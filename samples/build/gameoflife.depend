@@ -1,0 +1,26 @@
+# depslib dependency file v1.0
+1272732462 source:/home/overv/Development/Passion/samples/gameoflife/GameOfLife.cpp
+	<Passion/Render.hpp>
+	<time.h>
+	<cstring>
+	<cstdlib>
+
+1271362297 /home/overv/Development/Passion/include/Passion/Render.hpp
+	<Passion/Passion.hpp>
+	<Passion/Render/IBaseRender.hpp>
+
+1272722161 /home/overv/Development/Passion/include/Passion/Passion.hpp
+	<string>
+	<iostream>
+	<dlfcn.h>
+	<windows.h>
+
+1272721525 /home/overv/Development/Passion/include/Passion/Render/IBaseRender.hpp
+	<Passion/Render/Color.hpp>
+	<Passion/Render/Vector.hpp>
+
+1272721525 /home/overv/Development/Passion/include/Passion/Render/Color.hpp
+
+1272721525 /home/overv/Development/Passion/include/Passion/Render/Vector.hpp
+	<cmath>
+
