@@ -77,11 +77,11 @@ int main()
 	// Load a simple PP shader
 	////////////////////////////////////////////////////////////
 
-	Passion::Shader dummy[2];
-	dummy[0] = render->CreateShader( LoadShader( "shaders/dummy.ps" ).c_str(), PIXEL_SHADER );
-	dummy[1] = render->CreateShader( LoadShader( "shaders/dummy.vs" ).c_str(), VERTEX_SHADER );
+	Passion::Shader boxblur[2];
+	boxblur[0] = render->CreateShader( LoadShader( "shaders/null.vs" ).c_str(), VERTEX_SHADER );
+	boxblur[1] = render->CreateShader( LoadShader( "shaders/boxblur.ps" ).c_str(), PIXEL_SHADER );
 
-	Passion::Program shader = render->CreateProgram( dummy, 2 );
+	Passion::Program postfx = render->CreateProgram( boxblur, 2 );
 
 	////////////////////////////////////////////////////////////
 	// Create a render target
@@ -97,11 +97,18 @@ int main()
 		render->Clear( Passion::Color( 0.1f, 0.1f, 0.1f ) );
 		render->ClearZ();
 		
-		render->Start3D( Passion::Vector( cos( (float)clock() / (float)CLOCKS_PER_SEC ) * 130.0f, sin( (float)clock() / (float)CLOCKS_PER_SEC ) * 130.0f, 120.0f ), Passion::Vector() );
-			render->SetDrawColor( Passion::Color( 1.0f, 1.0f, 0.0f ) );
+		render->Start3D( Passion::Vector( cos( (float)clock() / (float)CLOCKS_PER_SEC ) * 250.0f, sin( (float)clock() / (float)CLOCKS_PER_SEC ) * 250.0f, 200.0f ), Passion::Vector() );
 			render->SetTexture( pattern );
+			render->SetProgram();
 
+			render->SetDrawColor( Passion::Color( 1.0f, 1.0f, 0.0f ) );
 			render->DrawBox( Passion::Vector( -30.0f, -30.0f, -30.0f ), Passion::Vector( 30.0f, 30.0f, 30.0f ) );
+
+			render->SetDrawColor( Passion::Color( 0.0f, 1.0f, 0.0f ) );
+			render->DrawBox( Passion::Vector( 40.0f, -30.0f, -30.0f ), Passion::Vector( 100.0f, 30.0f, 30.0f ) );
+
+			render->SetDrawColor( Passion::Color( 1.0f, 0.0f, 0.0f ) );
+			render->DrawBox( Passion::Vector( -40.0f, -30.0f, -30.0f ), Passion::Vector( -100.0f, 30.0f, 30.0f ) );
 		render->End3D();
 
 		render->SetRenderTarget();
@@ -110,10 +117,9 @@ int main()
 		render->Start2D();
 			render->SetDrawColor( Passion::Color( 1.0f, 1.0f, 1.0f ) );
 			render->SetTexture( rt->GetTexture() );
+			render->SetProgram( postfx );
 			
-			render->SetProgram( shader );
 			render->DrawQuad( Passion::Vector( 0.0f, 0.0f ), Passion::Vector( 1280.0f, 0.0f ), Passion::Vector( 1280.0f, 720.0f ), Passion::Vector( 0.0f, 720.0f ) );
-			render->SetProgram();
 		render->End2D();
 
 		render->Present();
