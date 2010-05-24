@@ -190,6 +190,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\..\include\Passion\Render\BaseRenderTarget.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\Passion\Render\Color.hpp"
 				>
 			</File>
@@ -207,6 +211,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\Passion\Render.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\Passion\Render\RenderTarget.hpp"
 				>
 			</File>
 			<File

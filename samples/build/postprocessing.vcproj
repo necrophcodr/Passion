@@ -2,10 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="julia"
-	ProjectGUID="{82DBCCC3-CC29-4F9D-A8A0-2B7B337A6A84}"
-	RootNamespace="mandelbrot"
-	Keyword="Win32Proj"
+	Name="postprocessing"
+	ProjectGUID="{12475166-557F-4E7A-9BC1-5967AFCAB96A}"
+	RootNamespace="postprocessing"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -46,7 +45,6 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -61,11 +59,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/LTCG"
 				OutputFile="$(SolutionDir)\..\..\samples\bin\$(ProjectName)-d.exe"
-				LinkIncremental="0"
 				GenerateDebugInformation="true"
-				SubSystem="1"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -118,10 +113,8 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;..\..\include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -137,9 +130,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(SolutionDir)\..\..\samples\bin\$(ProjectName).exe"
-				LinkIncremental="1"
 				GenerateDebugInformation="true"
-				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -176,7 +167,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\julia\Julia.cpp"
+				RelativePath="..\postprocessing\PostProcessing.cpp"
 				>
 			</File>
 		</Filter>

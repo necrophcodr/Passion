@@ -29,6 +29,7 @@
 
 #include <Passion/Render/Color.hpp>
 #include <Passion/Render/Vector.hpp>
+#include <Passion/Render/BaseRenderTarget.hpp>
 
 #define STENCIL_NEVER			0x0200
 #define STENCIL_LESS			0x0201
@@ -74,6 +75,7 @@ namespace Passion
 		virtual void SetTexturingEnabled( bool enabled ) = 0;
 
 		virtual Texture LoadTexture( const char* filename ) = 0;
+		virtual BaseRenderTarget* CreateRenderTarget( unsigned int width, unsigned int height ) = 0;
 
 		virtual Shader CreateShader( const char* code, int type ) = 0;
 		virtual Program CreateProgram( Shader* shaders, int count ) = 0;
@@ -96,7 +98,8 @@ namespace Passion
 		virtual void End3D() = 0;
 
 		virtual void SetDrawColor( Color color ) = 0;
-		virtual void SetTexture( Texture texture ) = 0;
+		virtual void SetTexture( Texture texture = 0 ) = 0;
+		virtual void SetRenderTarget( BaseRenderTarget* rendertarget = 0 ) = 0;
 		virtual void SetProgram( Program program = 0 ) = 0;
 
 		virtual void DrawPoint( Vector point ) = 0;

@@ -1,0 +1,7 @@
+varying vec2 uv;
+uniform sampler2D tex;
+
+void main()
+{
+	gl_FragColor = texture2D( tex, vec2( uv.x, uv.y + ( sin( uv.y * 75 ) * 0.03 ) ) );
+}

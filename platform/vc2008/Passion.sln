@@ -16,6 +16,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "julia", "..\..\samples\buil
 		{2C4474FE-FCDE-463E-B6BE-197394990C89} = {2C4474FE-FCDE-463E-B6BE-197394990C89}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "postprocessing", "..\..\samples\build\postprocessing.vcproj", "{12475166-557F-4E7A-9BC1-5967AFCAB96A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2B47C2D6-BA4A-4741-A22A-DA16617279EF} = {2B47C2D6-BA4A-4741-A22A-DA16617279EF}
+		{2C4474FE-FCDE-463E-B6BE-197394990C89} = {2C4474FE-FCDE-463E-B6BE-197394990C89}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug MX|Win32 = Debug MX|Win32
@@ -56,6 +62,14 @@ Global
 		{82DBCCC3-CC29-4F9D-A8A0-2B7B337A6A84}.Release MX|Win32.Build.0 = Release|Win32
 		{82DBCCC3-CC29-4F9D-A8A0-2B7B337A6A84}.Release|Win32.ActiveCfg = Release|Win32
 		{82DBCCC3-CC29-4F9D-A8A0-2B7B337A6A84}.Release|Win32.Build.0 = Release|Win32
+		{12475166-557F-4E7A-9BC1-5967AFCAB96A}.Debug MX|Win32.ActiveCfg = Debug|Win32
+		{12475166-557F-4E7A-9BC1-5967AFCAB96A}.Debug MX|Win32.Build.0 = Debug|Win32
+		{12475166-557F-4E7A-9BC1-5967AFCAB96A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{12475166-557F-4E7A-9BC1-5967AFCAB96A}.Debug|Win32.Build.0 = Debug|Win32
+		{12475166-557F-4E7A-9BC1-5967AFCAB96A}.Release MX|Win32.ActiveCfg = Release|Win32
+		{12475166-557F-4E7A-9BC1-5967AFCAB96A}.Release MX|Win32.Build.0 = Release|Win32
+		{12475166-557F-4E7A-9BC1-5967AFCAB96A}.Release|Win32.ActiveCfg = Release|Win32
+		{12475166-557F-4E7A-9BC1-5967AFCAB96A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -28,6 +28,7 @@
 ////////////////////////////////////////////////////////////
 
 #include <Passion/Render/IBaseRender.hpp>
+#include <Passion/Render/RenderTarget.hpp>
 #include <Passion/Render/GLee/GLee.h>
 #include <SFML/Window.hpp>
 
@@ -65,6 +66,7 @@ namespace Passion
 		void SetTexturingEnabled( bool enabled );
 
 		Texture LoadTexture( const char* filename );
+		BaseRenderTarget* CreateRenderTarget( unsigned int width, unsigned int height );
 
 		Shader CreateShader( const char* code, int type );
 		Program CreateProgram( Shader* shaders, int count );
@@ -72,7 +74,7 @@ namespace Passion
 		void SetProgramFloat( const char* name, float value );
 
 		void Clear( Color color );
-		void ClearZ( float value = 0.0f );
+		void ClearZ( float value = 1.0f );
 		void ClearStencil();
 
 		void SetViewport( int x, int y, int w, int h );
@@ -88,6 +90,7 @@ namespace Passion
 
 		void SetDrawColor( Color color );
 		void SetTexture( Texture texture );
+		void SetRenderTarget( BaseRenderTarget* rendertarget );
 		void SetProgram( Program program = 0 );
 
 		void DrawPoint( Vector point );

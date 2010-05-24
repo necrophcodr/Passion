@@ -138,6 +138,35 @@ namespace Passion
 		return SOIL_load_OGL_texture( filename, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT );
 	}
 
+	BaseRenderTarget* IRender::CreateRenderTarget( unsigned int width, unsigned int height )
+	{
+		RenderTarget* rt = new RenderTarget();
+
+		glGenFramebuffersEXT( 1, &rt->m_framebuffer );
+		glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, rt->m_framebuffer );
+
+		glGenRenderbuffersEXT( 1, &rt->m_renderbuffer );
+		glBindRenderbufferEXT( GL_RENDERBUFFER_EXT, rt->m_renderbuffer );
+		glRenderbufferStorageEXT( GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, 1280, 720 );
+
+		glFramebufferRenderbufferEXT( GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, rt->m_renderbuffer );
+
+		glGenTextures( 1, &rt->m_rendertexture );
+		glBindTexture( GL_TEXTURE_2D, rt->m_rendertexture );
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, 1280, 720, 0, GL_RGBA, GL_FLOAT, NULL );
+		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+		glGenerateMipmapEXT( GL_TEXTURE_2D );
+		glFramebufferTexture2DEXT( GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, rt->m_rendertexture, 0 );
+
+		SetRenderTarget( 0 );
+		SetTexture( 0 );
+
+		return rt;
+	}
+
 	Shader IRender::CreateShader( const char* code, int type )
 	{
 		int shader = glCreateShader( type );
@@ -255,6 +284,15 @@ namespace Passion
 		glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
 	}
 
+	void IRender::SetRenderTarget( BaseRenderTarget* rendertarget )
+	{
+		Flush();
+		if ( rendertarget != 0 )
+			glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, ((RenderTarget*)rendertarget)->m_framebuffer );
+		else
+			glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, 0 );
+	}
+
 	void IRender::SetProgram( Program program )
 	{
 		Flush();
@@ -291,9 +329,9 @@ namespace Passion
 			m_shape = GL_TRIANGLES;
 		}
 
-		m_vertices[m_vertexIndex++] = Vertex( p1.x, p1.y, p1.z, m_drawColor );
-		m_vertices[m_vertexIndex++] = Vertex( p2.x, p2.y, p2.z, m_drawColor );
-		m_vertices[m_vertexIndex++] = Vertex( p3.x, p3.y, p3.z, m_drawColor );
+		m_vertices[m_vertexIndex++] = Vertex( p1.x, p1.y, p1.z, m_drawColor, 0.0f, 1.0f );
+		m_vertices[m_vertexIndex++] = Vertex( p2.x, p2.y, p2.z, m_drawColor, 1.0f, 1.0f );
+		m_vertices[m_vertexIndex++] = Vertex( p3.x, p3.y, p3.z, m_drawColor, 1.0f, 0.0f );
 	}
 
 	void IRender::DrawQuad( Vector p1, Vector p2, Vector p3, Vector p4, float repeat )
@@ -303,10 +341,10 @@ namespace Passion
 			m_shape = GL_QUADS;
 		}
 
-		m_vertices[m_vertexIndex++] = Vertex( p1.x, p1.y, p1.z, m_drawColor, 0.0f, 0.0f );
-		m_vertices[m_vertexIndex++] = Vertex( p2.x, p2.y, p2.z, m_drawColor, repeat, 0.0f );
-		m_vertices[m_vertexIndex++] = Vertex( p3.x, p3.y, p3.z, m_drawColor, repeat, repeat );
-		m_vertices[m_vertexIndex++] = Vertex( p4.x, p4.y, p4.z, m_drawColor, 0.0f, repeat );
+		m_vertices[m_vertexIndex++] = Vertex( p1.x, p1.y, p1.z, m_drawColor, 0.0f, repeat );
+		m_vertices[m_vertexIndex++] = Vertex( p2.x, p2.y, p2.z, m_drawColor, repeat, repeat );
+		m_vertices[m_vertexIndex++] = Vertex( p3.x, p3.y, p3.z, m_drawColor, repeat, 0.0f );
+		m_vertices[m_vertexIndex++] = Vertex( p4.x, p4.y, p4.z, m_drawColor, 0.0f, 0.0f );
 	}
 
 	void IRender::DrawBox( Vector min, Vector max )
@@ -336,57 +374,41 @@ namespace Passion
 
 	// For testing purposes, remove at release
 	bool testInitialized = false;
-	Program program;
+	RenderTarget* rt;
 
 	void IRender::Test()
 	{
 		if ( !testInitialized )
 		{
-			const char* vertexShader = "uniform float time; varying vec4 gl_FrontColor; varying vec4 gl_BackColor; void main() { vec4 v = vec4( gl_Vertex ); v.z = sin( v.x / 400.0f + 1.0f + v.y / 400.0f + 1.0f + time * 10.0f ) * 50.0f; gl_FrontColor = vec4( v.x / 800.0f + 0.5f, v.y / 800.0f + 0.5f, v.z / 100.0f + 0.5f, 1.0f );  gl_Position = gl_ModelViewProjectionMatrix * v; }";
-			const char* fragmentShader = "varying vec4 gl_Color; void main() { gl_FragColor = gl_Color; }";
-			
-			Shader v = CreateShader( vertexShader, VERTEX_SHADER );
-			Shader f = CreateShader( fragmentShader, PIXEL_SHADER );
-
-			Shader shaders[2];
-			shaders[0] = v;
-			shaders[1] = f;
-			program = CreateProgram( shaders, 2 );
-
+			rt = (RenderTarget*)CreateRenderTarget( 1280, 720 );
 			testInitialized = true;
 		}
 
-		float angle = (float)clock() / (float)CLOCKS_PER_SEC / 5.0f;
-		int density = 5.0f;
-		float space = 800.0f / density;
+		// Draw the scene of the render target
+		SetRenderTarget( rt );
+		SetTexture( 0 );
 
-		SetProgram( program );
-		SetProgramFloat( "time", angle );
+		Clear( Color( 0.2f, 0.2f, 0.2f ) );
+		ClearZ();
 
-		glBegin( GL_QUADS );
-			for ( float x = -400.0f; x <= 400.0f - space; x += space )
-			{
-				for ( float y = -400.0f; y <= 400.0f - space; y += space )
-				{
-					glColor4f( 1.0f, 0.0f, 0.0f, 1.0f );
-					glVertex3f( x, y, 0.0f );
-					glTexCoord2f( 0.0f, 0.0f );
+		Start3D( Vector( cos( (float)clock() / (float)CLOCKS_PER_SEC ) * 50.0f, sin( (float)clock() / (float)CLOCKS_PER_SEC ) * 50.0f, 40.0f ), Vector(), Vector( 0.0f, 1.0f, 0.0f ) );
+			SetDrawColor( Color( 0.0f, 1.0f, 0.0f ) );
 
-					glColor4f( 0.0f, 1.0f, 0.0f, 1.0f );
-					glVertex3f( x + space, y, 0.0f );
-					glTexCoord2f( 1.0f, 0.0f );
-					
-					glColor4f( 0.0f, 0.0f, 1.0f, 1.0f );
-					glVertex3f( x + space, y + space, 0.0f );
-					glTexCoord2f( 1.0f, 1.0f );
+			DrawBox( Vector( -10.0f, -10.0f, -10.0f ), Vector( 10.0f, 10.0f, 10.0f ) );
+		End3D();
 
-					glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );
-					glVertex3f( x, y + space, 0.0f );
-					glTexCoord2f( 0.0f, 1.0f );
-				}
-			}
-		glEnd();
+		// Draw the actual scene
+		SetRenderTarget( 0 );
+		SetTexture( rt->GetTexture() );
 
-		SetProgram();
+		Clear( Color( 0.0f, 0.0f, 0.0f ) );
+		ClearZ();
+		
+		Start3D( Vector( cos( (float)clock() / (float)CLOCKS_PER_SEC / 4.0f ) * 50.0f, sin( (float)clock() / (float)CLOCKS_PER_SEC / 4.0f ) * 50.0f, 40.0f ), Vector(), Vector( 0.0f, 1.0f, 0.0f ) );
+			SetDrawColor( Color( 1.0f, 1.0f, 1.0f ) );
+			DrawBox( Vector( -10.0f, -10.0f, -10.0f ), Vector( 10.0f, 10.0f, 10.0f ) );
+		End3D();
+
+		Present();
 	}
 }
