@@ -72,6 +72,7 @@ int main()
 
 	render->SetTexturingEnabled( true );
 	render->SetDepthEnabled( true );
+	render->SetAlphaBlendingEnabled( true );
 
 	////////////////////////////////////////////////////////////
 	// Load a simple PP shader
@@ -114,8 +115,10 @@ int main()
 		render->SetRenderTarget();
 		render->SetDepthEnabled( false );
 
+		render->Clear( Passion::Color( 0.0f, 0.0f, 0.0f ) );
+
 		render->Start2D();
-			render->SetDrawColor( Passion::Color( 1.0f, 1.0f, 1.0f ) );
+			render->SetDrawColor( Passion::Color( 1.0f, 1.0f, 1.0f, 1.0f ) );
 			render->SetTexture( rt->GetTexture() );
 			render->SetProgram( postfx );
 			

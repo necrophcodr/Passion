@@ -204,7 +204,7 @@ namespace Passion
 
 	void IRender::Clear( Color color )
 	{
-		glClearColor( color.R, color.G, color.B, 0.0f );
+		glClearColor( color.R, color.G, color.B, color.A );
 		glClear( GL_COLOR_BUFFER_BIT );
 	}
 
