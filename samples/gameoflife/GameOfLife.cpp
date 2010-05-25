@@ -25,6 +25,7 @@
 ////////////////////////////////////////////////////////////
 
 #include <Passion/Render.hpp>
+#include <Passion/Input.hpp>
 #include <time.h>
 #include <cstdlib>
 #include <cstring>
@@ -48,12 +49,15 @@ int main()
 	////////////////////////////////////////////////////////////
 
 	#ifdef _DEBUG_
-		Passion::IBaseRender* render = (Passion::IBaseRender*)Passion::CreateInterface( "../../lib/passion-render-d" );
+		Passion::IBaseRender* render = (Passion::IBaseRender*)Passion::CreateInterface( "../../lib/render-d" );
+		Passion::IBaseInput* input = (Passion::IBaseInput*)Passion::CreateInterface( "../../lib/input-d" );
 	#else
-		Passion::IBaseRender* render = (Passion::IBaseRender*)Passion::CreateInterface( "../../lib/passion-render" );
+		Passion::IBaseRender* render = (Passion::IBaseRender*)Passion::CreateInterface( "../../lib/render" );
+		Passion::IBaseInput* input = (Passion::IBaseInput*)Passion::CreateInterface( "../../lib/input" );
 	#endif
 
 	Passion::RenderWindow* window = render->CreateRenderWindow( 1280, 720, "Game of Life" );
+	input->SetWindow( window );
 
 	Passion::Texture texBox = render->LoadTexture( "textures/box.png" );
 	render->SetTexture( texBox );
@@ -78,7 +82,7 @@ int main()
 	long nextUpdate = clock() + (long)( (float)CLOCKS_PER_SEC / generationsPerSecond );
 	int grayOffset = 0;
 
-	while ( true )
+	while ( input->GetEvents() )
 	{
 		////////////////////////////////////////////////////////////
 		// Update the grid

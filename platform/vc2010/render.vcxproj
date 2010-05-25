@@ -11,8 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{63EB3DEF-8D4C-4C81-82B3-7083B744DB0C}</ProjectGuid>
-    <RootNamespace>passioninput</RootNamespace>
+    <ProjectGuid>{68E43F2F-8552-40A4-8CEC-099ECBD72E07}</ProjectGuid>
+    <RootNamespace>passionrender</RootNamespace>
+    <ProjectName>render</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -40,11 +41,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)$(ConfigurationName)</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>..\..\temp</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IntDir>..\..\temp</IntDir>
     <OutDir>$(SolutionDir)$(ConfigurationName)</OutDir>
+    <IntDir>..\..\temp</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -56,7 +59,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OutputFile>$(SolutionDir)\..\..\lib\$(ProjectName)-d.dll</OutputFile>
       <AdditionalLibraryDirectories>..\..\extlibs\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-system-s-d.lib;sfml-window-s-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-system-s-d.lib;sfml-window-s-d.lib;glu32.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -71,18 +74,24 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>sfml-system-s.lib;sfml-window-s.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(SolutionDir)\..\..\lib\$(ProjectName).dll</OutputFile>
       <AdditionalLibraryDirectories>..\..\extlibs\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-system-s.lib;sfml-window-s.lib;glu32.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\Passion\Input\IBaseInput.hpp" />
-    <ClInclude Include="..\..\include\Passion\Input\IInput.hpp" />
+    <ClCompile Include="..\..\src\Passion\Render\GLee\GLee.c" />
+    <ClCompile Include="..\..\src\Passion\Render\IRender.cpp" />
+    <ClCompile Include="..\..\src\Passion\Render\Render.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\Passion\Input\IInput.cpp" />
-    <ClCompile Include="..\..\src\Passion\Input\Input.cpp" />
+    <ClInclude Include="..\..\include\Passion\Render\BaseRenderTarget.hpp" />
+    <ClInclude Include="..\..\include\Passion\Render\Color.hpp" />
+    <ClInclude Include="..\..\include\Passion\Render\GLee\GLee.h" />
+    <ClInclude Include="..\..\include\Passion\Render\IBaseRender.hpp" />
+    <ClInclude Include="..\..\include\Passion\Render\IRender.hpp" />
+    <ClInclude Include="..\..\include\Passion\Render\RenderTarget.hpp" />
+    <ClInclude Include="..\..\include\Passion\Render\Vector.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

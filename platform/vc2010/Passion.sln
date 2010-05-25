@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "passion-render", "passion-render.vcxproj", "{68E43F2F-8552-40A4-8CEC-099ECBD72E07}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "render", "render.vcxproj", "{68E43F2F-8552-40A4-8CEC-099ECBD72E07}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "passion-input", "passion-input.vcxproj", "{63EB3DEF-8D4C-4C81-82B3-7083B744DB0C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "input", "input.vcxproj", "{63EB3DEF-8D4C-4C81-82B3-7083B744DB0C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gameoflife", "..\..\samples\build\gameoflife.vcxproj", "{B591E05B-6C34-4913-9536-0B5298A49721}"
 	ProjectSection(ProjectDependencies) = postProject

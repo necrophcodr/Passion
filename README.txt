@@ -1,8 +1,9 @@
 Passion SVN
 
-Passion is collection of libraries intended for game development with C++ and Lua.
+Passion is collection of libraries intended for game development with C++ and Lua. Currently, the following libraries are up and running:
 
-For more information, watch the blog at http://www.overvprojects.nl.
+- render: A simple render library with 2D and 3D support.
+- input: A simple input library, also used to manage the render window.
 
 Passion will build without issues on Microsoft Visual C++ 2008, Microsoft Visual C++ 2010 and the latest version of Code::Blocks on Linux.
 
