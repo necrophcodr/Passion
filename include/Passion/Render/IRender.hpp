@@ -56,6 +56,9 @@ namespace Passion
 		RenderWindow* CreateRenderWindow( unsigned int width, unsigned int height, const char* title );
 		void SetRenderWindow( RenderWindow* window );
 
+		bool SupportsShaders();
+		bool SupportsRenderTargets();
+
 		void SetWireframeEnabled( bool enabled );
 		void SetDepthEnabled( bool enabled );
 		void SetColorEnabled( bool enabled );
@@ -67,6 +70,9 @@ namespace Passion
 
 		Texture LoadTexture( const char* filename );
 		BaseRenderTarget* CreateRenderTarget( unsigned int width, unsigned int height );
+
+		Model LoadModel( const char* filename );
+		void DrawModel( Model model );
 
 		Shader CreateShader( const char* code, int type );
 		Program CreateProgram( Shader* shaders, int count );

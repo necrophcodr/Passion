@@ -38,7 +38,7 @@
 			>
 			<DebugSettings
 				Command="$(TargetPath)"
-				WorkingDirectory="C:\Users\Overv\Desktop\Passion\samples\bin"
+				WorkingDirectory="$(ProjectDir)\..\bin"
 				CommandArguments=""
 				Attach="false"
 				DebuggerType="3"

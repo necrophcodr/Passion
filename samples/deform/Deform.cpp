@@ -26,9 +26,9 @@
 
 #include <Passion/Render.hpp>
 #include <Passion/Input.hpp>
-#include <time.h>
 #include <string>
 #include <fstream>
+#include <time.h>
 
 ////////////////////////////////////////////////////////////
 // Helper function for loading the shaders
@@ -64,65 +64,43 @@ int main()
 		Passion::IBaseInput* input = (Passion::IBaseInput*)Passion::CreateInterface( "../../lib/input" );
 	#endif
 
-	Passion::RenderWindow* window = render->CreateRenderWindow( 1280, 720, "Post-processing" );
-	input->SetWindow( window );
+	Passion::RenderWindow* window = render->CreateRenderWindow( 1280, 720, "Deform" );
 
-	Passion::Texture pattern = render->LoadTexture( "textures/box.png" );
+	Passion::Model tankModel = render->LoadModel( "models/tank.obj" );
+	Passion::Texture tankTexture = render->LoadTexture( "textures/models/tank.tga" );
 
 	render->SetTexturingEnabled( true );
 	render->SetDepthEnabled( true );
-	render->SetAlphaBlendingEnabled( true );
+	render->SetTexture( tankTexture );
+
+	input->SetWindow( window );
 
 	////////////////////////////////////////////////////////////
-	// Load a simple PP shader
+	// Load a simple sine wav shader
 	////////////////////////////////////////////////////////////
 
-	Passion::Shader boxblur[2];
-	boxblur[0] = render->CreateShader( LoadShader( "shaders/null.vs" ).c_str(), VERTEX_SHADER );
-	boxblur[1] = render->CreateShader( LoadShader( "shaders/boxblur.ps" ).c_str(), PIXEL_SHADER );
+	Passion::Program shader = 0;
 
-	Passion::Program postfx = render->CreateProgram( boxblur, 2 );
+	if ( render->SupportsShaders() )
+	{
+		Passion::Shader deform[2];
+		deform[0] = render->CreateShader( LoadShader( "shaders/wave.vs" ).c_str(), VERTEX_SHADER );
+		deform[1] = render->CreateShader( LoadShader( "shaders/null.ps" ).c_str(), PIXEL_SHADER );
 
-	////////////////////////////////////////////////////////////
-	// Create a render target
-	////////////////////////////////////////////////////////////
-
-	Passion::BaseRenderTarget* rt = render->CreateRenderTarget( 1280, 720 );
+		shader = render->CreateProgram( deform, 2 );
+		render->SetProgram( shader );
+	}
 
 	while ( input->GetEvents() )
 	{
-		render->SetRenderTarget( rt );
-		render->SetDepthEnabled( true );
-
-		render->Clear( Passion::Color( 0.1f, 0.1f, 0.1f ) );
-		render->ClearZ();
-		
-		render->Start3D( Passion::Vector( cos( (float)clock() / (float)CLOCKS_PER_SEC ) * 250.0f, sin( (float)clock() / (float)CLOCKS_PER_SEC ) * 250.0f, 200.0f ), Passion::Vector() );
-			render->SetTexture( pattern );
-			render->SetProgram();
-
-			render->SetDrawColor( Passion::Color( 1.0f, 1.0f, 0.0f ) );
-			render->DrawBox( Passion::Vector( -30.0f, -30.0f, -30.0f ), Passion::Vector( 30.0f, 30.0f, 30.0f ) );
-
-			render->SetDrawColor( Passion::Color( 0.0f, 1.0f, 0.0f ) );
-			render->DrawBox( Passion::Vector( 40.0f, -30.0f, -30.0f ), Passion::Vector( 100.0f, 30.0f, 30.0f ) );
-
-			render->SetDrawColor( Passion::Color( 1.0f, 0.0f, 0.0f ) );
-			render->DrawBox( Passion::Vector( -40.0f, -30.0f, -30.0f ), Passion::Vector( -100.0f, 30.0f, 30.0f ) );
-		render->End3D();
-
-		render->SetRenderTarget();
-		render->SetDepthEnabled( false );
-
 		render->Clear( Passion::Color( 0.0f, 0.0f, 0.0f ) );
+		render->ClearZ();
 
-		render->Start2D();
-			render->SetDrawColor( Passion::Color( 1.0f, 1.0f, 1.0f, 1.0f ) );
-			render->SetTexture( rt->GetTexture() );
-			render->SetProgram( postfx );
-			
-			render->DrawQuad( Passion::Vector( 0.0f, 0.0f ), Passion::Vector( 1280.0f, 0.0f ), Passion::Vector( 1280.0f, 720.0f ), Passion::Vector( 0.0f, 720.0f ) );
-		render->End2D();
+		if ( shader != 0 ) render->SetProgramFloat( "time", (float)clock() / (float)CLOCKS_PER_SEC );
+
+		render->Start3D( Passion::Vector( -200.0f, -200.0f, 150.0f ), Passion::Vector( 0.0f, 10.0f, 30.0f ) );
+			render->DrawModel( tankModel );
+		render->End3D();
 
 		render->Present();
 	}

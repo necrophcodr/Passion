@@ -27,6 +27,7 @@
 #include <Passion/Render/IRender.hpp>
 #include <SOIL.h>
 #include <iostream>
+#include <fstream>
 
 namespace Passion
 {
@@ -40,7 +41,8 @@ namespace Passion
 
 	IRender::~IRender()
 	{
-		if ( m_renderWindow ) delete m_renderWindow;
+		delete [] m_vertices;
+		delete m_renderWindow;
 	}
 
 	RenderWindow* IRender::CreateRenderWindow( unsigned int width, unsigned int height, const char* title )
@@ -133,6 +135,16 @@ namespace Passion
 			glDisable( GL_TEXTURE_2D );
 	}
 
+	bool IRender::SupportsShaders()
+	{
+		return GLEE_ARB_fragment_shader && GLEE_ARB_vertex_shader;
+	}
+
+	bool IRender::SupportsRenderTargets()
+	{
+		return GLEE_ARB_framebuffer_object;
+	}
+
 	Texture IRender::LoadTexture( const char* filename )
 	{
 		return SOIL_load_OGL_texture( filename, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT );
@@ -165,6 +177,99 @@ namespace Passion
 		SetTexture( 0 );
 
 		return rt;
+	}
+
+	Model IRender::LoadModel( const char* filename )
+	{
+		// Parse the .obj model file
+
+		std::ifstream file;
+		file.open( filename, std::ios::in );
+		if ( !file.is_open() ) return 0;
+
+		std::vector<Vector> points;
+		std::vector<Vector> normals;
+		std::vector<Vector> texcoords;
+		std::vector<Vertex*> triangles;
+
+		float x, y, z;
+		int v, t, n;
+		char c;
+		std::string keyword;
+
+		while ( !file.eof() )
+		{
+			file >> keyword;
+
+			if ( keyword == "v" )
+			{
+				file >> x >> y >> z;
+				points.push_back( Vector( x, y, z ) );
+			} else if ( keyword == "vt" )
+			{
+				file >> x >> y >> z;
+				texcoords.push_back( Vector( x, y, z ) );
+			} else if ( keyword == "vn" )
+			{
+				file >> x >> y >> z;
+				normals.push_back( Vector( x, y, z ) );
+			} else if ( keyword == "f" )
+			{
+				Vector point;
+				Vector uv = Vector();
+				Vector normal = Vector();
+				Vertex* tr = new Vertex[3];
+
+				for ( int face = 0; face < 3; face++ ) {
+					file >> v;
+					point = points[v-1];
+					if ( texcoords.size() > 0 ) {
+						file >> c >> t;
+						uv = texcoords[t-1];
+					}
+					if ( normals.size() > 0 ) {
+						file >> c >> n;
+						normal = normals[n-1];
+					}
+
+					tr[face] = Vertex( point.x, point.y, point.z, Color(), uv.x, uv.y );
+				}
+
+				triangles.push_back( tr );
+			}
+		}
+
+		// Build the display list for rendering
+		Model model = glGenLists( 1 );
+		glNewList( model, GL_COMPILE );
+			glBegin( GL_TRIANGLES );
+				glColor3f( 1.0f, 1.0f, 1.0f );
+
+			for ( unsigned int i = 0; i < triangles.size(); i++ )
+			{
+				glTexCoord2f( triangles[i][0].u, triangles[i][0].v );
+				glVertex3f( triangles[i][0].x, triangles[i][0].y, triangles[i][0].z );
+				
+				glTexCoord2f( triangles[i][1].u, triangles[i][1].v );
+				glVertex3f( triangles[i][1].x, triangles[i][1].y, triangles[i][1].z );
+
+				glTexCoord2f( triangles[i][2].u, triangles[i][2].v );
+				glVertex3f( triangles[i][2].x, triangles[i][2].y, triangles[i][2].z );
+
+				delete [] triangles[i];
+			}
+
+			glEnd();
+		glEndList();
+
+		file.close();
+
+		return model;
+	}
+
+	void IRender::DrawModel( Model model )
+	{
+		glCallList( model );
 	}
 
 	Shader IRender::CreateShader( const char* code, int type )
@@ -373,42 +478,22 @@ namespace Passion
 	}
 
 	// For testing purposes, remove at release
-	bool testInitialized = false;
-	RenderTarget* rt;
-
+	bool init = false;
+	Model model;
+	Texture texture;
+	
 	void IRender::Test()
 	{
-		if ( !testInitialized )
+		if ( !init )
 		{
-			rt = (RenderTarget*)CreateRenderTarget( 1280, 720 );
-			testInitialized = true;
+			model = LoadModel( "models/tank.obj" );
+			texture = LoadTexture( "textures/models/tank.tga" );
+			init = true;
 		}
 
-		// Draw the scene of the render target
-		SetRenderTarget( rt );
-		SetTexture( 0 );
+		SetTexture( texture );
+		SetDrawColor( Color( 0.0f, 1.0f, 0.0f ) );
 
-		Clear( Color( 0.2f, 0.2f, 0.2f ) );
-		ClearZ();
-
-		Start3D( Vector( cos( (float)clock() / (float)CLOCKS_PER_SEC ) * 50.0f, sin( (float)clock() / (float)CLOCKS_PER_SEC ) * 50.0f, 40.0f ), Vector(), Vector( 0.0f, 1.0f, 0.0f ) );
-			SetDrawColor( Color( 0.0f, 1.0f, 0.0f ) );
-
-			DrawBox( Vector( -10.0f, -10.0f, -10.0f ), Vector( 10.0f, 10.0f, 10.0f ) );
-		End3D();
-
-		// Draw the actual scene
-		SetRenderTarget( 0 );
-		SetTexture( rt->GetTexture() );
-
-		Clear( Color( 0.0f, 0.0f, 0.0f ) );
-		ClearZ();
-		
-		Start3D( Vector( cos( (float)clock() / (float)CLOCKS_PER_SEC / 4.0f ) * 50.0f, sin( (float)clock() / (float)CLOCKS_PER_SEC / 4.0f ) * 50.0f, 40.0f ), Vector(), Vector( 0.0f, 1.0f, 0.0f ) );
-			SetDrawColor( Color( 1.0f, 1.0f, 1.0f ) );
-			DrawBox( Vector( -10.0f, -10.0f, -10.0f ), Vector( 10.0f, 10.0f, 10.0f ) );
-		End3D();
-
-		Present();
+		DrawModel( model );
 	}
 }

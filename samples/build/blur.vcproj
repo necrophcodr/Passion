@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="render"
-	ProjectGUID="{2B47C2D6-BA4A-4741-A22A-DA16617279EF}"
-	RootNamespace="Passion"
+	Name="blur"
+	ProjectGUID="{12475166-557F-4E7A-9BC1-5967AFCAB96A}"
+	RootNamespace="postprocessing"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -19,7 +19,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="..\..\temp"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			CharacterSet="2"
 			>
 			<Tool
@@ -40,8 +40,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\extlibs\headers;..\..\include"
-				PreprocessorDefinitions="GLEW_STATIC"
+				AdditionalIncludeDirectories="&quot;..\..\include&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -59,9 +59,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="sfml-system-s-d.lib sfml-window-s-d.lib glu32.lib SOIL.lib"
-				OutputFile="$(SolutionDir)\..\..\lib\$(ProjectName)-d.dll"
-				AdditionalLibraryDirectories="..\..\extlibs\lib"
+				OutputFile="$(SolutionDir)\..\..\samples\bin\$(ProjectName)-d.exe"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
 			/>
@@ -91,7 +89,7 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="..\..\temp"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
@@ -115,8 +113,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..\..\extlibs\headers;..\..\include"
-				PreprocessorDefinitions="GLEW_STATIC"
+				AdditionalIncludeDirectories="&quot;..\..\include&quot;"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -133,9 +130,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="sfml-system-s.lib sfml-window-s.lib glu32.lib SOIL.lib"
-				OutputFile="$(SolutionDir)\..\..\lib\$(ProjectName).dll"
-				AdditionalLibraryDirectories="..\..\extlibs\lib"
+				OutputFile="$(SolutionDir)\..\..\samples\bin\$(ProjectName).exe"
 				GenerateDebugInformation="true"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -173,15 +168,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\src\Passion\Render\GLee\GLee.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\Passion\Render\IRender.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\Passion\Render\Render.cpp"
+				RelativePath="..\blur\Blur.cpp"
 				>
 			</File>
 		</Filter>
@@ -190,38 +177,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath="..\..\include\Passion\Render\BaseRenderTarget.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\Passion\Render\Color.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\Passion\Render\GLee\GLee.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\Passion\Render\IBaseRender.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\Passion\Render\IRender.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\Passion\Render.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\Passion\Render\RenderTarget.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\Passion\Render\Vector.hpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

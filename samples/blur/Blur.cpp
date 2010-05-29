@@ -26,10 +26,10 @@
 
 #include <Passion/Render.hpp>
 #include <Passion/Input.hpp>
+#include <time.h>
+#include <string>
 #include <fstream>
 #include <iostream>
-#include <string>
-#include <time.h>
 
 ////////////////////////////////////////////////////////////
 // Helper function for loading the shaders
@@ -65,104 +65,71 @@ int main()
 		Passion::IBaseInput* input = (Passion::IBaseInput*)Passion::CreateInterface( "../../lib/input" );
 	#endif
 
-	Passion::RenderWindow* window = render->CreateRenderWindow( 1280, 720, "Julia Set" );
+	Passion::RenderWindow* window = render->CreateRenderWindow( 1280, 720, "Post-processing" );
 
-	if ( !render->SupportsShaders() )
+	if ( !render->SupportsShaders() || !render->SupportsRenderTargets() )
 	{
 		std::cout << "Shaders and/or render targets aren't supported by your graphics card!" << std::endl;
 		return 1;
 	}
 
-	render->SetAlphaBlendingEnabled( true );
+	Passion::Texture pattern = render->LoadTexture( "textures/box.png" );
+
+	render->SetTexturingEnabled( true );
+	render->SetDepthEnabled( true );
 
 	input->SetWindow( window );
 
 	////////////////////////////////////////////////////////////
-	// Load the julia set shader
+	// Load a simple PP shader
 	////////////////////////////////////////////////////////////
 
-	Passion::Shader julia[2];
-	julia[0] = render->CreateShader( LoadShader( "shaders/julia.ps" ).c_str(), PIXEL_SHADER );
-	julia[1] = render->CreateShader( LoadShader( "shaders/julia.vs" ).c_str(), VERTEX_SHADER );
+	Passion::Shader boxblur[2];
+	boxblur[0] = render->CreateShader( LoadShader( "shaders/null.vs" ).c_str(), VERTEX_SHADER );
+	boxblur[1] = render->CreateShader( LoadShader( "shaders/boxblur.ps" ).c_str(), PIXEL_SHADER );
 
-	Passion::Program juliaShader = render->CreateProgram( julia, 2 );
-	render->SetProgram( juliaShader );
+	Passion::Program postfx = render->CreateProgram( boxblur, 2 );
 
 	////////////////////////////////////////////////////////////
-	// Set up the julia
+	// Create a render target
 	////////////////////////////////////////////////////////////
-	
-	bool dragging = false;
-	int lastX, lastY;
-	float centerRe, centerIm, scaleRe, scaleIm;
 
-	centerRe = -0.0f;
-	centerIm = 0.0f;
-	scaleRe = 2.2f;
-	scaleIm = 1.32f;
-
-	render->SetProgramFloat( "centerRe", centerRe );
-	render->SetProgramFloat( "centerIm", centerIm );
-	render->SetProgramFloat( "scaleRe", scaleRe );
-	render->SetProgramFloat( "scaleIm", scaleIm );
-
-	float time = 0.0f;
-	clock_t lastTime = clock();
+	Passion::BaseRenderTarget* rt = render->CreateRenderTarget( 1280, 720 );
 
 	while ( input->GetEvents() )
 	{
-		if ( clock() - lastTime > 0 ) {
-			time += (float)( clock() - lastTime ) / 1000.0f / ( 4.0f / scaleRe ) / 2.0f;
-			lastTime = clock();
-		}
+		float time = (float)clock() / (float)CLOCKS_PER_SEC;
 
-		render->SetProgramFloat( "time", time );
+		render->SetRenderTarget( rt );
 
-		////////////////////////////////////////////////////////////
-		// Calculate the center and scale based on input
-		////////////////////////////////////////////////////////////
+		render->Clear( Passion::Color( 0.1f, 0.1f, 0.1f ) );
+		render->ClearZ();
+		
+		render->Start3D( Passion::Vector( cos( time ) * 280.0f, sin( time ) * 280.0f, 200.0f ), Passion::Vector() );			
+			render->SetTexture( pattern );
+			render->SetProgram();
 
-		if ( input->IsMouseDown( Passion::MOUSE_LEFT ) ) {			
-			if ( dragging ) {
-				centerRe += (float)( lastX - input->GetMouseX() ) / 1280.0f * scaleRe * 2.0f;
-				centerIm += (float)( lastY - input->GetMouseY() ) / 720.0f * scaleIm * 2.0f;
-			} else {
-				dragging = true;
-			}
+			render->SetDrawColor( Passion::Color( 1.0f, 1.0f, 0.0f ) );
+			render->DrawBox( Passion::Vector( -30.0f, -30.0f, -30.0f ), Passion::Vector( 30.0f, 30.0f, 30.0f ) );
 
-			lastX = input->GetMouseX();
-			lastY = input->GetMouseY();
+			render->SetDrawColor( Passion::Color( 0.0f, 1.0f, 0.0f ) );
+			render->DrawBox( Passion::Vector( 40.0f, -30.0f, -30.0f ), Passion::Vector( 100.0f, 30.0f, 30.0f ) );
 
-			render->SetProgramFloat( "centerRe", centerRe );
-			render->SetProgramFloat( "centerIm", centerIm );
-		} else {
-			dragging = false;
-		}
+			render->SetDrawColor( Passion::Color( 1.0f, 0.0f, 0.0f ) );
+			render->DrawBox( Passion::Vector( -40.0f, -30.0f, -30.0f ), Passion::Vector( -100.0f, 30.0f, 30.0f ) );
+		render->End3D();
 
-		if ( input->GetMouseWheel() > 0 ) {
-			scaleRe /= 1.2f;
-			scaleIm /= 1.2f;
+		render->SetRenderTarget();
 
-			render->SetProgramFloat( "scaleRe", scaleRe );
-			render->SetProgramFloat( "scaleIm", scaleIm );
-		} else if ( input->GetMouseWheel() < 0 ) {
-			scaleRe *= 1.2f;
-			scaleIm *= 1.2f;
-
-			render->SetProgramFloat( "scaleRe", scaleRe );
-			render->SetProgramFloat( "scaleIm", scaleIm );
-		}
-
-		////////////////////////////////////////////////////////////
-		// Draw the julia quad filling the whole screen
-		////////////////////////////////////////////////////////////
-
-		render->Clear( Passion::Color( 0.05f, 0.05f, 0.05f ) );
+		render->Clear( Passion::Color( 0.0f, 0.0f, 0.0f ) );
+		render->ClearZ();
 
 		render->Start2D();
-
+			render->SetDrawColor( Passion::Color( 1.0f, 1.0f, 1.0f, 1.0f ) );
+			render->SetTexture( rt->GetTexture() );
+			render->SetProgram( postfx );
+			
 			render->DrawQuad( Passion::Vector( 0.0f, 0.0f ), Passion::Vector( 1280.0f, 0.0f ), Passion::Vector( 1280.0f, 720.0f ), Passion::Vector( 0.0f, 720.0f ) );
-
 		render->End2D();
 
 		render->Present();
