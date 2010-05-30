@@ -26,7 +26,8 @@
 
 #include <Passion/Render.hpp>
 #include <Passion/Input.hpp>
-#include <string>
+#include <cstring>
+#include <iostream>
 #include <fstream>
 #include <time.h>
 
@@ -39,7 +40,7 @@ std::string LoadShader( const char* filename )
 	char buffer[4096];
 	memset( buffer, 0, 4096 );
 
-	std::fstream shaderFile( filename, std::fstream::in );		
+	std::fstream shaderFile( filename, std::fstream::in );
 		shaderFile.read( buffer, 4096 );
 	shaderFile.close();
 
@@ -89,7 +90,12 @@ int main()
 
 		shader = render->CreateProgram( deform, 2 );
 		render->SetProgram( shader );
+	} else {
+        std::cout << "Warning: Shaders are not supported on your system, so they will not be used!" << std::endl;
 	}
+
+	time_t lasttime = time(0);
+	int frames = 0;
 
 	while ( input->GetEvents() )
 	{
@@ -103,6 +109,14 @@ int main()
 		render->End3D();
 
 		render->Present();
+
+        frames++;
+        if ( lasttime != time(0) )
+        {
+            std::cout << frames << " frames!\n";
+            frames = 0;
+            lasttime = time(0);
+        }
 	}
 
 	return 0;

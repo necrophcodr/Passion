@@ -28,7 +28,7 @@
 #include <Passion/Input.hpp>
 #include <fstream>
 #include <iostream>
-#include <string>
+#include <cstring>
 #include <time.h>
 
 ////////////////////////////////////////////////////////////
@@ -40,7 +40,7 @@ std::string LoadShader( const char* filename )
 	char buffer[4096];
 	memset( buffer, 0, 4096 );
 
-	std::fstream shaderFile( filename, std::fstream::in );		
+	std::fstream shaderFile( filename, std::fstream::in );
 		shaderFile.read( buffer, 4096 );
 	shaderFile.close();
 
@@ -91,7 +91,7 @@ int main()
 	////////////////////////////////////////////////////////////
 	// Set up the julia
 	////////////////////////////////////////////////////////////
-	
+
 	bool dragging = false;
 	int lastX, lastY;
 	float centerRe, centerIm, scaleRe, scaleIm;
@@ -122,7 +122,7 @@ int main()
 		// Calculate the center and scale based on input
 		////////////////////////////////////////////////////////////
 
-		if ( input->IsMouseDown( Passion::MOUSE_LEFT ) ) {			
+		if ( input->IsMouseDown( Passion::MOUSE_LEFT ) ) {
 			if ( dragging ) {
 				centerRe += (float)( lastX - input->GetMouseX() ) / 1280.0f * scaleRe * 2.0f;
 				centerIm += (float)( lastY - input->GetMouseY() ) / 720.0f * scaleIm * 2.0f;

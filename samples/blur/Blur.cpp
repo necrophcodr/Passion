@@ -27,7 +27,7 @@
 #include <Passion/Render.hpp>
 #include <Passion/Input.hpp>
 #include <time.h>
-#include <string>
+#include <cstring>
 #include <fstream>
 #include <iostream>
 
@@ -40,7 +40,7 @@ std::string LoadShader( const char* filename )
 	char buffer[4096];
 	memset( buffer, 0, 4096 );
 
-	std::fstream shaderFile( filename, std::fstream::in );		
+	std::fstream shaderFile( filename, std::fstream::in );
 		shaderFile.read( buffer, 4096 );
 	shaderFile.close();
 
@@ -104,8 +104,8 @@ int main()
 
 		render->Clear( Passion::Color( 0.1f, 0.1f, 0.1f ) );
 		render->ClearZ();
-		
-		render->Start3D( Passion::Vector( cos( time ) * 280.0f, sin( time ) * 280.0f, 200.0f ), Passion::Vector() );			
+
+		render->Start3D( Passion::Vector( cos( time ) * 280.0f, sin( time ) * 280.0f, 200.0f ), Passion::Vector() );
 			render->SetTexture( pattern );
 			render->SetProgram();
 
@@ -128,7 +128,7 @@ int main()
 			render->SetDrawColor( Passion::Color( 1.0f, 1.0f, 1.0f, 1.0f ) );
 			render->SetTexture( rt->GetTexture() );
 			render->SetProgram( postfx );
-			
+
 			render->DrawQuad( Passion::Vector( 0.0f, 0.0f ), Passion::Vector( 1280.0f, 0.0f ), Passion::Vector( 1280.0f, 720.0f ), Passion::Vector( 0.0f, 720.0f ) );
 		render->End2D();
 

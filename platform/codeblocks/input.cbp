@@ -2,29 +2,33 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="passion-render" />
+		<Option title="input" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="../../lib/passion-render" prefix_auto="1" extension_auto="1" />
-				<Option object_output="../../temp" />
+				<Option output="../../lib/input-d" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../lib" />
+				<Option object_output="../../temp/" />
 				<Option type="3" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Option createStaticLib="1" />
 				<Compiler>
+					<Add option="-Wall" />
 					<Add option="-g" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="../../lib/passion-render" prefix_auto="1" extension_auto="1" />
-				<Option object_output="../../temp" />
+				<Option output="../../lib/input" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../lib" />
+				<Option object_output="../../temp/" />
 				<Option type="3" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Option createStaticLib="1" />
 				<Compiler>
+					<Add option="-Wall" />
 					<Add option="-O2" />
 				</Compiler>
 				<Linker>
@@ -33,7 +37,6 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-Wall" />
 			<Add option="-DPASSION_PLATFORM_LINUX" />
 			<Add directory="../../include" />
 			<Add directory="../../extlibs/headers" />
@@ -41,18 +44,14 @@
 		<Linker>
 			<Add library="sfml-system" />
 			<Add library="sfml-window" />
-			<Add library="sfml-graphics" />
-			<Add directory="../../extlibs/lib" />
 		</Linker>
-		<Unit filename="../../include/Passion/Render.hpp" />
-		<Unit filename="../../include/Passion/Render/Color.hpp" />
-		<Unit filename="../../include/Passion/Render/IBaseRender.hpp" />
-		<Unit filename="../../include/Passion/Render/IRender.hpp" />
+		<Unit filename="../../include/Passion/Input/IBaseInput.hpp" />
+		<Unit filename="../../include/Passion/Input/IInput.hpp" />
 		<Unit filename="export.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../../src/Passion/Render/IRender.cpp" />
-		<Unit filename="../../src/Passion/Render/Render.cpp" />
+		<Unit filename="../../src/Passion/Input/IInput.cpp" />
+		<Unit filename="../../src/Passion/Input/Input.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

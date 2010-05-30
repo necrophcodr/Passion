@@ -2,14 +2,14 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="gameoflife" />
+		<Option title="blur" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="../bin/gameoflife-d" prefix_auto="1" extension_auto="1" />
+				<Option output="../bin/blur-d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="../bin" />
-				<Option object_output="../../temp" />
+				<Option object_output="../../temp/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -17,9 +17,9 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="../bin/gameoflife" prefix_auto="1" extension_auto="1" />
+				<Option output="../bin/blur" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="../bin" />
-				<Option object_output="../../temp" />
+				<Option object_output="../../temp/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -32,13 +32,14 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-fexceptions" />
 			<Add option="-DPASSION_PLATFORM_LINUX" />
 			<Add directory="../../include" />
 		</Compiler>
 		<Linker>
 			<Add library="libdl" />
 		</Linker>
-		<Unit filename="../gameoflife/GameOfLife.cpp" />
+		<Unit filename="../blur/Blur.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

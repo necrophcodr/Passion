@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="Workspace">
-		<Project filename="passion-render.cbp" />
-		<Project filename="../../samples/build/gameoflife.cbp" active="1">
-			<Depends filename="passion-render.cbp" />
+		<Project filename="../../samples/build/gameoflife.cbp">
+			<Depends filename="input.cbp" />
+			<Depends filename="render.cbp" />
 		</Project>
+		<Project filename="input.cbp" />
+		<Project filename="render.cbp" />
+		<Project filename="../../samples/build/deform.cbp" />
+		<Project filename="../../samples/build/julia.cbp" />
+		<Project filename="../../samples/build/blur.cbp" active="1" />
 	</Workspace>
 </CodeBlocks_workspace_file>

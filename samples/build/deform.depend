@@ -1,10 +1,11 @@
 # depslib dependency file v1.0
-1275183842 source:/home/overv/Development/Passion/samples/gameoflife/GameOfLife.cpp
+1275184323 source:/home/overv/Development/Passion/samples/deform/Deform.cpp
 	<Passion/Render.hpp>
 	<Passion/Input.hpp>
-	<time.h>
-	<cstdlib>
 	<cstring>
+	<iostream>
+	<fstream>
+	<time.h>
 
 1275181837 /home/overv/Development/Passion/include/Passion/Render.hpp
 	<Passion/Passion.hpp>
