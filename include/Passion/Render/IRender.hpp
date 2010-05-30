@@ -53,7 +53,7 @@ namespace Passion
 		IRender();
 		~IRender();
 
-		RenderWindow* CreateRenderWindow( unsigned int width, unsigned int height, const char* title );
+		RenderWindow* CreateRenderWindow( unsigned int width, unsigned int height, const char* title, bool fullscreen );
 		void SetRenderWindow( RenderWindow* window );
 
 		bool SupportsShaders();
@@ -91,7 +91,7 @@ namespace Passion
 
 		void Start2D();
 		void End2D();
-		void Start3D( Vector position, Vector lookAt, Vector up );
+		void Start3D( Vector position, Vector lookAt, float fov, float znear, float zfar, Vector up );
 		void End3D();
 
 		void SetDrawColor( Color color );

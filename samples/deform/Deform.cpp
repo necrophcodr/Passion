@@ -65,7 +65,7 @@ int main()
 		Passion::IBaseInput* input = (Passion::IBaseInput*)Passion::CreateInterface( "../../lib/input" );
 	#endif
 
-	Passion::RenderWindow* window = render->CreateRenderWindow( 1280, 720, "Deform" );
+	Passion::RenderWindow* window = render->CreateRenderWindow( 1280, 800, "Deform" );
 
 	Passion::Model tankModel = render->LoadModel( "models/tank.obj" );
 	Passion::Texture tankTexture = render->LoadTexture( "textures/models/tank.tga" );
@@ -94,9 +94,6 @@ int main()
         std::cout << "Warning: Shaders are not supported on your system, so they will not be used!" << std::endl;
 	}
 
-	time_t lasttime = time(0);
-	int frames = 0;
-
 	while ( input->GetEvents() )
 	{
 		render->Clear( Passion::Color( 0.0f, 0.0f, 0.0f ) );
@@ -109,14 +106,6 @@ int main()
 		render->End3D();
 
 		render->Present();
-
-        frames++;
-        if ( lasttime != time(0) )
-        {
-            std::cout << frames << " frames!\n";
-            frames = 0;
-            lasttime = time(0);
-        }
 	}
 
 	return 0;

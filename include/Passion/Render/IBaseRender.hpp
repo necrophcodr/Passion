@@ -63,7 +63,7 @@ namespace Passion
 	class IBaseRender
 	{
 	public:
-		virtual RenderWindow* CreateRenderWindow( unsigned int width, unsigned int height, const char* title ) = 0;
+		virtual RenderWindow* CreateRenderWindow( unsigned int width, unsigned int height, const char* title, bool fullscreen = false ) = 0;
 		virtual void SetRenderWindow( RenderWindow* window ) = 0;
 
 		virtual bool SupportsShaders() = 0;
@@ -101,7 +101,7 @@ namespace Passion
 
 		virtual void Start2D() = 0;
 		virtual void End2D() = 0;
-		virtual void Start3D( Vector position, Vector lookAt = Vector(), Vector up = Vector( 0.0f, 1.0f, 0.0f ) ) = 0;
+		virtual void Start3D( Vector position, Vector lookAt = Vector(), float fov = 45.0f, float znear = 1.0f, float zfar = 10000.0f, Vector up = Vector( 0.0f, 1.0f, 0.0f ) ) = 0;
 		virtual void End3D() = 0;
 
 		virtual void SetDrawColor( Color color ) = 0;

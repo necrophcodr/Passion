@@ -45,9 +45,13 @@ namespace Passion
 		delete m_renderWindow;
 	}
 
-	RenderWindow* IRender::CreateRenderWindow( unsigned int width, unsigned int height, const char* title )
+	RenderWindow* IRender::CreateRenderWindow( unsigned int width, unsigned int height, const char* title, bool fullscreen )
 	{
-		m_renderWindow = new sf::Window( sf::VideoMode( width, height, 32 ), title, sf::Style::Close );
+		if ( fullscreen )
+			m_renderWindow = new sf::Window( sf::VideoMode( width, height, 32 ), title, sf::Style::Fullscreen );
+		else
+			m_renderWindow = new sf::Window( sf::VideoMode( width, height, 32 ), title, sf::Style::Close );
+
 		SetViewport( 0, 0, width, height );
 
 		glVertexPointer( 3, GL_FLOAT, sizeof( Vertex ), m_vertices );
@@ -361,11 +365,11 @@ namespace Passion
 		Flush();
 	}
 
-	void IRender::Start3D( Vector position, Vector lookAt, Vector up )
+	void IRender::Start3D( Vector position, Vector lookAt, float fov, float znear, float zfar, Vector up )
 	{
 		glMatrixMode( GL_PROJECTION );
 		glLoadIdentity();
-		gluPerspective( 45.0f, m_viewW / m_viewH, 1.0f, 100000.0f );
+		gluPerspective( fov, m_viewW / m_viewH, znear, zfar );
 		gluLookAt( position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z, up.x, up.z, up.y );
 	}
 

@@ -56,7 +56,7 @@ int main()
 		Passion::IBaseInput* input = (Passion::IBaseInput*)Passion::CreateInterface( "../../lib/input" );
 	#endif
 
-	Passion::RenderWindow* window = render->CreateRenderWindow( 1280, 720, "Game of Life" );
+	Passion::RenderWindow* window = render->CreateRenderWindow( 1280, 800, "Game of Life" );
 	input->SetWindow( window );
 
 	Passion::Texture texBox = render->LoadTexture( "textures/box.png" );
