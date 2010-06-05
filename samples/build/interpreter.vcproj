@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="blur"
-	ProjectGUID="{12475166-557F-4E7A-9BC1-5967AFCAB96A}"
-	RootNamespace="postprocessing"
+	Name="interpreter"
+	ProjectGUID="{F626D834-D935-4028-9E28-AFAEB89E9FAC}"
+	RootNamespace="interpreter"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -112,7 +112,6 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="&quot;..\..\include&quot;"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -168,7 +167,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\blur\Blur.cpp"
+				RelativePath="..\interpreter\Interpreter.cpp"
 				>
 			</File>
 		</Filter>

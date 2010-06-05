@@ -1,0 +1,15 @@
+# No temporary editor files
+temp/*.*
+
+# No compiling files
+lib/*.lib
+lib/*.pdb
+lib/*.exp
+lib/*.ilk
+
+# No VS files
+platform/vc2008/*.ncb
+
+# Again no compiling files
+samples/bin/*.pdb
+samples/bin/*.ilk
