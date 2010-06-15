@@ -35,8 +35,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "interpreter", "..\..\sample
 		{B749F58A-CA7C-4C8C-A173-C2B23E8115CE} = {B749F58A-CA7C-4C8C-A173-C2B23E8115CE}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "network", "network.vcproj", "{8CCEEE4F-DE54-4345-8111-0EE22449A1CE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug MX|Win32 = Debug MX|Win32
@@ -109,14 +107,6 @@ Global
 		{F626D834-D935-4028-9E28-AFAEB89E9FAC}.Release MX|Win32.Build.0 = Release|Win32
 		{F626D834-D935-4028-9E28-AFAEB89E9FAC}.Release|Win32.ActiveCfg = Release|Win32
 		{F626D834-D935-4028-9E28-AFAEB89E9FAC}.Release|Win32.Build.0 = Release|Win32
-		{8CCEEE4F-DE54-4345-8111-0EE22449A1CE}.Debug MX|Win32.ActiveCfg = Debug|Win32
-		{8CCEEE4F-DE54-4345-8111-0EE22449A1CE}.Debug MX|Win32.Build.0 = Debug|Win32
-		{8CCEEE4F-DE54-4345-8111-0EE22449A1CE}.Debug|Win32.ActiveCfg = Debug|Win32
-		{8CCEEE4F-DE54-4345-8111-0EE22449A1CE}.Debug|Win32.Build.0 = Debug|Win32
-		{8CCEEE4F-DE54-4345-8111-0EE22449A1CE}.Release MX|Win32.ActiveCfg = Release|Win32
-		{8CCEEE4F-DE54-4345-8111-0EE22449A1CE}.Release MX|Win32.Build.0 = Release|Win32
-		{8CCEEE4F-DE54-4345-8111-0EE22449A1CE}.Release|Win32.ActiveCfg = Release|Win32
-		{8CCEEE4F-DE54-4345-8111-0EE22449A1CE}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

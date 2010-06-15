@@ -55,7 +55,6 @@ namespace Passion
 	typedef int Shader;
 	typedef int Program;
 	typedef int Model;
-	typedef void* Font;
 
 	////////////////////////////////////////////////////////////
 	// Base rendering interface
@@ -81,9 +80,6 @@ namespace Passion
 
 		virtual Texture LoadTexture( const char* filename ) = 0;
 		virtual BaseRenderTarget* CreateRenderTarget( unsigned int width, unsigned int height ) = 0;
-
-		virtual Font CreateFont( const char* filename, unsigned int size ) = 0;
-		virtual void DrawText( const char* str, Font font, float x, float y ) = 0;
 
 		virtual Model LoadModel( const char* filename ) = 0;
 		virtual void DrawModel( Model model ) = 0;

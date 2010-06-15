@@ -32,9 +32,6 @@
 #include <Passion/Render/GLee/GLee.h>
 #include <SFML/Window.hpp>
 
-#undef CreateFont
-#undef DrawText
-
 namespace Passion
 {
 	struct Vertex
@@ -73,9 +70,6 @@ namespace Passion
 
 		Texture LoadTexture( const char* filename );
 		BaseRenderTarget* CreateRenderTarget( unsigned int width, unsigned int height );
-
-		Font CreateFont( const char* filename, unsigned int size );
-		void DrawText( const char* str, Font font, float x, float y );
 
 		Model LoadModel( const char* filename );
 		void DrawModel( Model model );

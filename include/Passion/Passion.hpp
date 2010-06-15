@@ -23,7 +23,7 @@ namespace Passion
 	// Loads an interface from a shared library
 	////////////////////////////////////////////////////////////
 
-	inline void* CreateInterface( const char* filename )
+	void* CreateInterface( const char* filename )
 	{
 		std::string fullPath = filename;
 		typedef void* (*Factory) ();

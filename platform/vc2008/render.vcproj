@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\extlibs\headers;..\..\include"
-				PreprocessorDefinitions="OGLFT_NO_SOLID; OGLFT_NO_QT"
+				PreprocessorDefinitions="GLEW_STATIC"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -59,7 +59,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="sfml-system-s-d.lib sfml-window-s-d.lib glu32.lib SOIL.lib OGLFT.lib"
+				AdditionalDependencies="sfml-system-s-d.lib sfml-window-s-d.lib glu32.lib SOIL.lib"
 				OutputFile="$(SolutionDir)\..\..\lib\$(ProjectName)-d.dll"
 				AdditionalLibraryDirectories="..\..\extlibs\lib"
 				GenerateDebugInformation="true"
@@ -116,7 +116,7 @@
 				EnableIntrinsicFunctions="true"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="..\..\extlibs\headers;..\..\include"
-				PreprocessorDefinitions="OGLFT_NO_SOLID; OGLFT_NO_QT"
+				PreprocessorDefinitions="GLEW_STATIC"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -133,7 +133,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="sfml-system-s.lib sfml-window-s.lib glu32.lib SOIL.lib OGLFT.lib"
+				AdditionalDependencies="sfml-system-s.lib sfml-window-s.lib glu32.lib SOIL.lib"
 				OutputFile="$(SolutionDir)\..\..\lib\$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\..\extlibs\lib"
 				GenerateDebugInformation="true"
