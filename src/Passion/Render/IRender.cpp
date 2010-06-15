@@ -26,8 +26,9 @@
 
 #include <Passion/Render/IRender.hpp>
 #include <SOIL.h>
-#include <iostream>
+#include <OGLFT.h>
 #include <fstream>
+#include <iostream>
 
 namespace Passion
 {
@@ -61,6 +62,8 @@ namespace Passion
 		glEnableClientState( GL_VERTEX_ARRAY );
 		glEnableClientState( GL_COLOR_ARRAY );
 		glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+
+		glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
 
 		glBlendFunc ( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
@@ -146,7 +149,7 @@ namespace Passion
 
 	bool IRender::SupportsRenderTargets()
 	{
-		return GLEE_ARB_framebuffer_object;
+		return GLEE_ARB_framebuffer_object != 0;
 	}
 
 	Texture IRender::LoadTexture( const char* filename )
@@ -181,6 +184,23 @@ namespace Passion
 		SetTexture( 0 );
 
 		return rt;
+	}
+
+	Font IRender::CreateFont( const char* filename, unsigned int size )
+	{
+		return new OGLFT::Monochrome( filename, size );
+	}
+
+	void IRender::DrawText( const char* str, Font font, float x, float y )
+	{
+		Flush();
+		
+		OGLFT::Monochrome* realfont = (OGLFT::Monochrome*)font;
+		if ( realfont != 0 && realfont->isValid() )
+		{
+			realfont->setForegroundColor( m_drawColor.R, m_drawColor.G, m_drawColor.B, m_drawColor.A );
+			realfont->draw( x, y, str );
+		}
 	}
 
 	Model IRender::LoadModel( const char* filename )
@@ -483,21 +503,21 @@ namespace Passion
 
 	// For testing purposes, remove at release
 	bool init = false;
-	Model model;
-	Texture texture;
+	Font face;
 	
 	void IRender::Test()
 	{
 		if ( !init )
-		{
-			model = LoadModel( "models/tank.obj" );
-			texture = LoadTexture( "textures/models/tank.tga" );
+		{			
+			face = CreateFont( "fonts/ehsmb.ttf", 24 );
+
 			init = true;
 		}
 
-		SetTexture( texture );
-		SetDrawColor( Color( 0.0f, 1.0f, 0.0f ) );
+		char buffer[64];
+		sprintf( buffer, "Time: %g", (float)clock() / (float)CLOCKS_PER_SEC );
 
-		DrawModel( model );
+		SetDrawColor( Color( 0.95f, 0.95f, 0.1f ) );
+		DrawText( buffer, face, 5.0f, 35.0f );
 	}
 }
