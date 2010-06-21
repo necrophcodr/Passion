@@ -285,7 +285,10 @@ namespace Passion
 		char buffer[1024];
 		int length;
 		glGetShaderInfoLog( shader, 1024, &length, buffer );
-		std::cout << buffer;
+
+		#ifdef _DEBUG_
+			std::cout << buffer;
+		#endif
 
 		return shader;
 	}

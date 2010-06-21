@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\extlibs\headers;..\..\include"
-				PreprocessorDefinitions="GLEW_STATIC"
+				PreprocessorDefinitions="_DEBUG_"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
