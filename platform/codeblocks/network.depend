@@ -1,0 +1,28 @@
+# depslib dependency file v1.0
+1277316011 source:/home/overv/Development/Passion/src/Passion/Network/INetwork.cpp
+	<Passion/Network/INetwork.hpp>
+	<Passion/Network/TCPSocket.hpp>
+	<ws2tcpip.h>
+
+1277316011 /home/overv/Development/Passion/include/Passion/Network/INetwork.hpp
+	<Passion/Network/IBaseNetwork.hpp>
+
+1277316011 /home/overv/Development/Passion/include/Passion/Network/IBaseNetwork.hpp
+	<Passion/Network/BaseTCPSocket.hpp>
+
+1277316011 /home/overv/Development/Passion/include/Passion/Network/BaseTCPSocket.hpp
+
+1277316011 /home/overv/Development/Passion/include/Passion/Network/TCPSocket.hpp
+	<Passion/Network/BaseTCPSocket.hpp>
+	<SFML/Network.hpp>
+	<deque>
+
+1277316011 source:/home/overv/Development/Passion/src/Passion/Network/Network.cpp
+	<Passion/Network/INetwork.hpp>
+
+1277316011 source:/home/overv/Development/Passion/src/Passion/Network/TCPSocket.cpp
+	<Passion/Network/TCPSocket.hpp>
+	<iostream>
+
+1275226896 source:/home/overv/Development/Passion/platform/codeblocks/export.c
+

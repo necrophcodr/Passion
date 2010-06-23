@@ -27,7 +27,7 @@
 #include <Passion/Network.hpp>
 #include <iostream>
 #include <time.h>
-#include <windows.h>
+#include <stdio.h>
 
 ////////////////////////////////////////////////////////////
 // Entry point of the application
@@ -56,16 +56,20 @@ int main()
 	clock_t start = clock();
 
 	while ( !socket->IsConnected() && clock() < timeout );
-	
+
 	if ( !socket->IsConnected() )
 	{
-		std::cout << "Could not connect to www.whatismyip.org!";
-		getchar();
+		std::cout << "Could not connect to www.whatismyip.org!\n";
+
+		#ifndef PASSION_PLATFORM_LINUX
+            getchar();
+        #endif
+
 		return 1;
 	}
 
 	clock_t ping = clock() - start;
-	std::cout << "Connected after " << ping << " milliseconds." << std::endl;
+	std::cout << "Connected after " << (float)ping / (float)CLOCKS_PER_SEC * 1000.0f << " milliseconds." << std::endl;
 
 	char request[] = "GET / HTTP/1.1\r\nHost: www.whatismyip.org\r\n\r\n";
 	socket->Send( request, sizeof( request ) );
@@ -77,12 +81,12 @@ int main()
 	{
 		socket->Receive( response, 512, received );
 		response[received] = 0;
-		
+
 		if ( received > 0 )
 		{
 			if ( network->IsIPAddress( response ) )
 			{
-				std::cout << "Your IP address is: " << response;
+				std::cout << "Your IP address is: " << response << "\n";
 				socket->Disconnect();
 
 				break;
@@ -92,7 +96,9 @@ int main()
 		}
 	}
 
-	getchar();
+	#ifndef PASSION_PLATFORM_LINUX
+        getchar();
+    #endif
 
 	return 0;
 }
