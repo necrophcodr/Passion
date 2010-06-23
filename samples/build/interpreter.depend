@@ -1,0 +1,18 @@
+# depslib dependency file v1.0
+1277323502 source:/home/overv/Development/Passion/samples/interpreter/Interpreter.cpp
+	<Passion/Scripting.hpp>
+	<iostream>
+	<cstring>
+
+1277316011 /home/overv/Development/Passion/include/Passion/Scripting.hpp
+	<Passion/Passion.hpp>
+	<Passion/Scripting/IBaseScripting.hpp>
+
+1277325058 /home/overv/Development/Passion/include/Passion/Passion.hpp
+	<string>
+	<iostream>
+	<dlfcn.h>
+	<windows.h>
+
+1277316011 /home/overv/Development/Passion/include/Passion/Scripting/IBaseScripting.hpp
+

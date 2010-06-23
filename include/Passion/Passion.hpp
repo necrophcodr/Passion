@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////
 
 #include <string>
+#include <iostream>
 
 #ifdef PASSION_PLATFORM_LINUX
 	#include <dlfcn.h>
@@ -31,9 +32,17 @@ namespace Passion
 		#ifdef PASSION_PLATFORM_LINUX
 			fullPath += ".so";
 
-			void* library = dlopen( fullPath.c_str(), RTLD_LAZY );
+			void* library = dlopen( fullPath.c_str(), RTLD_NOW );
+
+			if ( library == 0 ) { std::cout << "Couldn't load library: " << fullPath << "\n"; while( true ); }
+
 			Factory libFactory = (Factory)dlsym( library, "CreateInterface" );
+
+			if ( libFactory == 0 ) { std::cout << "Couldn't load factory in library: " << fullPath << "\n" << dlerror() << "\n"; while( true ); }
+
 			return (*libFactory) ();
+
+			return 0;
 		#else
 			fullPath += ".dll";
 

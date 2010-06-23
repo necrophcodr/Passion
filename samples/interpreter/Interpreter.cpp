@@ -26,6 +26,7 @@
 
 #include <Passion/Scripting.hpp>
 #include <iostream>
+#include <cstring>
 
 ////////////////////////////////////////////////////////////
 // Entry point of the application
@@ -58,7 +59,11 @@ int main()
 
 		if ( !success )
 		{
-			std::cout << scripting->Error() << "\n";
+		    // Skip the error string prefix
+		    std::string rawError = scripting->Error();
+		    rawError = rawError.substr( 12 + strlen( code ) );
+
+			std::cout << rawError << "\n";
 		}
 	}
 
