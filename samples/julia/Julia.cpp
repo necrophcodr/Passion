@@ -65,7 +65,7 @@ int main()
 		Passion::IBaseInput* input = (Passion::IBaseInput*)Passion::CreateInterface( "../../lib/input" );
 	#endif
 
-	Passion::RenderWindow* window = render->CreateRenderWindow( 1280, 800, "Julia Set" );
+	Passion::RenderWindow* window = render->CreateRenderWindow( 1280, 720, "Julia Set" );
 
 	if ( !render->SupportsShaders() )
 	{
