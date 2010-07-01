@@ -47,6 +47,12 @@ namespace Passion
 			fullPath += ".dll";
 
 			HMODULE library = LoadLibrary( fullPath.c_str() );
+			if ( library == 0 )
+			{
+				std::cout << "Could not load library: " << fullPath << "\n";
+				exit( 1 );
+			}
+
 			Factory libFactory = (Factory)GetProcAddress( library, "CreateInterface" );
 			return (*libFactory) ();
 		#endif

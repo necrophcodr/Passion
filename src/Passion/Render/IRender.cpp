@@ -482,6 +482,10 @@ namespace Passion
 	void IRender::Present()
 	{
 		m_renderWindow->Display();
+
+		#ifndef _DEBUG_
+			sf::Sleep( 0.001f );
+		#endif
 	}
 
 	// For testing purposes, remove at release
