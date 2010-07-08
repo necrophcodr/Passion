@@ -68,7 +68,7 @@ int main()
 	Passion::RenderWindow* window = render->CreateRenderWindow( 1280, 720, "Deform" );
 
 	Passion::Model tankModel = render->LoadModel( "models/tank.obj" );
-	Passion::Texture tankTexture = render->LoadTexture( "textures/models/tank.jpg" );
+	Passion::Texture tankTexture = render->LoadTexture( "textures/models/tank.jpg", false );
 
 	render->SetTexturingEnabled( true );
 	render->SetDepthEnabled( true );
@@ -102,6 +102,7 @@ int main()
 		if ( shader != 0 ) render->SetProgramFloat( "time", float( clock() ) / float( CLOCKS_PER_SEC ) );
 
 		render->Start3D( Passion::Vector( -200.0f, -200.0f, 150.0f ), Passion::Vector( 0.0f, 10.0f, 30.0f ) );
+			render->SetTexture( tankTexture );
 			render->DrawModel( tankModel );
 		render->End3D();
 

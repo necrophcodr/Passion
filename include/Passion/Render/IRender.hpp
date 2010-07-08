@@ -68,7 +68,7 @@ namespace Passion
 		void SetAlphaBlendingEnabled( bool enabled );
 		void SetTexturingEnabled( bool enabled );
 
-		Texture LoadTexture( const char* filename );
+		Texture LoadTexture( const char* filename, bool mipmaps );
 		BaseRenderTarget* CreateRenderTarget( unsigned int width, unsigned int height );
 
 		Model LoadModel( const char* filename );

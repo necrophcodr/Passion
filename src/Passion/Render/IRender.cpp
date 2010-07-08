@@ -149,9 +149,11 @@ namespace Passion
 		return GLEE_ARB_framebuffer_object;
 	}
 
-	Texture IRender::LoadTexture( const char* filename )
+	Texture IRender::LoadTexture( const char* filename, bool mipmaps )
 	{
-		return SOIL_load_OGL_texture( filename, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
+		unsigned int flags = SOIL_FLAG_INVERT_Y;
+		if ( mipmaps ) flags |= SOIL_FLAG_MIPMAPS;
+		return SOIL_load_OGL_texture( filename, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, flags );
 	}
 
 	BaseRenderTarget* IRender::CreateRenderTarget( unsigned int width, unsigned int height )
@@ -185,11 +187,9 @@ namespace Passion
 
 	Model IRender::LoadModel( const char* filename )
 	{
-		std::cout << "Loading model file " << filename << std::endl;
-
 		std::ifstream file;
 		file.open( filename, std::ios::in );
-		if ( !file.is_open() ) return 0;
+		if ( !file.is_open() ) return Model();
 
 		std::vector<Vector> points;
 		std::vector<Vector> normals;
@@ -200,8 +200,6 @@ namespace Passion
 		int v, t, n;
 		char c;
 		std::string keyword;
-
-		clock_t offset = clock();
 
 		while ( !file.eof() )
 		{
@@ -245,45 +243,33 @@ namespace Passion
 			}
 		}
 
-		std::cout << "File parsing took " << float( clock() - offset ) / float( CLOCKS_PER_SEC ) << " seconds." << std::endl;
-		offset = clock();
-
-		// Build the display list for rendering
-		Model model = glGenLists( 1 );
-		glNewList( model, GL_COMPILE );
-			glBegin( GL_TRIANGLES );
-				glColor3f( 1.0f, 1.0f, 1.0f );
-
-			for ( unsigned int i = 0; i < triangles.size(); i++ )
-			{
-				glTexCoord2f( triangles[i][0].u, triangles[i][0].v );
-				glVertex3f( triangles[i][0].x, triangles[i][0].y, triangles[i][0].z );
-				
-				glTexCoord2f( triangles[i][1].u, triangles[i][1].v );
-				glVertex3f( triangles[i][1].x, triangles[i][1].y, triangles[i][1].z );
-
-				glTexCoord2f( triangles[i][2].u, triangles[i][2].v );
-				glVertex3f( triangles[i][2].x, triangles[i][2].y, triangles[i][2].z );
-
-				delete [] triangles[i];
-			}
-
-			glEnd();
-		glEndList();
-
-		size_t mem = points.size() * sizeof( Vector ) + normals.size() * sizeof( Vector ) + texcoords.size() * sizeof( Vector ) + triangles.size() * 3 * sizeof( Vertex );
-
-		std::cout << "Display list creation took " << float( clock() - offset ) / float( CLOCKS_PER_SEC ) << " seconds." << std::endl;
-		std::cout << "Model loading took approximately " << float( mem ) / 1024.0f << " kB" << std::endl;
-
 		file.close();
+		
+		Model model;
+		model.vertices = triangles.size() * 3;
+
+		Vertex* vertices = new Vertex[model.vertices];
+		
+		for ( unsigned int i = 0; i < triangles.size(); i++ )
+			memcpy( &vertices[i*3], triangles[i], sizeof( Vertex ) * 3 );
+
+		glGenBuffers( 1, &model.id );
+		glBindBuffer( GL_ARRAY_BUFFER, model.id );
+		glBufferData( GL_ARRAY_BUFFER, sizeof( Vertex ) * model.vertices, vertices, GL_STATIC_DRAW );
+
+		delete [] vertices;
 
 		return model;
 	}
 
 	void IRender::DrawModel( Model model )
 	{
-		glCallList( model );
+		glVertexPointer( 3, GL_FLOAT, sizeof( Vertex ), 0 );
+		glColorPointer( 4, GL_FLOAT, sizeof( Vertex ), reinterpret_cast<void*>( sizeof( Vector ) ) );
+		glTexCoordPointer( 2, GL_FLOAT, sizeof( Vertex ), reinterpret_cast<void*>( sizeof( Vector ) + sizeof( float ) * 4 ) );
+
+		glBindBuffer( GL_ARRAY_BUFFER, model.id );
+		glDrawArrays( GL_TRIANGLES, 0, model.vertices );
 	}
 
 	Shader IRender::CreateShader( const char* code, int type )
@@ -499,22 +485,26 @@ namespace Passion
 	}
 
 	// For testing purposes, remove at release
+	unsigned int id;
 	bool init = false;
-	Model model;
-	Texture texture;
 	
 	void IRender::Test()
 	{
 		if ( !init )
 		{
-			model = LoadModel( "models/tank.obj" );
-			texture = LoadTexture( "textures/models/tank.tga" );
+			Vector vertices[2];
+			vertices[0] = Vector( -100.0f, -100.0f, -100.0f );
+			vertices[1] = Vector( 100.0f, 100.0f, 100.0f );
+
+			glGenBuffers( 1, &id );
+			glBindBuffer( GL_ARRAY_BUFFER, id );
+			glBufferData( GL_ARRAY_BUFFER, sizeof( vertices ), vertices, GL_STATIC_DRAW );
+
 			init = true;
 		}
 
-		SetTexture( texture );
-		SetDrawColor( Color( 0.0f, 1.0f, 0.0f ) );
-
-		DrawModel( model );
+		glVertexPointer( 3, GL_FLOAT, 0, 0 );
+		glBindBuffer( GL_ARRAY_BUFFER, id );
+		glDrawArrays( GL_LINES, 0, 2 );
 	}
 }

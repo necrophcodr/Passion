@@ -25,7 +25,7 @@
 
 namespace Passion
 {
-	typedef int Texture;
+	typedef unsigned int Texture;
 
 	class BaseRenderTarget
 	{

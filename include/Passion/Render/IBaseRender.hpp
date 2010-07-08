@@ -51,10 +51,17 @@
 namespace Passion
 {
 	typedef void RenderWindow;
-	typedef int Texture;
-	typedef int Shader;
-	typedef int Program;
-	typedef int Model;
+	typedef unsigned int Texture;
+	typedef unsigned int Shader;
+	typedef unsigned int Program;
+
+	struct Model
+	{
+		Model() { id = 0; }
+
+		unsigned int id;
+		unsigned int vertices;
+	};
 
 	////////////////////////////////////////////////////////////
 	// Base rendering interface
@@ -78,7 +85,7 @@ namespace Passion
 		virtual void SetAlphaBlendingEnabled( bool enabled ) = 0;
 		virtual void SetTexturingEnabled( bool enabled ) = 0;
 
-		virtual Texture LoadTexture( const char* filename ) = 0;
+		virtual Texture LoadTexture( const char* filename, bool mipmaps = true ) = 0;
 		virtual BaseRenderTarget* CreateRenderTarget( unsigned int width, unsigned int height ) = 0;
 
 		virtual Model LoadModel( const char* filename ) = 0;
