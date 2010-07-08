@@ -34,12 +34,24 @@ namespace Passion
 
 		Vector operator+( Vector& vec );
 		Vector operator-( Vector& vec );
+		Vector operator-();
 		Vector operator*( float n );
+		Vector operator/( float n );
+
+		void operator+=( Vector& v );
+		void operator-=( Vector& v );
+		void operator*=( float n );
+		void operator/=( float n );
+
+		bool operator==( Vector& v );
+		bool operator<( Vector& v );
 
 		float Length();
 		float LengthSqr();
 
+		float Dot( Vector& v );
 		Vector Normal();
+		void Normalize();
 
 		float x, y, z;
 	};
@@ -54,9 +66,49 @@ namespace Passion
 		return Vector( x - vec.x, y - vec.y, z - vec.z );
 	}
 
+	inline Vector Vector::operator-()
+	{
+		return Vector( -x, -y, -z );
+	}
+
 	inline Vector Vector::operator*( float n )
 	{
 		return Vector( x * n, y * n, z * n );
+	}
+
+	inline Vector Vector::operator/( float n )
+	{
+		return Vector( x / n, y / n, z / n );
+	}
+
+	inline void Vector::operator+=( Vector& v )
+	{
+		x += v.x; y += v.y; z += v.z;
+	}
+
+	inline void Vector::operator-=( Vector& v )
+	{
+		x -= v.x; y -= v.y; z -= v.z;
+	}
+
+	inline void Vector::operator*=( float n )
+	{
+		x *= n; y *= n; z *= n;
+	}
+
+	inline void Vector::operator/=( float n )
+	{
+		x /= n; y /= n; z /= n;
+	}
+
+	inline bool Vector::operator==( Vector& v )
+	{
+		return LengthSqr() == v.LengthSqr();
+	}
+
+	inline bool Vector::operator<( Vector& v )
+	{
+		return LengthSqr() < v.LengthSqr();
 	}
 
 	inline float Vector::Length()
@@ -69,10 +121,21 @@ namespace Passion
 		return x*x + y*y + z*z;
 	}
 
+	inline float Vector::Dot( Vector& v )
+	{
+		return x * v.x + y * v.y + z * v.z;
+	}
+
 	inline Vector Vector::Normal()
 	{
 		float length = Length();
 		return Vector( x / length, y / length, z / length );
+	}
+
+	inline void Vector::Normalize()
+	{
+		float length = Length();
+		x /= length; y/= length; z /= length;
 	}
 }
 

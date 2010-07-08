@@ -146,7 +146,7 @@ namespace Passion
 
 	bool IRender::SupportsRenderTargets()
 	{
-		return GLEE_ARB_framebuffer_object;
+		return GLEE_ARB_framebuffer_object != 0;
 	}
 
 	Texture IRender::LoadTexture( const char* filename, bool mipmaps )
@@ -245,19 +245,26 @@ namespace Passion
 
 		file.close();
 		
-		Model model;
-		model.vertices = triangles.size() * 3;
+		unsigned int vertexcount = triangles.size() * 3;
 
-		Vertex* vertices = new Vertex[model.vertices];
+		Vertex* vertices = new Vertex[vertexcount];
 		
 		for ( unsigned int i = 0; i < triangles.size(); i++ )
 			memcpy( &vertices[i*3], triangles[i], sizeof( Vertex ) * 3 );
 
+		return CreateModel( vertices, vertexcount );
+	}
+
+	Model IRender::CreateModel( Passion::Vertex* points, unsigned int count )
+	{
+		if ( count % 3 != 0 ) return Model();
+		
+		Model model;
+		model.vertices = count;
+		
 		glGenBuffers( 1, &model.id );
 		glBindBuffer( GL_ARRAY_BUFFER, model.id );
-		glBufferData( GL_ARRAY_BUFFER, sizeof( Vertex ) * model.vertices, vertices, GL_STATIC_DRAW );
-
-		delete [] vertices;
+		glBufferData( GL_ARRAY_BUFFER, sizeof( Vertex ) * count, points, GL_STATIC_DRAW );
 
 		return model;
 	}

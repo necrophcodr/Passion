@@ -33,16 +33,7 @@
 #include <SFML/Window.hpp>
 
 namespace Passion
-{
-	struct Vertex
-	{
-		Vertex() {}
-		Vertex( float X, float Y, float Z, Color color, float U = 0.0f, float V = 0.0f ) { x = X; y = Y; z = Z; r = color.R; g = color.G; b = color.B; a = color.A; u = U; v = V; }
-		float x, y, z;
-		float r, g, b, a;
-		float u, v;
-	};
-	
+{	
 	////////////////////////////////////////////////////////////
 	// OpenGL implementation of IBaseRender
 	////////////////////////////////////////////////////////////
@@ -72,6 +63,7 @@ namespace Passion
 		BaseRenderTarget* CreateRenderTarget( unsigned int width, unsigned int height );
 
 		Model LoadModel( const char* filename );
+		Model CreateModel( Vertex* points, unsigned int count );
 		void DrawModel( Model model );
 
 		Shader CreateShader( const char* code, int type );

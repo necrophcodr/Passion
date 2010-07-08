@@ -63,6 +63,15 @@ namespace Passion
 		unsigned int vertices;
 	};
 
+	struct Vertex
+	{
+		Vertex() {}
+		Vertex( float X, float Y, float Z, Color color, float U = 0.0f, float V = 0.0f ) { x = X; y = Y; z = Z; r = color.R; g = color.G; b = color.B; a = color.A; u = U; v = V; }
+		float x, y, z;
+		float r, g, b, a;
+		float u, v;
+	};
+
 	////////////////////////////////////////////////////////////
 	// Base rendering interface
 	////////////////////////////////////////////////////////////
@@ -89,6 +98,7 @@ namespace Passion
 		virtual BaseRenderTarget* CreateRenderTarget( unsigned int width, unsigned int height ) = 0;
 
 		virtual Model LoadModel( const char* filename ) = 0;
+		virtual Model CreateModel( Vertex* points, unsigned int count ) = 0;
 		virtual void DrawModel( Model model ) = 0;
 
 		virtual Shader CreateShader( const char* code, int type ) = 0;

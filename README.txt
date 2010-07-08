@@ -5,6 +5,7 @@ Passion is collection of libraries intended for game development with C++ and Lu
 - render: A render library with 2D and 3D grapics support.
 - input: A input library, also used to manage the render window.
 - network: A networking library with socket objects.
+- scripting: A scripting library which makes interaction with Lua scripts easy.
 
 Passion will build without issues on Microsoft Visual C++ 2008. In theory the libraries are completely cross-platform, but some libraries won't work right on Linux.
 

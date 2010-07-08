@@ -77,7 +77,7 @@ int main()
 	input->SetWindow( window );
 
 	////////////////////////////////////////////////////////////
-	// Load a simple sine wav shader
+	// Load a simple sine wave shader
 	////////////////////////////////////////////////////////////
 
 	Passion::Program shader = 0;
@@ -102,7 +102,6 @@ int main()
 		if ( shader != 0 ) render->SetProgramFloat( "time", float( clock() ) / float( CLOCKS_PER_SEC ) );
 
 		render->Start3D( Passion::Vector( -200.0f, -200.0f, 150.0f ), Passion::Vector( 0.0f, 10.0f, 30.0f ) );
-			render->SetTexture( tankTexture );
 			render->DrawModel( tankModel );
 		render->End3D();
 
