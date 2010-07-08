@@ -19,7 +19,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="..\..\temp"
+			IntermediateDirectory="..\..\temp\Debug"
 			ConfigurationType="1"
 			CharacterSet="2"
 			>
@@ -92,7 +92,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="..\..\temp"
+			IntermediateDirectory="..\..\temp\Release"
 			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="1"

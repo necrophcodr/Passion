@@ -94,7 +94,7 @@ int main()
 	// Create a render target
 	////////////////////////////////////////////////////////////
 
-	Passion::BaseRenderTarget* rt = render->CreateRenderTarget( 1280, 800 );
+	Passion::BaseRenderTarget* rt = render->CreateRenderTarget( 1280, 720 );
 
 	while ( input->GetEvents() )
 	{

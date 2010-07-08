@@ -151,7 +151,7 @@ namespace Passion
 
 	Texture IRender::LoadTexture( const char* filename )
 	{
-		return SOIL_load_OGL_texture( filename, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT );
+		return SOIL_load_OGL_texture( filename, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y );
 	}
 
 	BaseRenderTarget* IRender::CreateRenderTarget( unsigned int width, unsigned int height )
@@ -163,13 +163,13 @@ namespace Passion
 
 		glGenRenderbuffersEXT( 1, &rt->m_renderbuffer );
 		glBindRenderbufferEXT( GL_RENDERBUFFER_EXT, rt->m_renderbuffer );
-		glRenderbufferStorageEXT( GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, 1280, 720 );
+		glRenderbufferStorageEXT( GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, width, height );
 
 		glFramebufferRenderbufferEXT( GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, rt->m_renderbuffer );
 
 		glGenTextures( 1, &rt->m_rendertexture );
 		glBindTexture( GL_TEXTURE_2D, rt->m_rendertexture );
-		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, 1280, 720, 0, GL_RGBA, GL_FLOAT, NULL );
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_FLOAT, NULL );
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
@@ -185,7 +185,7 @@ namespace Passion
 
 	Model IRender::LoadModel( const char* filename )
 	{
-		// Parse the .obj model file
+		std::cout << "Loading model file " << filename << std::endl;
 
 		std::ifstream file;
 		file.open( filename, std::ios::in );
@@ -200,6 +200,8 @@ namespace Passion
 		int v, t, n;
 		char c;
 		std::string keyword;
+
+		clock_t offset = clock();
 
 		while ( !file.eof() )
 		{
@@ -243,6 +245,9 @@ namespace Passion
 			}
 		}
 
+		std::cout << "File parsing took " << float( clock() - offset ) / float( CLOCKS_PER_SEC ) << " seconds." << std::endl;
+		offset = clock();
+
 		// Build the display list for rendering
 		Model model = glGenLists( 1 );
 		glNewList( model, GL_COMPILE );
@@ -265,6 +270,11 @@ namespace Passion
 
 			glEnd();
 		glEndList();
+
+		size_t mem = points.size() * sizeof( Vector ) + normals.size() * sizeof( Vector ) + texcoords.size() * sizeof( Vector ) + triangles.size() * 3 * sizeof( Vertex );
+
+		std::cout << "Display list creation took " << float( clock() - offset ) / float( CLOCKS_PER_SEC ) << " seconds." << std::endl;
+		std::cout << "Model loading took approximately " << float( mem ) / 1024.0f << " kB" << std::endl;
 
 		file.close();
 
