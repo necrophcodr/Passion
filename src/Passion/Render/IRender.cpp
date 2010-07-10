@@ -482,6 +482,39 @@ namespace Passion
 		}
 	}
 
+	Vector IRender::WorldToScreen( Vector pos )
+	{
+		double proj[16], model[16];
+		int view[4];
+
+		glGetDoublev( GL_PROJECTION_MATRIX, proj );
+		glGetDoublev( GL_MODELVIEW_MATRIX, model );
+		glGetIntegerv( GL_VIEWPORT, view );
+
+		double x, y, z;
+		gluProject( (double)pos.x, (double)pos.y, (double)pos.z, model, proj, view, &x, &y, &z );
+
+		return Vector( (float)x, (float)( view[3] - y ), (float)z );
+	}
+
+	Vector IRender::ScreenToWorld( float x, float y )
+	{
+		double proj[16], model[16];
+		int view[4];
+
+		glGetDoublev( GL_PROJECTION_MATRIX, proj );
+		glGetDoublev( GL_MODELVIEW_MATRIX, model );
+		glGetIntegerv( GL_VIEWPORT, view );
+
+		double x2, y2, z2;
+		gluUnProject( (double)x, (double)( view[3] - y ), 1.0, model, proj, view, &x2, &y2, &z2 );
+
+		Vector aim( (float)x2, (float)y2, (float)z2 );
+		aim.Normalize();
+
+		return aim;
+	}
+
 	void IRender::Present()
 	{
 		m_renderWindow->Display();
@@ -492,26 +525,9 @@ namespace Passion
 	}
 
 	// For testing purposes, remove at release
-	unsigned int id;
-	bool init = false;
 	
 	void IRender::Test()
 	{
-		if ( !init )
-		{
-			Vector vertices[2];
-			vertices[0] = Vector( -100.0f, -100.0f, -100.0f );
-			vertices[1] = Vector( 100.0f, 100.0f, 100.0f );
-
-			glGenBuffers( 1, &id );
-			glBindBuffer( GL_ARRAY_BUFFER, id );
-			glBufferData( GL_ARRAY_BUFFER, sizeof( vertices ), vertices, GL_STATIC_DRAW );
-
-			init = true;
-		}
-
-		glVertexPointer( 3, GL_FLOAT, 0, 0 );
-		glBindBuffer( GL_ARRAY_BUFFER, id );
-		glDrawArrays( GL_LINES, 0, 2 );
+		sf::Sleep( 0.5f );
 	}
 }

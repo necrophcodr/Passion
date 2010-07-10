@@ -98,7 +98,8 @@ namespace Passion
 
 		void DrawBox( Vector min, Vector max );
 
-		void Flush();
+		Vector WorldToScreen( Vector pos );
+		Vector ScreenToWorld( float x, float y );
 
 		void Present();
 
@@ -116,6 +117,8 @@ namespace Passion
 		Color m_drawColor;
 
 		Program m_activeProgram;
+
+		void Flush();
 	};
 }
 

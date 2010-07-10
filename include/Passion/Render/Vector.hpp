@@ -32,36 +32,39 @@ namespace Passion
 	public:
 		Vector( float X = 0.0f, float Y = 0.0f, float Z = 0.0f ) { x = X; y = Y; z = Z; }
 
-		Vector operator+( Vector& vec );
-		Vector operator-( Vector& vec );
+		Vector operator+( Vector vec );
+		Vector operator-( Vector vec );
 		Vector operator-();
 		Vector operator*( float n );
 		Vector operator/( float n );
 
-		void operator+=( Vector& v );
-		void operator-=( Vector& v );
+		void operator+=( Vector v );
+		void operator-=( Vector v );
 		void operator*=( float n );
 		void operator/=( float n );
 
-		bool operator==( Vector& v );
-		bool operator<( Vector& v );
+		bool operator==( Vector v );
+		bool operator<( Vector v );
 
+		float Distance( Vector v );
 		float Length();
 		float LengthSqr();
 
-		float Dot( Vector& v );
+		float Dot( Vector v );
+		Vector Cross( Vector v );
+
 		Vector Normal();
 		void Normalize();
 
 		float x, y, z;
 	};
 
-	inline Vector Vector::operator+( Vector& vec )
+	inline Vector Vector::operator+( Vector vec )
 	{
 		return Vector( x + vec.x, y + vec.y, z + vec.z );
 	}
 
-	inline Vector Vector::operator-( Vector& vec )
+	inline Vector Vector::operator-( Vector vec )
 	{
 		return Vector( x - vec.x, y - vec.y, z - vec.z );
 	}
@@ -81,12 +84,12 @@ namespace Passion
 		return Vector( x / n, y / n, z / n );
 	}
 
-	inline void Vector::operator+=( Vector& v )
+	inline void Vector::operator+=( Vector v )
 	{
 		x += v.x; y += v.y; z += v.z;
 	}
 
-	inline void Vector::operator-=( Vector& v )
+	inline void Vector::operator-=( Vector v )
 	{
 		x -= v.x; y -= v.y; z -= v.z;
 	}
@@ -101,14 +104,19 @@ namespace Passion
 		x /= n; y /= n; z /= n;
 	}
 
-	inline bool Vector::operator==( Vector& v )
+	inline bool Vector::operator==( Vector v )
 	{
 		return LengthSqr() == v.LengthSqr();
 	}
 
-	inline bool Vector::operator<( Vector& v )
+	inline bool Vector::operator<( Vector v )
 	{
 		return LengthSqr() < v.LengthSqr();
+	}
+
+	inline float Vector::Distance( Vector v )
+	{
+		return ( *this - v ).Length();
 	}
 
 	inline float Vector::Length()
@@ -121,9 +129,14 @@ namespace Passion
 		return x*x + y*y + z*z;
 	}
 
-	inline float Vector::Dot( Vector& v )
+	inline float Vector::Dot( Vector v )
 	{
 		return x * v.x + y * v.y + z * v.z;
+	}
+
+	inline Vector Vector::Cross( Vector v )
+	{
+		return Vector( y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x );
 	}
 
 	inline Vector Vector::Normal()
