@@ -211,6 +211,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\Passion\Render\Matrix.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\Passion\Render.hpp"
 				>
 			</File>

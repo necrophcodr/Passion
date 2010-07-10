@@ -29,6 +29,7 @@
 
 #include <Passion/Render/Color.hpp>
 #include <Passion/Render/Vector.hpp>
+#include <Passion/Render/Matrix.hpp>
 #include <Passion/Render/BaseRenderTarget.hpp>
 
 #define STENCIL_NEVER			0x0200
@@ -121,6 +122,7 @@ namespace Passion
 		virtual void Start3D( Vector position, Vector lookAt = Vector(), float fov = 45.0f, float znear = 1.0f, float zfar = 10000.0f, Vector up = Vector( 0.0f, 1.0f, 0.0f ) ) = 0;
 		virtual void End3D() = 0;
 
+		virtual void SetTransform( Matrix matrix ) = 0;
 		virtual void SetDrawColor( Color color ) = 0;
 		virtual void SetTexture( Texture texture = 0 ) = 0;
 		virtual void SetRenderTarget( BaseRenderTarget* rendertarget = 0 ) = 0;

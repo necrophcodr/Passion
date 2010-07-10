@@ -384,6 +384,14 @@ namespace Passion
 		Flush();
 	}
 
+	void IRender::SetTransform( Matrix matrix )
+	{
+		Flush();
+
+		glMatrixMode( GL_MODELVIEW );
+		glLoadMatrixf( reinterpret_cast<float*>( &matrix ) );
+	}
+
 	void IRender::SetDrawColor( Color color )
 	{
 		m_drawColor = color;
@@ -527,7 +535,7 @@ namespace Passion
 	// For testing purposes, remove at release
 	
 	void IRender::Test()
-	{
+	{		
 		sf::Sleep( 0.5f );
 	}
 }

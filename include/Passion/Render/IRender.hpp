@@ -86,6 +86,7 @@ namespace Passion
 		void Start3D( Vector position, Vector lookAt, float fov, float znear, float zfar, Vector up );
 		void End3D();
 
+		void SetTransform( Matrix matrix );
 		void SetDrawColor( Color color );
 		void SetTexture( Texture texture );
 		void SetRenderTarget( BaseRenderTarget* rendertarget );
