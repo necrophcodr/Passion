@@ -112,6 +112,7 @@ namespace Passion
 		float m_viewW, m_viewH;
 
 		Vertex* m_vertices;
+		unsigned int m_vertexBuffer;
 		int m_vertexIndex;
 
 		char m_shape;

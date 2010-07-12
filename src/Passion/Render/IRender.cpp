@@ -54,15 +54,19 @@ namespace Passion
 
 		SetViewport( 0, 0, width, height );
 
-		glVertexPointer( 3, GL_FLOAT, sizeof( Vertex ), m_vertices );
-		glColorPointer( 4, GL_FLOAT, sizeof( Vertex ), (char*)m_vertices + sizeof( float ) * 3 );
-		glTexCoordPointer( 2, GL_FLOAT, sizeof( Vertex ), (char*)m_vertices + sizeof( float ) * 7 );
+		glGenBuffers( 1, &m_vertexBuffer );
+		glBindBuffer( GL_ARRAY_BUFFER, m_vertexBuffer );
+		glBufferData( GL_ARRAY_BUFFER, 4096 * sizeof( Vertex ), m_vertices, GL_STREAM_DRAW );
 
 		glEnableClientState( GL_VERTEX_ARRAY );
 		glEnableClientState( GL_COLOR_ARRAY );
 		glEnableClientState( GL_TEXTURE_COORD_ARRAY );
 
-		glBlendFunc ( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+		glVertexPointer( 3, GL_FLOAT, sizeof( Vertex ), 0 );
+		glColorPointer( 4, GL_FLOAT, sizeof( Vertex ), reinterpret_cast<void*>( sizeof( Vector ) ) );
+		glTexCoordPointer( 2, GL_FLOAT, sizeof( Vertex ), reinterpret_cast<void*>( sizeof( Vector ) + sizeof( float ) * 4 ) );
+
+		glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
 		return m_renderWindow;
 	}
@@ -271,12 +275,30 @@ namespace Passion
 
 	void IRender::DrawModel( Model model )
 	{
+		glBindBuffer( GL_ARRAY_BUFFER, model.id );
+
 		glVertexPointer( 3, GL_FLOAT, sizeof( Vertex ), 0 );
 		glColorPointer( 4, GL_FLOAT, sizeof( Vertex ), reinterpret_cast<void*>( sizeof( Vector ) ) );
 		glTexCoordPointer( 2, GL_FLOAT, sizeof( Vertex ), reinterpret_cast<void*>( sizeof( Vector ) + sizeof( float ) * 4 ) );
 
-		glBindBuffer( GL_ARRAY_BUFFER, model.id );
 		glDrawArrays( GL_TRIANGLES, 0, model.vertices );
+	}
+
+	void IRender::Flush()
+	{
+		if ( m_vertexIndex > 0 )
+		{
+			glBindBuffer( GL_ARRAY_BUFFER, m_vertexBuffer );
+			glBufferSubData( GL_ARRAY_BUFFER, 0, m_vertexIndex * sizeof( Vertex ), m_vertices );
+			
+			glVertexPointer( 3, GL_FLOAT, sizeof( Vertex ), 0 );
+			glColorPointer( 4, GL_FLOAT, sizeof( Vertex ), reinterpret_cast<void*>( sizeof( Vector ) ) );
+			glTexCoordPointer( 2, GL_FLOAT, sizeof( Vertex ), reinterpret_cast<void*>( sizeof( Vector ) + sizeof( float ) * 4 ) );
+
+			glDrawArrays( m_shape, 0, m_vertexIndex );
+
+			m_vertexIndex = 0;
+		}
 	}
 
 	Shader IRender::CreateShader( const char* code, int type )
@@ -478,16 +500,6 @@ namespace Passion
 		DrawQuad( Vector( min.x, max.y, min.z ), Vector( min.x, max.y, max.z ), max, Vector( max.x, max.y, min.z ) );
 		DrawQuad( min, Vector( min.x, min.y, max.z ), Vector( min.x, max.y, max.z ), Vector( min.x, max.y, min.z ) );
 		DrawQuad( Vector( max.x, max.y, min.z ), max, Vector( max.x, min.y, max.z ), Vector( max.x, min.y, min.z ) );
-	}
-
-	void IRender::Flush()
-	{
-		if ( m_vertexIndex > 0 )
-		{
-			glDrawArrays( m_shape, 0, m_vertexIndex );
-
-			m_vertexIndex = 0;
-		}
 	}
 
 	Vector IRender::WorldToScreen( Vector pos )
