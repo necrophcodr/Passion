@@ -79,7 +79,7 @@ namespace Passion
 
 	class IBaseRender
 	{
-	public:
+	public:		
 		virtual RenderWindow* CreateRenderWindow( unsigned int width, unsigned int height, const char* title, bool fullscreen = false ) = 0;
 		virtual void SetRenderWindow( RenderWindow* window ) = 0;
 

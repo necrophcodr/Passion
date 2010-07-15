@@ -9,6 +9,8 @@ lib/*.ilk
 
 # No VS files
 platform/vc2008/*.ncb
+platform/vc2010/*.ncb
+platform/vc2010/*.sdf
 
 # Again no compiling files
 samples/bin/*.pdb
