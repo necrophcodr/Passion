@@ -21,6 +21,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "network", "network.vcxproj"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ip", "..\..\samples\build\ip.vcxproj", "{443E95E9-3F97-4B00-A924-E9A69521A68B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "passion", "..\..\passion\build\vc2010\passion.vcxproj", "{1E83B131-2CCB-444C-A734-798B479E19A0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B749F58A-CA7C-4C8C-A173-C2B23E8115CE} = {B749F58A-CA7C-4C8C-A173-C2B23E8115CE}
+		{2B47C2D6-BA4A-4741-A22A-DA16617279EF} = {2B47C2D6-BA4A-4741-A22A-DA16617279EF}
+		{2C4474FE-FCDE-463E-B6BE-197394990C89} = {2C4474FE-FCDE-463E-B6BE-197394990C89}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug MX|Win32 = Debug MX|Win32
@@ -109,6 +116,14 @@ Global
 		{443E95E9-3F97-4B00-A924-E9A69521A68B}.Release MX|Win32.Build.0 = Release|Win32
 		{443E95E9-3F97-4B00-A924-E9A69521A68B}.Release|Win32.ActiveCfg = Release|Win32
 		{443E95E9-3F97-4B00-A924-E9A69521A68B}.Release|Win32.Build.0 = Release|Win32
+		{1E83B131-2CCB-444C-A734-798B479E19A0}.Debug MX|Win32.ActiveCfg = Debug|Win32
+		{1E83B131-2CCB-444C-A734-798B479E19A0}.Debug MX|Win32.Build.0 = Debug|Win32
+		{1E83B131-2CCB-444C-A734-798B479E19A0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1E83B131-2CCB-444C-A734-798B479E19A0}.Debug|Win32.Build.0 = Debug|Win32
+		{1E83B131-2CCB-444C-A734-798B479E19A0}.Release MX|Win32.ActiveCfg = Release|Win32
+		{1E83B131-2CCB-444C-A734-798B479E19A0}.Release MX|Win32.Build.0 = Release|Win32
+		{1E83B131-2CCB-444C-A734-798B479E19A0}.Release|Win32.ActiveCfg = Release|Win32
+		{1E83B131-2CCB-444C-A734-798B479E19A0}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

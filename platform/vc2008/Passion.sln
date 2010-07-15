@@ -42,6 +42,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ip", "..\..\samples\build\i
 		{8CCEEE4F-DE54-4345-8111-0EE22449A1CE} = {8CCEEE4F-DE54-4345-8111-0EE22449A1CE}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "passion", "..\..\passion\build\vc2008\passion.vcproj", "{36A3547F-1F25-4BFC-AADC-FCCAA13B18EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug MX|Win32 = Debug MX|Win32
@@ -130,6 +132,14 @@ Global
 		{443E95E9-3F97-4B00-A924-E9A69521A68B}.Release MX|Win32.Build.0 = Release|Win32
 		{443E95E9-3F97-4B00-A924-E9A69521A68B}.Release|Win32.ActiveCfg = Release|Win32
 		{443E95E9-3F97-4B00-A924-E9A69521A68B}.Release|Win32.Build.0 = Release|Win32
+		{36A3547F-1F25-4BFC-AADC-FCCAA13B18EC}.Debug MX|Win32.ActiveCfg = Debug|Win32
+		{36A3547F-1F25-4BFC-AADC-FCCAA13B18EC}.Debug MX|Win32.Build.0 = Debug|Win32
+		{36A3547F-1F25-4BFC-AADC-FCCAA13B18EC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{36A3547F-1F25-4BFC-AADC-FCCAA13B18EC}.Debug|Win32.Build.0 = Debug|Win32
+		{36A3547F-1F25-4BFC-AADC-FCCAA13B18EC}.Release MX|Win32.ActiveCfg = Release|Win32
+		{36A3547F-1F25-4BFC-AADC-FCCAA13B18EC}.Release MX|Win32.Build.0 = Release|Win32
+		{36A3547F-1F25-4BFC-AADC-FCCAA13B18EC}.Release|Win32.ActiveCfg = Release|Win32
+		{36A3547F-1F25-4BFC-AADC-FCCAA13B18EC}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
