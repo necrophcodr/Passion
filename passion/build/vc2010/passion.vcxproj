@@ -39,13 +39,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)..\..\temp\Debug\</OutDir>
+    <OutDir>$(ProjectDir)..\..\bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(SolutionDir)..\..\temp\Debug\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)..\..\temp\Release\</OutDir>
+    <OutDir>$(ProjectDir)..\..\bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(SolutionDir)..\..\temp\Release\</IntDir>
@@ -54,15 +54,17 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OutputFile>$(SolutionDir)..\..\passion\bin\Passion-d.exe</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(SolutionDir)..\..\lib\render-d.dll" "$(SolutionDir)..\..\Passion\bin\render-d.dll"
-copy "$(SolutionDir)..\..\lib\input-d.dll" "$(SolutionDir)..\..\Passion\bin\input-d.dll"
-copy "$(SolutionDir)..\..\lib\scripting-d.dll" "$(SolutionDir)..\..\Passion\bin\scripting-d.dll"</Command>
+      <Command>copy "$(SolutionDir)..\..\lib\render.dll" "$(SolutionDir)..\..\Passion\bin\bin\render.dll"
+copy "$(SolutionDir)..\..\lib\input.dll" "$(SolutionDir)..\..\Passion\bin\bin\input.dll"
+copy "$(SolutionDir)..\..\lib\scripting.dll" "$(SolutionDir)..\..\Passion\bin\bin\scripting.dll"
+copy "$(SolutionDir)..\..\lib\network.dll" "$(SolutionDir)..\..\Passion\bin\bin\network.dll"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copying Passion libraries...</Message>
@@ -74,6 +76,7 @@ copy "$(SolutionDir)..\..\lib\scripting-d.dll" "$(SolutionDir)..\..\Passion\bin\
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\..\src;..\..\..\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -82,14 +85,19 @@ copy "$(SolutionDir)..\..\lib\scripting-d.dll" "$(SolutionDir)..\..\Passion\bin\
       <OutputFile>$(SolutionDir)..\..\passion\bin\Passion.exe</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(SolutionDir)..\..\lib\render.dll" "$(SolutionDir)..\..\Passion\bin\render.dll"
-copy "$(SolutionDir)..\..\lib\input.dll" "$(SolutionDir)..\..\Passion\bin\input.dll"
-copy "$(SolutionDir)..\..\lib\scripting.dll" "$(SolutionDir)..\..\Passion\bin\scripting.dll"</Command>
+      <Command>copy "$(SolutionDir)..\..\lib\render.dll" "$(SolutionDir)..\..\Passion\bin\bin\render.dll"
+copy "$(SolutionDir)..\..\lib\input.dll" "$(SolutionDir)..\..\Passion\bin\bin\input.dll"
+copy "$(SolutionDir)..\..\lib\scripting.dll" "$(SolutionDir)..\..\Passion\bin\bin\scripting.dll"
+copy "$(SolutionDir)..\..\lib\network.dll" "$(SolutionDir)..\..\Passion\bin\bin\network.dll"</Command>
       <Message>Copying Passion libraries...</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\CDefaultScene.cpp" />
     <ClCompile Include="..\..\src\Passion.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\CDefaultScene.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -39,9 +39,9 @@ int main()
 	////////////////////////////////////////////////////////////
 
 	#ifdef _DEBUG_
-		Passion::IBaseScripting* scripting = (Passion::IBaseScripting*)Passion::CreateInterface( "../../lib/scripting-d" );
+		Passion::IBaseScripting* scripting = Passion::CreateInterface<Passion::IBaseScripting>( "../../lib/scripting-d" );
 	#else
-		Passion::IBaseScripting* scripting = (Passion::IBaseScripting*)Passion::CreateInterface( "../../lib/scripting" );
+		Passion::IBaseScripting* scripting = Passion::CreateInterface<Passion::IBaseScripting>( "../../lib/scripting" );
 	#endif
 
 	////////////////////////////////////////////////////////////

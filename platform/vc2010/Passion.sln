@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "render", "render.vcxproj", "{2B47C2D6-BA4A-4741-A22A-DA16617279EF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gameoflife", "..\..\samples\build\gameoflife.vcxproj", "{3B7C15FF-1DB0-4E62-B170-DDC0077CF698}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2C4474FE-FCDE-463E-B6BE-197394990C89} = {2C4474FE-FCDE-463E-B6BE-197394990C89}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "input", "input.vcxproj", "{2C4474FE-FCDE-463E-B6BE-197394990C89}"
 EndProject

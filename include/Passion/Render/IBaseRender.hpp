@@ -132,6 +132,7 @@ namespace Passion
 		virtual void DrawLine( Vector p1, Vector p2 ) = 0;
 		virtual void DrawTriangle( Vector p1, Vector p2, Vector p3 ) = 0;
 		virtual void DrawQuad( Vector p1, Vector p2, Vector p3, Vector p4, float repeat = 1.0f ) = 0;
+		virtual void DrawRect( float x, float y, float w, float h, float repeat = 1.0f ) = 0;
 
 		virtual void DrawBox( Vector min, Vector max ) = 0;
 

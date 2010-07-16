@@ -34,15 +34,13 @@ namespace Passion
 	IRender::IRender()
 	{
 		m_renderWindow = 0;
-		m_vertices = new Vertex[4096];
 		m_vertexIndex = 0;
 		m_shape = 0;
 	}
 
 	IRender::~IRender()
 	{
-		delete [] m_vertices;
-		delete m_renderWindow;
+		if ( m_renderWindow ) delete m_renderWindow;
 	}
 
 	RenderWindow* IRender::CreateRenderWindow( unsigned int width, unsigned int height, const char* title, bool fullscreen )
@@ -254,9 +252,16 @@ namespace Passion
 		Vertex* vertices = new Vertex[vertexcount];
 		
 		for ( unsigned int i = 0; i < triangles.size(); i++ )
+		{
 			memcpy( &vertices[i*3], triangles[i], sizeof( Vertex ) * 3 );
+			delete [] triangles[i];
+		}
 
-		return CreateModel( vertices, vertexcount );
+		Model model = CreateModel( vertices, vertexcount );
+
+		delete [] vertices;
+
+		return model;
 	}
 
 	Model IRender::CreateModel( Passion::Vertex* points, unsigned int count )
@@ -421,6 +426,8 @@ namespace Passion
 
 	void IRender::SetTexture( Texture texture )
 	{
+		Flush();
+
 		glBindTexture( GL_TEXTURE_2D, texture );
 
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
@@ -490,6 +497,11 @@ namespace Passion
 		m_vertices[m_vertexIndex++] = Vertex( p2.x, p2.y, p2.z, m_drawColor, repeat, repeat );
 		m_vertices[m_vertexIndex++] = Vertex( p3.x, p3.y, p3.z, m_drawColor, repeat, 0.0f );
 		m_vertices[m_vertexIndex++] = Vertex( p4.x, p4.y, p4.z, m_drawColor, 0.0f, 0.0f );
+	}
+
+	void IRender::DrawRect( float x, float y, float w, float h, float repeat )
+	{
+		DrawQuad( Vector( x, y ), Vector( x + w, y ), Vector( x + w, y + h ), Vector( x, y + h ), repeat );
 	}
 
 	void IRender::DrawBox( Vector min, Vector max )

@@ -58,11 +58,11 @@ int main()
 	////////////////////////////////////////////////////////////
 
 	#ifdef _DEBUG_
-		Passion::IBaseRender* render = (Passion::IBaseRender*)Passion::CreateInterface( "../../lib/render-d" );
-		Passion::IBaseInput* input = (Passion::IBaseInput*)Passion::CreateInterface( "../../lib/input-d" );
+		Passion::IBaseRender* render = Passion::CreateInterface<Passion::IBaseRender>( "../../lib/render-d" );
+		Passion::IBaseInput* input = )Passion::CreateInterface<Passion::IBaseInput>( "../../lib/input-d" );
 	#else
-		Passion::IBaseRender* render = (Passion::IBaseRender*)Passion::CreateInterface( "../../lib/render" );
-		Passion::IBaseInput* input = (Passion::IBaseInput*)Passion::CreateInterface( "../../lib/input" );
+		Passion::IBaseRender* render = Passion::CreateInterface<Passion::IBaseRender>( "../../lib/render" );
+		Passion::IBaseInput* input = Passion::CreateInterface<Passion::IBaseInput>( "../../lib/input" );
 	#endif
 
 	Passion::RenderWindow* window = render->CreateRenderWindow( 1280, 720, "Deform" );

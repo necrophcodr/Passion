@@ -24,7 +24,8 @@ namespace Passion
 	// Loads an interface from a shared library
 	////////////////////////////////////////////////////////////
 
-	void* CreateInterface( const char* filename )
+	template <typename _interface>
+	_interface* CreateInterface( const char* filename )
 	{
 		std::string fullPath = filename;
 		typedef void* (*Factory) ();
@@ -54,7 +55,7 @@ namespace Passion
 			}
 
 			Factory libFactory = (Factory)GetProcAddress( library, "CreateInterface" );
-			return (*libFactory) ();
+			return (_interface*) (*libFactory) ();
 		#endif
 	}
 }

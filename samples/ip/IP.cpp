@@ -40,9 +40,9 @@ int main()
 	////////////////////////////////////////////////////////////
 
 	#ifdef _DEBUG_
-		Passion::IBaseNetwork* network = (Passion::IBaseNetwork*)Passion::CreateInterface( "../../lib/network-d" );
+		Passion::IBaseNetwork* network = Passion::CreateInterface<Passion::IBaseNetwork>( "../../lib/network-d" );
 	#else
-		Passion::IBaseNetwork* network = (Passion::IBaseNetwork*)Passion::CreateInterface( "../../lib/network" );
+		Passion::IBaseNetwork* network = Passion::CreateInterface<Passion::IBaseNetwork>( "../../lib/network" );
 	#endif
 
 	////////////////////////////////////////////////////////////

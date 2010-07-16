@@ -96,6 +96,7 @@ namespace Passion
 		void DrawLine( Vector p1, Vector p2 );
 		void DrawTriangle( Vector p1, Vector p2, Vector p3 );
 		void DrawQuad( Vector p1, Vector p2, Vector p3, Vector p4, float repeat = 1.0f );
+		void DrawRect( float x, float y, float w, float h, float repeat = 1.0f );
 
 		void DrawBox( Vector min, Vector max );
 
@@ -111,7 +112,7 @@ namespace Passion
 		sf::Window* m_renderWindow;
 		float m_viewW, m_viewH;
 
-		Vertex* m_vertices;
+		Vertex m_vertices[4096];
 		unsigned int m_vertexBuffer;
 		int m_vertexIndex;
 
