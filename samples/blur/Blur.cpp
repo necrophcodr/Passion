@@ -135,5 +135,12 @@ int main()
 		render->Present();
 	}
 
+	////////////////////////////////////////////////////////////
+	// Clean up
+	////////////////////////////////////////////////////////////
+
+	Passion::DestroyInterface<Passion::IBaseRender>( render );
+	Passion::DestroyInterface<Passion::IBaseInput>( input );
+
 	return 0;
 }

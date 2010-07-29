@@ -139,6 +139,8 @@ namespace Passion
 		virtual Vector WorldToScreen( Vector pos ) = 0;
 		virtual Vector ScreenToWorld( float x, float y ) = 0;
 
+		virtual float FrameTime() = 0;
+
 		virtual void Present() = 0;
 
 		// For testing purposes, remove at release

@@ -96,6 +96,12 @@ int main()
 		}
 	}
 
+	////////////////////////////////////////////////////////////
+	// Clean up
+	////////////////////////////////////////////////////////////
+
+	Passion::DestroyInterface<Passion::IBaseNetwork>( network );
+
 	#ifndef PASSION_PLATFORM_LINUX
         getchar();
     #endif

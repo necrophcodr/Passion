@@ -59,7 +59,7 @@ int main()
 
 	#ifdef _DEBUG_
 		Passion::IBaseRender* render = Passion::CreateInterface<Passion::IBaseRender>( "../../lib/render-d" );
-		Passion::IBaseInput* input = )Passion::CreateInterface<Passion::IBaseInput>( "../../lib/input-d" );
+		Passion::IBaseInput* input = Passion::CreateInterface<Passion::IBaseInput>( "../../lib/input-d" );
 	#else
 		Passion::IBaseRender* render = Passion::CreateInterface<Passion::IBaseRender>( "../../lib/render" );
 		Passion::IBaseInput* input = Passion::CreateInterface<Passion::IBaseInput>( "../../lib/input" );
@@ -107,6 +107,13 @@ int main()
 
 		render->Present();
 	}
+
+	////////////////////////////////////////////////////////////
+	// Clean up
+	////////////////////////////////////////////////////////////
+
+	Passion::DestroyInterface<Passion::IBaseRender>( render );
+	Passion::DestroyInterface<Passion::IBaseInput>( input );
 
 	return 0;
 }

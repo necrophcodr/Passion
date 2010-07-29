@@ -34,8 +34,18 @@ namespace Passion
 	class RenderTarget : public BaseRenderTarget
 	{
 	public:
+		RenderTarget( unsigned int frameBuffer, unsigned int renderBuffer, unsigned int renderTexture )
+		{
+			m_framebuffer = frameBuffer;
+			m_renderbuffer = renderBuffer;
+			m_rendertexture = renderTexture;
+		}
+
+		unsigned int GetFrameBuffer() { return m_framebuffer; }
+
 		Texture GetTexture() { return m_rendertexture; };
 
+	private:
 		unsigned int m_framebuffer, m_renderbuffer, m_rendertexture;
 	};
 }

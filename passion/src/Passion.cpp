@@ -45,25 +45,23 @@ int main()
 	render->SetTexturingEnabled( true );
 
 	CDefaultScene scene( render );
-	clock_t ltime = clock();
 
 	while ( input->GetEvents() )
 	{
 		render->Clear( Passion::Color( 0.0f, 0.0f, 0.0f ) );
 
 		// Draw default scene
-		scene.Update( (float)( clock() - ltime ) / (float)CLOCKS_PER_SEC );
-		ltime = clock();
+		scene.Update( render->FrameTime() );
 		scene.Draw();
 
 		render->Present();
 	}
 
 	// Clean up
-	delete network;
-	delete scripting;
-	delete input;
-	delete render;
+	Passion::DestroyInterface<Passion::IBaseRender>( render );
+	Passion::DestroyInterface<Passion::IBaseInput>( input );
+	Passion::DestroyInterface<Passion::IBaseScripting>( scripting );
+	Passion::DestroyInterface<Passion::IBaseNetwork>( network );
 
 	return 0;
 }

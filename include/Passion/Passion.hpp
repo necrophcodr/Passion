@@ -58,6 +58,13 @@ namespace Passion
 			return (_interface*) (*libFactory) ();
 		#endif
 	}
+
+	template <typename _interface>
+	void DestroyInterface( _interface* interface_ )
+	{
+		if ( interface_ )
+			delete interface_;
+	}
 }
 
 #endif

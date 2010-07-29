@@ -36,6 +36,9 @@ namespace Passion
 		m_renderWindow = 0;
 		m_vertexIndex = 0;
 		m_shape = 0;
+
+		m_time = clock();
+		m_frameTime = 0.0f;
 	}
 
 	IRender::~IRender()
@@ -45,6 +48,8 @@ namespace Passion
 
 	RenderWindow* IRender::CreateRenderWindow( unsigned int width, unsigned int height, const char* title, bool fullscreen )
 	{
+		if ( m_renderWindow ) return m_renderWindow;
+
 		if ( fullscreen )
 			m_renderWindow = new sf::Window( sf::VideoMode( width, height, 32 ), title, sf::Style::Fullscreen );
 		else
@@ -160,31 +165,31 @@ namespace Passion
 
 	BaseRenderTarget* IRender::CreateRenderTarget( unsigned int width, unsigned int height )
 	{
-		RenderTarget* rt = new RenderTarget();
+		unsigned int framebuffer, renderbuffer, rendertexture;
 
-		glGenFramebuffersEXT( 1, &rt->m_framebuffer );
-		glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, rt->m_framebuffer );
+		glGenFramebuffersEXT( 1, &framebuffer );
+		glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, framebuffer );
 
-		glGenRenderbuffersEXT( 1, &rt->m_renderbuffer );
-		glBindRenderbufferEXT( GL_RENDERBUFFER_EXT, rt->m_renderbuffer );
+		glGenRenderbuffersEXT( 1, &renderbuffer );
+		glBindRenderbufferEXT( GL_RENDERBUFFER_EXT, renderbuffer );
 		glRenderbufferStorageEXT( GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, width, height );
 
-		glFramebufferRenderbufferEXT( GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, rt->m_renderbuffer );
+		glFramebufferRenderbufferEXT( GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, renderbuffer );
 
-		glGenTextures( 1, &rt->m_rendertexture );
-		glBindTexture( GL_TEXTURE_2D, rt->m_rendertexture );
+		glGenTextures( 1, &rendertexture );
+		glBindTexture( GL_TEXTURE_2D, rendertexture );
 		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_FLOAT, NULL );
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 		glGenerateMipmapEXT( GL_TEXTURE_2D );
-		glFramebufferTexture2DEXT( GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, rt->m_rendertexture, 0 );
+		glFramebufferTexture2DEXT( GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, rendertexture, 0 );
 
 		SetRenderTarget( 0 );
 		SetTexture( 0 );
 
-		return rt;
+		return new RenderTarget( framebuffer, renderbuffer, rendertexture );
 	}
 
 	Model IRender::LoadModel( const char* filename )
@@ -440,7 +445,7 @@ namespace Passion
 	{
 		Flush();
 		if ( rendertarget != 0 )
-			glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, ((RenderTarget*)rendertarget)->m_framebuffer );
+			glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, ((RenderTarget*)rendertarget)->GetFrameBuffer() );
 		else
 			glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, 0 );
 	}
@@ -547,13 +552,23 @@ namespace Passion
 		return aim;
 	}
 
+	float IRender::FrameTime()
+	{
+		return m_frameTime;
+	}
+
 	void IRender::Present()
 	{
 		m_renderWindow->Display();
 
+		m_frameTime = (float)(clock() - m_time) / (float)CLOCKS_PER_SEC;
+		if ( m_frameTime < 0.001f ) m_frameTime = 0.001f;
+
 		#ifndef _DEBUG_
 			sf::Sleep( 0.001f );
 		#endif
+
+		m_time = clock();
 	}
 
 	// For testing purposes, remove at release

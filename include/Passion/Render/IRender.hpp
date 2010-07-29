@@ -103,6 +103,8 @@ namespace Passion
 		Vector WorldToScreen( Vector pos );
 		Vector ScreenToWorld( float x, float y );
 
+		float FrameTime();
+
 		void Present();
 
 		// For testing purposes, remove at release
@@ -120,6 +122,9 @@ namespace Passion
 		Color m_drawColor;
 
 		Program m_activeProgram;
+
+		clock_t m_time;
+		float m_frameTime;
 
 		void Flush();
 	};

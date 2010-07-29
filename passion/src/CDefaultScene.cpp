@@ -23,6 +23,7 @@
 // Headers
 #include "CDefaultScene.hpp"
 #include <cmath>
+#include <ctime>
 
 CDefaultScene::CDefaultScene( Passion::IBaseRender* render )
 {
@@ -61,7 +62,7 @@ void CDefaultScene::Draw()
 		}
 	m_render->End2D();
 
-	m_render->Start3D( Passion::Vector( 700.0f + sin( clouds[0].x / 100.0f ) * 200.0f, 100.0f, -800.0f ), Passion::Vector( 640.0f, 400.0f, 0.0f ), 45.0f, 1.0f, 10000.0f, Passion::Vector( 0.0f, 0.0f, -1.0f ) );
+	m_render->Start3D( Passion::Vector( 700.0f + sin( (float)clock() / 4000.0f ) * 200.0f, 100.0f, -800.0f ), Passion::Vector( 640.0f, 400.0f, 0.0f ), 45.0f, 1.0f, 10000.0f, Passion::Vector( 0.0f, 0.0f, -1.0f ) );
 		m_render->SetTexture( logo );
 		m_render->SetDrawColor( Passion::Color( 1.0f, 1.0f, 1.0f, 0.5f ) );
 		m_render->DrawRect( 392.0f, 312.0f, 496.0f, 158.0f );
