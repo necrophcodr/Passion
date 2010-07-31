@@ -84,10 +84,16 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\Passion\Scripting\IScripting.cpp" />
     <ClCompile Include="..\..\src\Passion\Scripting\Scripting.cpp" />
+    <ClCompile Include="..\..\src\Passion\Scripting\ScriptState.cpp" />
+    <ClCompile Include="..\..\src\Passion\Scripting\ScriptValue.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\Passion\Scripting\BaseScriptState.hpp" />
+    <ClInclude Include="..\..\include\Passion\Scripting\BaseScriptValue.hpp" />
     <ClInclude Include="..\..\include\Passion\Scripting\IBaseScripting.hpp" />
     <ClInclude Include="..\..\include\Passion\Scripting\IScripting.hpp" />
+    <ClInclude Include="..\..\include\Passion\Scripting\ScriptState.hpp" />
+    <ClInclude Include="..\..\include\Passion\Scripting\ScriptValue.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

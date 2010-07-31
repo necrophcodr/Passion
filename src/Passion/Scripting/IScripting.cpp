@@ -29,32 +29,14 @@
 
 namespace Passion
 {
-	IScripting::IScripting()
+	BaseScriptState* IScripting::CreateState()
 	{
-		lua = lua_open();
-		luaL_openlibs( lua );
+		return new ScriptState;
 	}
 
-	IScripting::~IScripting()
+	void IScripting::DestroyState( BaseScriptState* state )
 	{
-		lua_close( lua );
-	}
-
-	bool IScripting::DoString( const char* code )
-	{
-		int err = luaL_loadstring( lua, code ) || lua_pcall( lua, 0, 0, 0 );
-
-		if ( err )
-		{
-			strcpy( m_error, lua_tostring( lua, -1 ) );
-			lua_pop( lua, -1 );
-		}
-
-		return err == 0;
-	}
-
-	const char* IScripting::Error()
-	{
-		return m_error;
+		if ( state )
+			delete state;
 	}
 }

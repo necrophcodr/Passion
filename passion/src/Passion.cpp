@@ -28,34 +28,61 @@
 #include <ctime>
 #include "CDefaultScene.hpp"
 
-using Passion::Vector;
-
 int main()
 {
 	// Load the interfaces
+#ifndef _DEBUG_
 	Passion::IBaseRender*		render		= Passion::CreateInterface<Passion::IBaseRender>( "bin/render" );
 	Passion::IBaseInput*		input		= Passion::CreateInterface<Passion::IBaseInput>( "bin/input" );
 	Passion::IBaseScripting*	scripting	= Passion::CreateInterface<Passion::IBaseScripting>( "bin/scripting" );
 	Passion::IBaseNetwork*		network		= Passion::CreateInterface<Passion::IBaseNetwork>( "bin/network" );
+#else
+	Passion::IBaseRender*		render		= Passion::CreateInterface<Passion::IBaseRender>( "bin/render-d" );
+	Passion::IBaseInput*		input		= Passion::CreateInterface<Passion::IBaseInput>( "bin/input-d" );
+	Passion::IBaseScripting*	scripting	= Passion::CreateInterface<Passion::IBaseScripting>( "bin/scripting-d" );
+	Passion::IBaseNetwork*		network		= Passion::CreateInterface<Passion::IBaseNetwork>( "bin/network-d" );
+#endif
+
+	// Create scripting state
+	Passion::BaseScriptState* script = scripting->CreateState();
+
+	// GAME:Initialize (Creates window too!)
 
 	Passion::RenderWindow* window = render->CreateRenderWindow( 1280, 720, "Passion", false );
 	input->SetWindow( window );
 
 	render->SetAlphaBlendingEnabled( true );
 	render->SetTexturingEnabled( true );
+	
+	//  GAME:Load()
 
+	// NO GAME SCREEN, SHOULD BE LUA BASED AND REMOVED
 	CDefaultScene scene( render );
+	// END OF NO GAME SCREEN
 
+	// Game loop
 	while ( input->GetEvents() )
 	{
-		render->Clear( Passion::Color( 0.0f, 0.0f, 0.0f ) );
+		// GAME:KeyPress() or GAME:MousePress etc.
+		// GAME:Update()
 
-		// Draw default scene
-		scene.Update( render->FrameTime() );
-		scene.Draw();
+		// GAME:Draw()
+		
+		// NO GAME SCREEN, SHOULD BE LUA BASED AND REMOVED
+			render->Clear( Passion::Color( 0.0f, 0.0f, 0.0f ) );
 
-		render->Present();
+			// Draw default scene
+			scene.Update( render->FrameTime() );
+			scene.Draw();
+
+			render->Present();
+		// END OF NO GAME SCREEN
 	}
+
+	// GAME:Unload()
+
+	// Destroy script state
+	//scripting->DestroyState( script );
 
 	// Clean up
 	Passion::DestroyInterface<Passion::IBaseRender>( render );

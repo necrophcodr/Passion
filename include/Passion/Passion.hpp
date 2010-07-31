@@ -59,6 +59,10 @@ namespace Passion
 		#endif
 	}
 
+	////////////////////////////////////////////////////////////
+	// Unloads an interface from a shared library
+	////////////////////////////////////////////////////////////
+
 	template <typename _interface>
 	void DestroyInterface( _interface* interface_ )
 	{

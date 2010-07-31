@@ -20,22 +20,47 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef PASSION_IBASESCRIPTING_HPP
-#define PASSION_IBASESCRIPTING_HPP
+#ifndef PASSION_BASESCRIPTVALUE_HPP
+#define PASSION_BASESCRIPTVALUE_HPP
 
-#include <Passion/Scripting/BaseScriptState.hpp>
+#include <memory>
 
 namespace Passion
 {
 	////////////////////////////////////////////////////////////
-	// Base scripting interface
+	// Base scripting state
 	////////////////////////////////////////////////////////////
 
-	class IBaseScripting
+	class BaseScriptValue
 	{
 	public:
-		virtual BaseScriptState* CreateState() = 0;
-		virtual void DestroyState( BaseScriptState* state ) = 0;
+		virtual ~BaseScriptValue() { }
+
+		virtual bool IsNumber() = 0;
+		virtual bool IsBoolean() = 0;
+		virtual bool IsTable() = 0;
+		virtual bool IsString() = 0;
+		virtual bool IsFunction() = 0;
+		virtual bool IsNil() = 0;
+
+		virtual operator int() = 0;
+		virtual operator float() = 0;
+		virtual operator double() = 0;
+		virtual operator bool() = 0;
+		virtual operator const char*() = 0;
+
+		virtual std::auto_ptr<BaseScriptValue> GetMember( const char* key ) = 0;
+		virtual std::auto_ptr<BaseScriptValue> GetMember( int key ) = 0;
+		virtual std::auto_ptr<BaseScriptValue> GetMember( BaseScriptValue* key ) = 0;
+
+		virtual void operator= ( int val ) = 0;
+		virtual void operator= ( float val ) = 0;
+		virtual void operator= ( double val ) = 0;
+		virtual void operator= ( bool val ) = 0;
+		virtual void operator= ( const char* val ) = 0;
+		virtual void operator= ( BaseScriptValue* val ) = 0;
+
+		virtual void Push() = 0;
 	};
 }
 

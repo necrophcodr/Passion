@@ -20,58 +20,68 @@
 //
 ////////////////////////////////////////////////////////////
 
+#ifndef PASSION_SCRIPTVALUE_HPP
+#define PASSION_SCRIPTVALUE_HPP
+
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <Passion/Scripting.hpp>
-#include <iostream>
-#include <cstring>
+#include <Passion/Scripting/BaseScriptValue.hpp>
 
-////////////////////////////////////////////////////////////
-// Entry point of the application
-////////////////////////////////////////////////////////////
-
-int main()
+extern "C"
 {
-	////////////////////////////////////////////////////////////
-	// Set up the scripting interface
-	////////////////////////////////////////////////////////////
-
-	#ifdef _DEBUG_
-		Passion::IBaseScripting* scripting = Passion::CreateInterface<Passion::IBaseScripting>( "../../lib/scripting-d" );
-	#else
-		Passion::IBaseScripting* scripting = Passion::CreateInterface<Passion::IBaseScripting>( "../../lib/scripting" );
-	#endif
-
-	////////////////////////////////////////////////////////////
-	// Create a state
-	////////////////////////////////////////////////////////////
-
-	Passion::BaseScriptState* script = scripting->CreateState();
-
-	////////////////////////////////////////////////////////////
-	// Evaluate lines of code
-	////////////////////////////////////////////////////////////
-
-	char code[256];
-
-	while ( true )
-	{
-		std::cout << "> ";
-		std::cin.getline( code, 256 );
-
-		bool success = script->DoString( code );
-
-		if ( !success )
-		{
-		    // Skip the error string prefix
-		    std::string rawError = script->Error();
-		    rawError = rawError.substr( 12 + strlen( code ) );
-
-			std::cout << rawError << "\n";
-		}
-	}
-
-	return 0;
+	#include <Lua/lua.h>
+	#include <Lua/lauxlib.h>
+	#include <Lua/lualib.h>
 }
+
+namespace Passion
+{	
+	////////////////////////////////////////////////////////////
+	// Lua implementation of BaseScriptState
+	////////////////////////////////////////////////////////////
+
+	class ScriptValue : public BaseScriptValue
+	{
+	public:
+		ScriptValue( lua_State* state, int reference, int table, int key );
+		ScriptValue( const ScriptValue& val );
+		~ScriptValue();
+
+		bool IsNumber();
+		bool IsBoolean();
+		bool IsTable();
+		bool IsString();
+		bool IsFunction();
+		bool IsNil();
+
+		operator int();
+		operator float();
+		operator double();
+		operator bool();
+		operator const char*();
+
+		std::auto_ptr<BaseScriptValue> GetMember( const char* key );
+		std::auto_ptr<BaseScriptValue> GetMember( int key );
+		std::auto_ptr<BaseScriptValue> GetMember( BaseScriptValue* key );
+
+		void operator= ( int val );
+		void operator= ( float val );
+		void operator= ( double val );
+		void operator= ( bool val );
+		void operator= ( const char* val );
+		void operator= ( BaseScriptValue* val );
+
+		void Push();
+
+	private:
+		lua_State* m_lua;
+		int m_ref;
+
+		int m_tbl;
+		int m_key;
+	};
+}
+
+#endif

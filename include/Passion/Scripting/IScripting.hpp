@@ -23,20 +23,11 @@
 #ifndef PASSION_ISCRIPTING_HPP
 #define PASSION_ISCRIPTING_HPP
 
-////////////////////////////////////////////////////////////
-// Headers
-////////////////////////////////////////////////////////////
-
 #include <Passion/Scripting/IBaseScripting.hpp>
-extern "C"
-{
-	#include <Lua/lua.h>
-	#include <Lua/lauxlib.h>
-	#include <Lua/lualib.h>
-}
+#include <Passion/Scripting/ScriptState.hpp>
 
 namespace Passion
-{	
+{
 	////////////////////////////////////////////////////////////
 	// Lua implementation of IBaseScripting
 	////////////////////////////////////////////////////////////
@@ -44,15 +35,8 @@ namespace Passion
 	class IScripting : public IBaseScripting
 	{
 	public:
-		IScripting();
-		~IScripting();
-
-		bool DoString( const char* code );
-		const char* Error();
-
-	private:
-		lua_State* lua;
-		char m_error[128];
+		BaseScriptState* CreateState();
+		void DestroyState( BaseScriptState* state );
 	};
 }
 

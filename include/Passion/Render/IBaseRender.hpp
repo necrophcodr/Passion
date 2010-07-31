@@ -142,9 +142,6 @@ namespace Passion
 		virtual float FrameTime() = 0;
 
 		virtual void Present() = 0;
-
-		// For testing purposes, remove at release
-		virtual void Test() = 0;
 	};
 }
 

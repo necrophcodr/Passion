@@ -54,17 +54,18 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\..\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_DEBUG_</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OutputFile>$(SolutionDir)..\..\passion\bin\Passion-d.exe</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(SolutionDir)..\..\lib\render.dll" "$(SolutionDir)..\..\Passion\bin\bin\render.dll"
-copy "$(SolutionDir)..\..\lib\input.dll" "$(SolutionDir)..\..\Passion\bin\bin\input.dll"
-copy "$(SolutionDir)..\..\lib\scripting.dll" "$(SolutionDir)..\..\Passion\bin\bin\scripting.dll"
-copy "$(SolutionDir)..\..\lib\network.dll" "$(SolutionDir)..\..\Passion\bin\bin\network.dll"</Command>
+      <Command>copy "$(SolutionDir)..\..\lib\render-d.dll" "$(SolutionDir)..\..\Passion\bin\bin\render-d.dll"
+copy "$(SolutionDir)..\..\lib\input-d.dll" "$(SolutionDir)..\..\Passion\bin\bin\input-d.dll"
+copy "$(SolutionDir)..\..\lib\scripting-d.dll" "$(SolutionDir)..\..\Passion\bin\bin\scripting-d.dll"
+copy "$(SolutionDir)..\..\lib\network-d.dll" "$(SolutionDir)..\..\Passion\bin\bin\network-d.dll"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copying Passion libraries...</Message>

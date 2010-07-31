@@ -58,7 +58,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Lua.lib"
+				AdditionalDependencies="Lua-d.lib"
 				OutputFile="$(SolutionDir)\..\..\lib\$(ProjectName)-d.dll"
 				AdditionalLibraryDirectories="..\..\extlibs\lib"
 				GenerateDebugInformation="true"
@@ -177,6 +177,14 @@
 				RelativePath="..\..\src\Passion\Scripting\Scripting.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\src\Passion\Scripting\ScriptState.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\Passion\Scripting\ScriptValue.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -184,11 +192,27 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\..\include\Passion\Scripting\BaseScriptState.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\Passion\Scripting\BaseScriptValue.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\Passion\Scripting\IBaseScripting.hpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\include\Passion\Scripting\IScripting.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\Passion\Scripting\ScriptState.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\Passion\Scripting\ScriptValue.hpp"
 				>
 			</File>
 		</Filter>

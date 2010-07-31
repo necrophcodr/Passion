@@ -106,9 +106,6 @@ namespace Passion
 		float FrameTime();
 
 		void Present();
-
-		// For testing purposes, remove at release
-		void Test();
 		
 	private:
 		sf::Window* m_renderWindow;
@@ -123,7 +120,8 @@ namespace Passion
 
 		Program m_activeProgram;
 
-		clock_t m_time;
+		LARGE_INTEGER m_freq;
+		LARGE_INTEGER m_time;
 		float m_frameTime;
 
 		void Flush();

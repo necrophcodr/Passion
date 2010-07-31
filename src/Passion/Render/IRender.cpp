@@ -37,7 +37,9 @@ namespace Passion
 		m_vertexIndex = 0;
 		m_shape = 0;
 
-		m_time = clock();
+		QueryPerformanceCounter( &m_time );
+		QueryPerformanceFrequency( &m_freq );
+
 		m_frameTime = 0.0f;
 	}
 
@@ -561,20 +563,15 @@ namespace Passion
 	{
 		m_renderWindow->Display();
 
-		m_frameTime = (float)(clock() - m_time) / (float)CLOCKS_PER_SEC;
-		if ( m_frameTime < 0.001f ) m_frameTime = 0.001f;
+		LARGE_INTEGER t;
+		QueryPerformanceCounter( &t );
+
+		m_frameTime = (float)( t.QuadPart - m_time.QuadPart ) / (float)m_freq.QuadPart;
 
 		#ifndef _DEBUG_
 			sf::Sleep( 0.001f );
 		#endif
 
-		m_time = clock();
-	}
-
-	// For testing purposes, remove at release
-	
-	void IRender::Test()
-	{		
-		sf::Sleep( 0.5f );
+		QueryPerformanceCounter( &m_time );
 	}
 }

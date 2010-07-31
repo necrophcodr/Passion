@@ -20,22 +20,60 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef PASSION_IBASESCRIPTING_HPP
-#define PASSION_IBASESCRIPTING_HPP
+#ifndef PASSION_SCRIPTSTATE_HPP
+#define PASSION_SCRIPTSTATE_HPP
+
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
 
 #include <Passion/Scripting/BaseScriptState.hpp>
+#include <Passion/Scripting/ScriptValue.hpp>
+
+extern "C"
+{
+	#include <Lua/lua.h>
+	#include <Lua/lauxlib.h>
+	#include <Lua/lualib.h>
+}
 
 namespace Passion
-{
+{	
 	////////////////////////////////////////////////////////////
-	// Base scripting interface
+	// Lua implementation of BaseScriptState
 	////////////////////////////////////////////////////////////
 
-	class IBaseScripting
+	class ScriptState : public BaseScriptState
 	{
 	public:
-		virtual BaseScriptState* CreateState() = 0;
-		virtual void DestroyState( BaseScriptState* state ) = 0;
+		ScriptState();
+		~ScriptState();
+
+		bool DoString( const char* code );
+		bool DoFile( const char* path );
+
+		std::auto_ptr<BaseScriptValue> Globals();
+
+		void Push( const char* value );
+		void Push( const char* value, unsigned int length );
+		void Push( bool value );
+		void Push( double value );
+		void Push( float value );
+		void Push( int value );
+
+		void Pop( int values );
+
+		int Top();
+
+		bool Call( int args, int returns );
+
+		const char* Error();
+
+	private:
+		lua_State* m_lua;
+		char* m_error;
+
+		void SetError( const char* error = "" );
 	};
 }
 
