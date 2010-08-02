@@ -77,6 +77,7 @@ int main()
 
 	render->SetTexturingEnabled( true );
 	render->SetDepthEnabled( true );
+	render->SetAlphaBlendingEnabled( true );
 
 	input->SetWindow( window );
 
@@ -84,11 +85,16 @@ int main()
 	// Load a simple PP shader
 	////////////////////////////////////////////////////////////
 
-	Passion::Shader boxblur[2];
-	boxblur[0] = render->CreateShader( LoadShader( "shaders/null.vs" ).c_str(), VERTEX_SHADER );
-	boxblur[1] = render->CreateShader( LoadShader( "shaders/boxblur.ps" ).c_str(), PIXEL_SHADER );
+	Passion::Shader gaussianblur_h[2];
+	gaussianblur_h[0] = render->CreateShader( LoadShader( "shaders/null.vs" ).c_str(), VERTEX_SHADER );
+	gaussianblur_h[1] = render->CreateShader( LoadShader( "shaders/gaussianblur_h.ps" ).c_str(), PIXEL_SHADER );
 
-	Passion::Program postfx = render->CreateProgram( boxblur, 2 );
+	Passion::Shader gaussianblur_v[2];
+	gaussianblur_v[0] = render->CreateShader( LoadShader( "shaders/null.vs" ).c_str(), VERTEX_SHADER );
+	gaussianblur_v[1] = render->CreateShader( LoadShader( "shaders/gaussianblur_v.ps" ).c_str(), PIXEL_SHADER );
+
+	Passion::Program gaussian_h = render->CreateProgram( gaussianblur_h, 2 );
+	Passion::Program gaussian_v = render->CreateProgram( gaussianblur_v, 2 );
 
 	////////////////////////////////////////////////////////////
 	// Create a render target
@@ -101,6 +107,7 @@ int main()
 		float time = (float)clock() / (float)CLOCKS_PER_SEC;
 
 		render->SetRenderTarget( rt );
+		render->SetDepthEnabled( true );
 
 		render->Clear( Passion::Color( 0.1f, 0.1f, 0.1f ) );
 		render->ClearZ();
@@ -122,12 +129,17 @@ int main()
 		render->SetRenderTarget();
 
 		render->Clear( Passion::Color( 0.0f, 0.0f, 0.0f ) );
-		render->ClearZ();
+		render->SetDepthEnabled( false );
 
-		render->Start2D();
+		render->Start2D();			
 			render->SetDrawColor( Passion::Color( 1.0f, 1.0f, 1.0f, 1.0f ) );
 			render->SetTexture( rt->GetTexture() );
-			render->SetProgram( postfx );
+			render->SetProgram( gaussian_h );
+
+			render->DrawQuad( Passion::Vector( 0.0f, 0.0f ), Passion::Vector( 1280.0f, 0.0f ), Passion::Vector( 1280.0f, 720.0f ), Passion::Vector( 0.0f, 720.0f ) );
+
+			render->SetDrawColor( Passion::Color( 1.0f, 1.0f, 1.0f, 0.5f ) );
+			render->SetProgram( gaussian_v );
 
 			render->DrawQuad( Passion::Vector( 0.0f, 0.0f ), Passion::Vector( 1280.0f, 0.0f ), Passion::Vector( 1280.0f, 720.0f ), Passion::Vector( 0.0f, 720.0f ) );
 		render->End2D();

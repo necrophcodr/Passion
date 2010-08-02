@@ -27,8 +27,10 @@
 
 namespace Passion
 {
+	typedef int ( *ScriptFunction ) ( void* p );
+
 	////////////////////////////////////////////////////////////
-	// Base scripting state
+	// Base script value
 	////////////////////////////////////////////////////////////
 
 	class BaseScriptValue
@@ -43,22 +45,24 @@ namespace Passion
 		virtual bool IsFunction() = 0;
 		virtual bool IsNil() = 0;
 
-		virtual operator int() = 0;
-		virtual operator float() = 0;
-		virtual operator double() = 0;
-		virtual operator bool() = 0;
-		virtual operator const char*() = 0;
+		virtual int GetInteger() = 0;
+		virtual float GetFloat() = 0;
+		virtual double GetDouble() = 0;
+		virtual bool GetBoolean() = 0;
+		virtual const char* GetString() = 0;
+		virtual void* GetUserData() = 0;
 
 		virtual std::auto_ptr<BaseScriptValue> GetMember( const char* key ) = 0;
 		virtual std::auto_ptr<BaseScriptValue> GetMember( int key ) = 0;
 		virtual std::auto_ptr<BaseScriptValue> GetMember( BaseScriptValue* key ) = 0;
 
-		virtual void operator= ( int val ) = 0;
-		virtual void operator= ( float val ) = 0;
-		virtual void operator= ( double val ) = 0;
-		virtual void operator= ( bool val ) = 0;
-		virtual void operator= ( const char* val ) = 0;
-		virtual void operator= ( BaseScriptValue* val ) = 0;
+		virtual void Set( int value ) = 0;
+		virtual void Set( float value ) = 0;
+		virtual void Set( double value ) = 0;
+		virtual void Set( bool value ) = 0;
+		virtual void Set( const char* value ) = 0;
+		virtual void Set( std::auto_ptr<BaseScriptValue> value ) = 0;
+		virtual void Set( ScriptFunction value ) = 0;
 
 		virtual void Push() = 0;
 	};

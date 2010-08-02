@@ -72,6 +72,39 @@ namespace Passion
 		return err == 0;
 	}
 
+	std::auto_ptr<BaseScriptValue> ScriptState::NewTable()
+	{
+		lua_newtable( m_lua );
+
+		int ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
+		return std::auto_ptr<BaseScriptValue>( new ScriptValue( m_lua, ref, ref, 0 ) );
+	}
+
+	std::auto_ptr<BaseScriptValue> ScriptState::UserData( void* data, std::auto_ptr<BaseScriptValue> metatable )
+	{
+		Push( data, metatable );
+
+		int ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
+		return std::auto_ptr<BaseScriptValue>( new ScriptValue( m_lua, ref, ref, 0 ) );
+	}
+
+	void ScriptState::SetMetaTable( std::auto_ptr<BaseScriptValue> value, std::auto_ptr<BaseScriptValue> metatable )
+	{
+		value->Push();
+		metatable->Push();
+		lua_setmetatable( m_lua, -2 );
+		lua_pop( m_lua, 1 );
+	}
+
+	std::auto_ptr<BaseScriptValue> ScriptState::GetMetaTable( std::auto_ptr<BaseScriptValue> value )
+	{
+		value->Push();
+		lua_getmetatable( m_lua, -1 );
+		
+		int ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
+		return std::auto_ptr<BaseScriptValue>( new ScriptValue( m_lua, ref, ref, 0 ) );
+	}
+
 	std::auto_ptr<BaseScriptValue> ScriptState::Globals()
 	{
 		lua_getglobal( m_lua, "_G" );
@@ -83,6 +116,7 @@ namespace Passion
 		return std::auto_ptr<BaseScriptValue>( new ScriptValue( m_lua, ref, ref, key ) );
 	}
 
+	void ScriptState::Push( std::auto_ptr<BaseScriptValue> value ) { value->Push(); }
 	void ScriptState::Push( const char* value ) { lua_pushstring( m_lua, value ); }
 	void ScriptState::Push( const char* value, unsigned int length ) { lua_pushlstring( m_lua, value, length ); }
 	void ScriptState::Push( bool value ) { lua_pushboolean( m_lua, value ); }
@@ -90,7 +124,22 @@ namespace Passion
 	void ScriptState::Push( float value ) { lua_pushnumber( m_lua, value ); }
 	void ScriptState::Push( int value ) { lua_pushinteger( m_lua, value ); }
 
+	void ScriptState::Push( void* value, std::auto_ptr<BaseScriptValue> metatable )
+	{
+		void* block = lua_newuserdata( m_lua, sizeof( void* ) );
+		memcpy( block, &value, sizeof( void* ) );
+		
+		metatable->Push();
+		lua_setmetatable( m_lua, -2 );
+	}
+
 	void ScriptState::Pop( int values ) { lua_pop( m_lua, values ); }
+
+	std::auto_ptr<BaseScriptValue> ScriptState::Get( int index )
+	{
+		int ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
+		return std::auto_ptr<BaseScriptValue>( new ScriptValue( m_lua, ref, ref, 0 ) );
+	}
 
 	int ScriptState::Top() { return lua_gettop( m_lua ); }
 

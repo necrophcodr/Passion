@@ -39,7 +39,7 @@ extern "C"
 namespace Passion
 {	
 	////////////////////////////////////////////////////////////
-	// Lua implementation of BaseScriptState
+	// Lua implementation of BaseScriptValue
 	////////////////////////////////////////////////////////////
 
 	class ScriptValue : public BaseScriptValue
@@ -56,22 +56,24 @@ namespace Passion
 		bool IsFunction();
 		bool IsNil();
 
-		operator int();
-		operator float();
-		operator double();
-		operator bool();
-		operator const char*();
+		int GetInteger();
+		float GetFloat();
+		double GetDouble();
+		bool GetBoolean();
+		const char* GetString();
+		void* GetUserData();
 
 		std::auto_ptr<BaseScriptValue> GetMember( const char* key );
 		std::auto_ptr<BaseScriptValue> GetMember( int key );
 		std::auto_ptr<BaseScriptValue> GetMember( BaseScriptValue* key );
 
-		void operator= ( int val );
-		void operator= ( float val );
-		void operator= ( double val );
-		void operator= ( bool val );
-		void operator= ( const char* val );
-		void operator= ( BaseScriptValue* val );
+		void Set( int value );
+		void Set( float value );
+		void Set( double value );
+		void Set( bool value );
+		void Set( const char* value );
+		void Set( std::auto_ptr<BaseScriptValue> value );
+		void Set( ScriptFunction value );
 
 		void Push();
 

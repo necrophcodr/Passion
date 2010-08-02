@@ -109,7 +109,7 @@ namespace Passion
 		return t;
 	}
 
-	ScriptValue::operator int()
+	int ScriptValue::GetInteger()
 	{
 		int val;
 		Push();
@@ -118,7 +118,7 @@ namespace Passion
 		return val;
 	}
 
-	ScriptValue::operator float()
+	float ScriptValue::GetFloat()
 	{
 		float val;
 		Push();
@@ -127,7 +127,7 @@ namespace Passion
 		return val;
 	}
 
-	ScriptValue::operator double()
+	double ScriptValue::GetDouble()
 	{
 		double val;
 		Push();
@@ -136,7 +136,7 @@ namespace Passion
 		return val;
 	}
 
-	ScriptValue::operator bool()
+	bool ScriptValue::GetBoolean()
 	{
 		bool val;
 		Push();
@@ -145,13 +145,22 @@ namespace Passion
 		return val;
 	}
 
-	ScriptValue::operator const char*()
+	const char* ScriptValue::GetString()
 	{
 		const char* val;
 		Push();
 		val = lua_tostring( m_lua, -1 );
 		lua_pop( m_lua, -1 );
 		return val;
+	}
+
+	void* ScriptValue::GetUserData()
+	{
+		void** val;
+		Push();
+		val = (void**)lua_touserdata( m_lua, -1 );
+		lua_pop( m_lua, -1 );
+		return *val;
 	}
 
 	std::auto_ptr<BaseScriptValue> ScriptValue::GetMember( const char* key )
@@ -209,81 +218,94 @@ namespace Passion
 		return std::auto_ptr<BaseScriptValue>( new ScriptValue( m_lua, ref, selfcopy, keyref ) );
 	}
 
-	void ScriptValue::operator= ( int val )
+	void ScriptValue::Set( int value )
 	{
 		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_tbl );
 		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_key );
-		lua_pushinteger( m_lua, val );
+		lua_pushinteger( m_lua, value );
 		lua_settable( m_lua, -3 );
 		lua_pop( m_lua, -1 );
 
 		luaL_unref( m_lua, LUA_REGISTRYINDEX, m_ref );
-		lua_pushinteger( m_lua, val );
+		lua_pushinteger( m_lua, value );
 		m_ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
 	}
 
-	void ScriptValue::operator= ( float val )
+	void ScriptValue::Set( float value )
 	{
 		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_tbl );
 		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_key );
-		lua_pushnumber( m_lua, val );
+		lua_pushnumber( m_lua, value );
 		lua_settable( m_lua, -3 );
 		lua_pop( m_lua, -1 );
 
 		luaL_unref( m_lua, LUA_REGISTRYINDEX, m_ref );
-		lua_pushnumber( m_lua, val );
+		lua_pushnumber( m_lua, value );
 		m_ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
 	}
 
-	void ScriptValue::operator= ( double val )
+	void ScriptValue::Set( double value )
 	{
 		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_tbl );
 		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_key );
-		lua_pushnumber( m_lua, val );
+		lua_pushnumber( m_lua, value );
 		lua_settable( m_lua, -3 );
 		lua_pop( m_lua, -1 );
 
 		luaL_unref( m_lua, LUA_REGISTRYINDEX, m_ref );
-		lua_pushnumber( m_lua, val );
+		lua_pushnumber( m_lua, value );
 		m_ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
 	}
 
-	void ScriptValue::operator= ( bool val )
+	void ScriptValue::Set( bool value )
 	{
 		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_tbl );
 		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_key );
-		lua_pushboolean( m_lua, val );
+		lua_pushboolean( m_lua, value );
 		lua_settable( m_lua, -3 );
 		lua_pop( m_lua, -1 );
 
 		luaL_unref( m_lua, LUA_REGISTRYINDEX, m_ref );
-		lua_pushboolean( m_lua, val );
+		lua_pushboolean( m_lua, value );
 		m_ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
 	}
 
-	void ScriptValue::operator= ( const char* val )
+	void ScriptValue::Set( const char* value )
 	{
 		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_tbl );
 		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_key );
-		lua_pushstring( m_lua, val );
+		lua_pushstring( m_lua, value );
 		lua_settable( m_lua, -3 );
 		lua_pop( m_lua, -1 );
 
 		luaL_unref( m_lua, LUA_REGISTRYINDEX, m_ref );
-		lua_pushstring( m_lua, val );
+		lua_pushstring( m_lua, value );
 		m_ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
 	}
 
-	void ScriptValue::operator= ( BaseScriptValue* val )
+	void ScriptValue::Set( std::auto_ptr<BaseScriptValue> value )
 	{
 		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_tbl );
 		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_key );
-		val->Push();
+		value->Push();
 		lua_settable( m_lua, -3 );
 		lua_pop( m_lua, -1 );
 
 		luaL_unref( m_lua, LUA_REGISTRYINDEX, m_ref );
-		val->Push();
+		value->Push();
+		m_ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
+	}
+
+	void ScriptValue::Set( ScriptFunction value )
+	{
+		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_tbl );
+		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_key );
+		lua_pushcfunction( m_lua, (lua_CFunction)value );
+		lua_settable( m_lua, -3 );
+		lua_pop( m_lua, -1 );
+
+		luaL_unref( m_lua, LUA_REGISTRYINDEX, m_ref );
+		lua_pushcfunction( m_lua, (lua_CFunction)value );
 		m_ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
 	}
 

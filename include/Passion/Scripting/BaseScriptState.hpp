@@ -38,16 +38,25 @@ namespace Passion
 		virtual bool DoString( const char* code ) = 0;
 		virtual bool DoFile( const char* path ) = 0;
 
+		virtual std::auto_ptr<BaseScriptValue> NewTable() = 0;
+		virtual std::auto_ptr<BaseScriptValue> UserData( void* data, std::auto_ptr<BaseScriptValue> metatable ) = 0;
+
+		virtual void SetMetaTable( std::auto_ptr<BaseScriptValue> value, std::auto_ptr<BaseScriptValue> metatable ) = 0;
+		virtual std::auto_ptr<BaseScriptValue> GetMetaTable( std::auto_ptr<BaseScriptValue> value ) = 0;
+
 		virtual std::auto_ptr<BaseScriptValue> Globals() = 0;
 
+		virtual void Push( std::auto_ptr<BaseScriptValue> value ) = 0;
 		virtual void Push( const char* value ) = 0;
 		virtual void Push( const char* value, unsigned int length ) = 0;
 		virtual void Push( bool value ) = 0;
 		virtual void Push( double value ) = 0;
 		virtual void Push( float value ) = 0;
 		virtual void Push( int value ) = 0;
+		virtual void Push( void* value, std::auto_ptr<BaseScriptValue> metatable ) = 0;
 
 		virtual void Pop( int values ) = 0;
+		virtual std::auto_ptr<BaseScriptValue> Get( int index ) = 0;
 
 		virtual int Top() = 0;
 
