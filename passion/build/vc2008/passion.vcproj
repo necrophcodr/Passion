@@ -83,7 +83,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy &quot;$(SolutionDir)..\..\lib\render-d.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\render-d.dll&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)..\..\lib\input-d.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\input-d.dll&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)..\..\lib\scripting-d.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\scripting-d.dll&quot;&#x0D;&#x0A;"
+				CommandLine="copy &quot;$(SolutionDir)..\..\lib\render-d.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\bin\render-d.dll&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)..\..\lib\input-d.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\bin\input-d.dll&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)..\..\lib\scripting-d.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\bin\scripting-d.dll&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -156,7 +156,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy &quot;$(SolutionDir)..\..\lib\render.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\render.dll&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)..\..\lib\input.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\input.dll&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)..\..\lib\scripting.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\scripting.dll&quot;&#x0D;&#x0A;"
+				CommandLine="copy &quot;$(SolutionDir)..\..\lib\render.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\bin\render.dll&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)..\..\lib\input.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\bin\input.dll&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)..\..\lib\scripting.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\bin\scripting.dll&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -169,10 +169,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\src\CDefaultScene.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\src\Passion.cpp"
 				>
 			</File>
@@ -182,10 +178,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath="..\..\src\CDefaultScene.hpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

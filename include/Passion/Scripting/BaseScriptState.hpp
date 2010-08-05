@@ -47,6 +47,7 @@ namespace Passion
 		virtual std::auto_ptr<BaseScriptValue> Globals() = 0;
 
 		virtual void Push( std::auto_ptr<BaseScriptValue> value ) = 0;
+		virtual void Push( BaseScriptValue* value ) = 0;
 		virtual void Push( const char* value ) = 0;
 		virtual void Push( const char* value, unsigned int length ) = 0;
 		virtual void Push( bool value ) = 0;

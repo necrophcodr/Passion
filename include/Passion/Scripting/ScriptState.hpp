@@ -60,6 +60,7 @@ namespace Passion
 
 		std::auto_ptr<BaseScriptValue> Globals();
 
+		void Push( BaseScriptValue* value );
 		void Push( std::auto_ptr<BaseScriptValue> value );
 		void Push( const char* value );
 		void Push( const char* value, unsigned int length );

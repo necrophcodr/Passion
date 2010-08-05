@@ -20,75 +20,181 @@
 //
 ////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////
 // Headers
+////////////////////////////////////////////////////////////
+
 #include <Passion/Render.hpp>
 #include <Passion/Input.hpp>
 #include <Passion/Scripting.hpp>
 #include <Passion/Network.hpp>
-#include <ctime>
-#include "CDefaultScene.hpp"
+#include <fstream>
 
-int main()
+// Convenience
+using Passion::BaseScriptValue;
+
+////////////////////////////////////////////////////////////
+// Error handling
+////////////////////////////////////////////////////////////
+
+int handleError( const char* error )
 {
-	// Load the interfaces
-#ifndef _DEBUG_
-	Passion::IBaseRender*		render		= Passion::CreateInterface<Passion::IBaseRender>( "bin/render" );
-	Passion::IBaseInput*		input		= Passion::CreateInterface<Passion::IBaseInput>( "bin/input" );
-	Passion::IBaseScripting*	scripting	= Passion::CreateInterface<Passion::IBaseScripting>( "bin/scripting" );
-	Passion::IBaseNetwork*		network		= Passion::CreateInterface<Passion::IBaseNetwork>( "bin/network" );
-#else
-	Passion::IBaseRender*		render		= Passion::CreateInterface<Passion::IBaseRender>( "bin/render-d" );
-	Passion::IBaseInput*		input		= Passion::CreateInterface<Passion::IBaseInput>( "bin/input-d" );
-	Passion::IBaseScripting*	scripting	= Passion::CreateInterface<Passion::IBaseScripting>( "bin/scripting-d" );
-	Passion::IBaseNetwork*		network		= Passion::CreateInterface<Passion::IBaseNetwork>( "bin/network-d" );
-#endif
+	std::cout << error << std::endl;
 
-	// Create scripting state
+	getchar();
+	return 1;
+}
+
+int main( int argc, const char* argv[] )
+{
+	////////////////////////////////////////////////////////////
+	// Load interfaces
+	////////////////////////////////////////////////////////////
+
+	#ifndef _DEBUG_
+		Passion::IBaseRender*		render		= Passion::CreateInterface<Passion::IBaseRender>( "bin/render" );
+		Passion::IBaseInput*		input		= Passion::CreateInterface<Passion::IBaseInput>( "bin/input" );
+		Passion::IBaseScripting*	scripting	= Passion::CreateInterface<Passion::IBaseScripting>( "bin/scripting" );
+		Passion::IBaseNetwork*		network		= Passion::CreateInterface<Passion::IBaseNetwork>( "bin/network" );
+	#else
+		Passion::IBaseRender*		render		= Passion::CreateInterface<Passion::IBaseRender>( "bin/render-d" );
+		Passion::IBaseInput*		input		= Passion::CreateInterface<Passion::IBaseInput>( "bin/input-d" );
+		Passion::IBaseScripting*	scripting	= Passion::CreateInterface<Passion::IBaseScripting>( "bin/scripting-d" );
+		Passion::IBaseNetwork*		network		= Passion::CreateInterface<Passion::IBaseNetwork>( "bin/network-d" );
+	#endif
+
+	////////////////////////////////////////////////////////////
+	// Create script state and initialize the GAME table
+	////////////////////////////////////////////////////////////
+
 	Passion::BaseScriptState* script = scripting->CreateState();
+	std::auto_ptr<BaseScriptValue> GAME = script->Globals()->GetMember( "GAME" );
+	GAME->Set( script->NewTable() );
 
-	// GAME:Initialize (Creates window too!)
-
-	Passion::RenderWindow* window = render->CreateRenderWindow( 1280, 720, "Passion", false );
-	input->SetWindow( window );
-
-	render->SetAlphaBlendingEnabled( true );
-	render->SetTexturingEnabled( true );
+	////////////////////////////////////////////////////////////
+	// Load specified code or default code
+	////////////////////////////////////////////////////////////
 	
-	//  GAME:Load()
+	if ( argc > 1 ) {
+		std::ifstream i ( argv[1], std::ios::in );
+		if ( i.is_open() ) {
+			i.close();
 
-	// NO GAME SCREEN, SHOULD BE LUA BASED AND REMOVED
-	CDefaultScene scene( render );
-	// END OF NO GAME SCREEN
+			script->DoFile( argv[1] );
+		} else {
+			i.close();
+			
+			std::cout << argv[1] << ": No such file or directory!" << std::endl;
 
-	// Game loop
-	while ( input->GetEvents() )
-	{
-		// GAME:KeyPress() or GAME:MousePress etc.
-		// GAME:Update()
-
-		// GAME:Draw()
-		
-		// NO GAME SCREEN, SHOULD BE LUA BASED AND REMOVED
-			render->Clear( Passion::Color( 0.0f, 0.0f, 0.0f ) );
-
-			// Draw default scene
-			scene.Update( render->FrameTime() );
-			scene.Draw();
-
-			render->Present();
-		// END OF NO GAME SCREEN
+			return 1;
+		}
+	} else {
+		script->DoString( "print( \"No default screen code.\" )" );
 	}
 
-	// GAME:Unload()
+	////////////////////////////////////////////////////////////
+	// Configure the window
+	////////////////////////////////////////////////////////////
+
+	Passion::RenderWindow* window;
+
+	int w = 1280;
+	int h = 720;
+	char title[128] = "Passion 0.1a";
+	bool fullscreen = false;
+
+	if ( GAME->IsTable() && GAME->GetMember( "Config" )->IsFunction() ) {
+		std::auto_ptr<BaseScriptValue> config = script->NewTable();
+
+		config->GetMember( "Title" )->Set( title );
+		config->GetMember( "Fullscreen" )->Set( fullscreen );
+		config->GetMember( "Width" )->Set( w );
+		config->GetMember( "Height" )->Set( h );
+		
+		script->Push( GAME->GetMember( "Config" ).get() );
+		script->Push( GAME.get() );
+		script->Push( config );
+
+		if ( script->Call( 2, 1 ) ) {
+			config = script->Get( -1 );
+
+			if ( config->IsTable() && config->GetMember( "Title" )->IsString() && config->GetMember( "Fullscreen" )->IsBoolean() &&
+				config->GetMember( "Width" )->IsNumber() && config->GetMember( "Height" )->IsNumber() )
+			{
+				w = config->GetMember( "Width" )->GetInteger();
+				h = config->GetMember( "Height" )->GetInteger();
+				strcpy( title, config->GetMember( "Title" )->GetString() );
+				fullscreen = config->GetMember( "Fullscreen" )->GetBoolean();
+			} else {
+				std::cout << "Warning: Unexpected return value from GAME:Config, ignored." << std::endl;
+			}
+		} else
+			return handleError( script->Error() );
+	}
+
+	window = render->CreateRenderWindow( w, h, title, fullscreen );
+	input->SetWindow( window );
+	
+	////////////////////////////////////////////////////////////
+	// Initialize game and load resources
+	////////////////////////////////////////////////////////////
+
+	if ( GAME->IsTable() && GAME->GetMember( "Initialize" )->IsFunction() ) {
+		script->Push( GAME->GetMember( "Initialize" ).get() );
+		script->Push( GAME.get() );
+
+		if ( !script->Call( 1, 0 ) )
+			return handleError( script->Error() );
+	}
+	
+	while ( input->GetEvents() )
+	{
+		////////////////////////////////////////////////////////////
+		// Update
+		////////////////////////////////////////////////////////////
+
+		if ( GAME->IsTable() && GAME->GetMember( "Update" )->IsFunction() ) {
+			script->Push( GAME->GetMember( "Update" ).get() );
+			script->Push( GAME.get() );
+			script->Push( render->FrameTime() );
+
+			if ( !script->Call( 2, 0 ) )
+				return handleError( script->Error() );
+		}
+
+		////////////////////////////////////////////////////////////
+		// Draw
+		////////////////////////////////////////////////////////////
+
+		if ( GAME->IsTable() && GAME->GetMember( "Draw" )->IsFunction() ) {
+			script->Push( GAME->GetMember( "Draw" ).get() );
+			script->Push( GAME.get() );
+
+			if ( !script->Call( 1, 0 ) )
+				return handleError( script->Error() );
+		}
+	}
+
+	////////////////////////////////////////////////////////////
+	// Unload
+	////////////////////////////////////////////////////////////
+
+	if ( GAME->IsTable() && GAME->GetMember( "Unload" )->IsFunction() ) {
+		script->Push( GAME->GetMember( "Unload" ).get() );
+		script->Push( GAME.get() );
+
+		if ( !script->Call( 1, 0 ) )
+			return handleError( script->Error() );
+	}
 
 	// Destroy script state
-	//scripting->DestroyState( script );
+	scripting->DestroyState( script );
 
 	// Clean up
 	Passion::DestroyInterface<Passion::IBaseRender>( render );
 	Passion::DestroyInterface<Passion::IBaseInput>( input );
 	Passion::DestroyInterface<Passion::IBaseScripting>( scripting );
 	Passion::DestroyInterface<Passion::IBaseNetwork>( network );
-
+	
 	return 0;
 }

@@ -116,6 +116,7 @@ namespace Passion
 		return std::auto_ptr<BaseScriptValue>( new ScriptValue( m_lua, ref, ref, key ) );
 	}
 
+	void ScriptState::Push( BaseScriptValue* value ) { value->Push(); }
 	void ScriptState::Push( std::auto_ptr<BaseScriptValue> value ) { value->Push(); }
 	void ScriptState::Push( const char* value ) { lua_pushstring( m_lua, value ); }
 	void ScriptState::Push( const char* value, unsigned int length ) { lua_pushlstring( m_lua, value, length ); }
