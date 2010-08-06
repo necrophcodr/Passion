@@ -10,7 +10,7 @@
 			>
 			<DebugSettings
 				Command="$(TargetPath)"
-				WorkingDirectory="C:\Users\Overv\Desktop\Passion\passion\bin"
+				WorkingDirectory="$(TargetDir)"
 				CommandArguments="&quot;lua/main.lua&quot;"
 				Attach="false"
 				DebuggerType="3"
@@ -38,7 +38,7 @@
 			>
 			<DebugSettings
 				Command="$(TargetPath)"
-				WorkingDirectory="C:\Users\Overv\Desktop\Passion\passion\bin"
+				WorkingDirectory="$(TargetDir)"
 				CommandArguments="&quot;lua/main.lua&quot;"
 				Attach="false"
 				DebuggerType="3"
