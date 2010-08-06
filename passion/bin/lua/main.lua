@@ -15,7 +15,9 @@ function GAME:Update( dt )
 end
 
 function GAME:Draw()
+	render.Clear( Color( math.sin( os.clock() ) * 127 + 127, 0, 0 ) )
 	
+	render.Present()
 end
 
 function GAME:Unload()

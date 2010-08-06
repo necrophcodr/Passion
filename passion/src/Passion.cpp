@@ -24,26 +24,35 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <Passion/Render.hpp>
-#include <Passion/Input.hpp>
-#include <Passion/Scripting.hpp>
-#include <Passion/Network.hpp>
 #include <fstream>
 
-// Convenience
-using Passion::BaseScriptValue;
+// Base header
+#include "Interfaces.hpp"
 
-////////////////////////////////////////////////////////////
+// Libraries
+#include "render.hpp"
+
+// Lua files
+#include "util.lua.hpp"
+
 // Error handling
+#include "ErrorHandling.hpp"
+
+////////////////////////////////////////////////////////////
+// Globals
 ////////////////////////////////////////////////////////////
 
-int handleError( const char* error )
-{
-	std::cout << error << std::endl;
+Passion::IBaseRender*		g_Render	= NULL;
+Passion::IBaseInput*		g_Input		= NULL;
 
-	getchar();
-	return 1;
-}
+Passion::IBaseScripting*	g_Scripting	= NULL;
+Passion::BaseScriptState*	g_Lua		= NULL;
+
+Passion::IBaseNetwork*		g_Network	= NULL;
+
+////////////////////////////////////////////////////////////
+// Main
+////////////////////////////////////////////////////////////
 
 int main( int argc, const char* argv[] )
 {
@@ -52,24 +61,37 @@ int main( int argc, const char* argv[] )
 	////////////////////////////////////////////////////////////
 
 	#ifndef _DEBUG_
-		Passion::IBaseRender*		render		= Passion::CreateInterface<Passion::IBaseRender>( "bin/render" );
-		Passion::IBaseInput*		input		= Passion::CreateInterface<Passion::IBaseInput>( "bin/input" );
-		Passion::IBaseScripting*	scripting	= Passion::CreateInterface<Passion::IBaseScripting>( "bin/scripting" );
-		Passion::IBaseNetwork*		network		= Passion::CreateInterface<Passion::IBaseNetwork>( "bin/network" );
+		g_Render	= Passion::CreateInterface<Passion::IBaseRender>( "bin/render" );
+		g_Input		= Passion::CreateInterface<Passion::IBaseInput>( "bin/input" );
+		g_Scripting	= Passion::CreateInterface<Passion::IBaseScripting>( "bin/scripting" );
+		g_Network	= Passion::CreateInterface<Passion::IBaseNetwork>( "bin/network" );
 	#else
-		Passion::IBaseRender*		render		= Passion::CreateInterface<Passion::IBaseRender>( "bin/render-d" );
-		Passion::IBaseInput*		input		= Passion::CreateInterface<Passion::IBaseInput>( "bin/input-d" );
-		Passion::IBaseScripting*	scripting	= Passion::CreateInterface<Passion::IBaseScripting>( "bin/scripting-d" );
-		Passion::IBaseNetwork*		network		= Passion::CreateInterface<Passion::IBaseNetwork>( "bin/network-d" );
+		g_Render	= Passion::CreateInterface<Passion::IBaseRender>( "bin/render-d" );
+		g_Input		= Passion::CreateInterface<Passion::IBaseInput>( "bin/input-d" );
+		g_Scripting	= Passion::CreateInterface<Passion::IBaseScripting>( "bin/scripting-d" );
+		g_Network	= Passion::CreateInterface<Passion::IBaseNetwork>( "bin/network-d" );
 	#endif
 
 	////////////////////////////////////////////////////////////
 	// Create script state and initialize the GAME table
 	////////////////////////////////////////////////////////////
 
-	Passion::BaseScriptState* script = scripting->CreateState();
-	std::auto_ptr<BaseScriptValue> GAME = script->Globals()->GetMember( "GAME" );
-	GAME->Set( script->NewTable() );
+	g_Lua = g_Scripting->CreateState();
+
+	std::auto_ptr<BaseScriptValue> GAME = g_Lua->Globals()->GetMember( "GAME" );
+	GAME->Set( g_Lua->NewTable() );
+
+	////////////////////////////////////////////////////////////
+	// Load libraries
+	////////////////////////////////////////////////////////////
+
+	render::Bind();
+
+	////////////////////////////////////////////////////////////
+	// Load Lua files
+	////////////////////////////////////////////////////////////
+
+	g_Lua->DoString( utillua );
 
 	////////////////////////////////////////////////////////////
 	// Load specified code or default code
@@ -80,7 +102,7 @@ int main( int argc, const char* argv[] )
 		if ( i.is_open() ) {
 			i.close();
 
-			script->DoFile( argv[1] );
+			g_Lua->DoFile( argv[1] );
 		} else {
 			i.close();
 			
@@ -89,7 +111,7 @@ int main( int argc, const char* argv[] )
 			return 1;
 		}
 	} else {
-		script->DoString( "print( \"No default screen code.\" )" );
+		g_Lua->DoString( "print( \"No default screen code.\" )" );
 	}
 
 	////////////////////////////////////////////////////////////
@@ -104,19 +126,19 @@ int main( int argc, const char* argv[] )
 	bool fullscreen = false;
 
 	if ( GAME->IsTable() && GAME->GetMember( "Config" )->IsFunction() ) {
-		std::auto_ptr<BaseScriptValue> config = script->NewTable();
+		std::auto_ptr<BaseScriptValue> config = g_Lua->NewTable();
 
 		config->GetMember( "Title" )->Set( title );
 		config->GetMember( "Fullscreen" )->Set( fullscreen );
 		config->GetMember( "Width" )->Set( w );
 		config->GetMember( "Height" )->Set( h );
 		
-		script->Push( GAME->GetMember( "Config" ).get() );
-		script->Push( GAME.get() );
-		script->Push( config );
+		g_Lua->Push( GAME->GetMember( "Config" ).get() );
+		g_Lua->Push( GAME.get() );
+		g_Lua->Push( config );
 
-		if ( script->Call( 2, 1 ) ) {
-			config = script->Get( -1 );
+		if ( g_Lua->Call( 2, 1 ) ) {
+			config = g_Lua->Get( -1 );
 
 			if ( config->IsTable() && config->GetMember( "Title" )->IsString() && config->GetMember( "Fullscreen" )->IsBoolean() &&
 				config->GetMember( "Width" )->IsNumber() && config->GetMember( "Height" )->IsNumber() )
@@ -129,37 +151,37 @@ int main( int argc, const char* argv[] )
 				std::cout << "Warning: Unexpected return value from GAME:Config, ignored." << std::endl;
 			}
 		} else
-			return handleError( script->Error() );
+			return Error( g_Lua->Error() );
 	}
 
-	window = render->CreateRenderWindow( w, h, title, fullscreen );
-	input->SetWindow( window );
+	window = g_Render->CreateRenderWindow( w, h, title, fullscreen );
+	g_Input->SetWindow( window );
 	
 	////////////////////////////////////////////////////////////
 	// Initialize game and load resources
 	////////////////////////////////////////////////////////////
 
 	if ( GAME->IsTable() && GAME->GetMember( "Initialize" )->IsFunction() ) {
-		script->Push( GAME->GetMember( "Initialize" ).get() );
-		script->Push( GAME.get() );
+		g_Lua->Push( GAME->GetMember( "Initialize" ).get() );
+		g_Lua->Push( GAME.get() );
 
-		if ( !script->Call( 1, 0 ) )
-			return handleError( script->Error() );
+		if ( !g_Lua->Call( 1, 0 ) )
+			return Error( g_Lua->Error() );
 	}
 	
-	while ( input->GetEvents() )
+	while ( g_Input->GetEvents() )
 	{
 		////////////////////////////////////////////////////////////
 		// Update
 		////////////////////////////////////////////////////////////
 
 		if ( GAME->IsTable() && GAME->GetMember( "Update" )->IsFunction() ) {
-			script->Push( GAME->GetMember( "Update" ).get() );
-			script->Push( GAME.get() );
-			script->Push( render->FrameTime() );
+			g_Lua->Push( GAME->GetMember( "Update" ).get() );
+			g_Lua->Push( GAME.get() );
+			g_Lua->Push( g_Render->FrameTime() );
 
-			if ( !script->Call( 2, 0 ) )
-				return handleError( script->Error() );
+			if ( !g_Lua->Call( 2, 0 ) )
+				return Error( g_Lua->Error() );
 		}
 
 		////////////////////////////////////////////////////////////
@@ -167,11 +189,11 @@ int main( int argc, const char* argv[] )
 		////////////////////////////////////////////////////////////
 
 		if ( GAME->IsTable() && GAME->GetMember( "Draw" )->IsFunction() ) {
-			script->Push( GAME->GetMember( "Draw" ).get() );
-			script->Push( GAME.get() );
+			g_Lua->Push( GAME->GetMember( "Draw" ).get() );
+			g_Lua->Push( GAME.get() );
 
-			if ( !script->Call( 1, 0 ) )
-				return handleError( script->Error() );
+			if ( !g_Lua->Call( 1, 0 ) )
+				return Error( g_Lua->Error() );
 		}
 	}
 
@@ -180,21 +202,21 @@ int main( int argc, const char* argv[] )
 	////////////////////////////////////////////////////////////
 
 	if ( GAME->IsTable() && GAME->GetMember( "Unload" )->IsFunction() ) {
-		script->Push( GAME->GetMember( "Unload" ).get() );
-		script->Push( GAME.get() );
+		g_Lua->Push( GAME->GetMember( "Unload" ).get() );
+		g_Lua->Push( GAME.get() );
 
-		if ( !script->Call( 1, 0 ) )
-			return handleError( script->Error() );
+		if ( !g_Lua->Call( 1, 0 ) )
+			return Error( g_Lua->Error() );
 	}
 
-	// Destroy script state
-	scripting->DestroyState( script );
+	// Destroy g_Lua state
+	g_Scripting->DestroyState( g_Lua );
 
 	// Clean up
-	Passion::DestroyInterface<Passion::IBaseRender>( render );
-	Passion::DestroyInterface<Passion::IBaseInput>( input );
-	Passion::DestroyInterface<Passion::IBaseScripting>( scripting );
-	Passion::DestroyInterface<Passion::IBaseNetwork>( network );
+	Passion::DestroyInterface<Passion::IBaseRender>( g_Render );
+	Passion::DestroyInterface<Passion::IBaseInput>( g_Input );
+	Passion::DestroyInterface<Passion::IBaseScripting>( g_Scripting );
+	Passion::DestroyInterface<Passion::IBaseNetwork>( g_Network );
 	
 	return 0;
 }

@@ -25,6 +25,7 @@
 ////////////////////////////////////////////////////////////
 
 #include <Passion/Scripting/ScriptValue.hpp>
+#include <iostream>
 
 namespace Passion
 {
@@ -50,9 +51,9 @@ namespace Passion
 
 	ScriptValue::~ScriptValue()
 	{
-		luaL_unref( m_lua, LUA_REGISTRYINDEX, m_ref );
+		if ( m_ref > 0 ) luaL_unref( m_lua, LUA_REGISTRYINDEX, m_ref );
 		if ( m_ref != m_tbl ) luaL_unref( m_lua, LUA_REGISTRYINDEX, m_tbl );
-		luaL_unref( m_lua, LUA_REGISTRYINDEX, m_key );
+		if ( m_key > 0 ) luaL_unref( m_lua, LUA_REGISTRYINDEX, m_key );
 	}
 
 	bool ScriptValue::IsNumber()
@@ -60,7 +61,7 @@ namespace Passion
 		bool t;
 		Push();
 			t = lua_isnumber( m_lua, -1 ) == 1;
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 		return t;
 	}
 
@@ -69,7 +70,7 @@ namespace Passion
 		bool t;
 		Push();
 			t = lua_isboolean( m_lua, -1 );
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 		return t;
 	}
 
@@ -78,7 +79,7 @@ namespace Passion
 		bool t;
 		Push();
 			t = lua_isnil( m_lua, -1 );
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 		return t;
 	}
 
@@ -87,7 +88,7 @@ namespace Passion
 		bool t;
 		Push();
 			t = lua_istable( m_lua, -1 );
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 		return t;
 	}
 
@@ -96,7 +97,7 @@ namespace Passion
 		bool t;
 		Push();
 			t = lua_isstring( m_lua, -1 ) == 1;
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 		return t;
 	}
 
@@ -105,7 +106,7 @@ namespace Passion
 		bool t;
 		Push();
 			t = lua_isfunction( m_lua, -1 );
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 		return t;
 	}
 
@@ -114,7 +115,7 @@ namespace Passion
 		int val;
 		Push();
 		val = lua_tointeger( m_lua, -1 );
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 		return val;
 	}
 
@@ -123,7 +124,7 @@ namespace Passion
 		float val;
 		Push();
 		val = static_cast<float>( lua_tonumber( m_lua, -1 ) );
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 		return val;
 	}
 
@@ -132,7 +133,7 @@ namespace Passion
 		double val;
 		Push();
 		val = lua_tonumber( m_lua, -1 );
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 		return val;
 	}
 
@@ -150,7 +151,7 @@ namespace Passion
 		const char* val;
 		Push();
 		val = lua_tostring( m_lua, -1 );
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 		return val;
 	}
 
@@ -159,7 +160,7 @@ namespace Passion
 		void** val;
 		Push();
 		val = (void**)lua_touserdata( m_lua, -1 );
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 		return *val;
 	}
 
@@ -195,7 +196,7 @@ namespace Passion
 		lua_gettable( m_lua, -2 );
 		int ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
 
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 
 		return std::auto_ptr<BaseScriptValue>( new ScriptValue( m_lua, ref, selfcopy, keyref ) );
 	}
@@ -213,7 +214,7 @@ namespace Passion
 		lua_gettable( m_lua, -2 );
 		int ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
 
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 
 		return std::auto_ptr<BaseScriptValue>( new ScriptValue( m_lua, ref, selfcopy, keyref ) );
 	}
@@ -224,7 +225,7 @@ namespace Passion
 		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_key );
 		lua_pushinteger( m_lua, value );
 		lua_settable( m_lua, -3 );
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 
 		luaL_unref( m_lua, LUA_REGISTRYINDEX, m_ref );
 		lua_pushinteger( m_lua, value );
@@ -237,7 +238,7 @@ namespace Passion
 		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_key );
 		lua_pushnumber( m_lua, value );
 		lua_settable( m_lua, -3 );
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 
 		luaL_unref( m_lua, LUA_REGISTRYINDEX, m_ref );
 		lua_pushnumber( m_lua, value );
@@ -250,7 +251,7 @@ namespace Passion
 		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_key );
 		lua_pushnumber( m_lua, value );
 		lua_settable( m_lua, -3 );
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 
 		luaL_unref( m_lua, LUA_REGISTRYINDEX, m_ref );
 		lua_pushnumber( m_lua, value );
@@ -263,7 +264,7 @@ namespace Passion
 		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_key );
 		lua_pushboolean( m_lua, value );
 		lua_settable( m_lua, -3 );
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 
 		luaL_unref( m_lua, LUA_REGISTRYINDEX, m_ref );
 		lua_pushboolean( m_lua, value );
@@ -276,7 +277,7 @@ namespace Passion
 		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_key );
 		lua_pushstring( m_lua, value );
 		lua_settable( m_lua, -3 );
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 
 		luaL_unref( m_lua, LUA_REGISTRYINDEX, m_ref );
 		lua_pushstring( m_lua, value );
@@ -289,7 +290,7 @@ namespace Passion
 		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_key );
 		value->Push();
 		lua_settable( m_lua, -3 );
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 
 		luaL_unref( m_lua, LUA_REGISTRYINDEX, m_ref );
 		value->Push();
@@ -302,11 +303,37 @@ namespace Passion
 		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_key );
 		lua_pushcfunction( m_lua, (lua_CFunction)value );
 		lua_settable( m_lua, -3 );
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 
 		luaL_unref( m_lua, LUA_REGISTRYINDEX, m_ref );
 		lua_pushcfunction( m_lua, (lua_CFunction)value );
 		m_ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
+	}
+
+	void ScriptValue::SetMetaTable( std::auto_ptr<BaseScriptValue> metatable )
+	{
+		Push();
+		metatable->Push();
+		lua_setmetatable( m_lua, -2 );
+		lua_pop( m_lua, 1 );
+	}
+	
+	std::auto_ptr<BaseScriptValue> ScriptValue::GetMetaTable()
+	{
+		Push();
+		lua_getmetatable( m_lua, -1 );
+		
+		int ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
+		return std::auto_ptr<BaseScriptValue>( new ScriptValue( m_lua, ref, ref, 0 ) );
+	}
+
+	bool ScriptValue::Equals( std::auto_ptr<BaseScriptValue> value )
+	{
+		Push();
+		value->Push();
+		bool eq = lua_equal( m_lua, -1, -2 ) == 1;
+		lua_pop( m_lua, 2 );
+		return eq;
 	}
 
 	void ScriptValue::Push()

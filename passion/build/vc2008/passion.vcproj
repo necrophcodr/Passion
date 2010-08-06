@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="passion"
 	ProjectGUID="{36A3547F-1F25-4BFC-AADC-FCCAA13B18EC}"
 	RootNamespace="passion"
@@ -83,7 +83,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy &quot;$(SolutionDir)..\..\lib\render-d.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\bin\render-d.dll&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)..\..\lib\input-d.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\bin\input-d.dll&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)..\..\lib\scripting-d.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\bin\scripting-d.dll&quot;&#x0D;&#x0A;"
+				CommandLine="copy &quot;$(SolutionDir)..\..\lib\render-d.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\bin\render-d.dll&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)..\..\lib\input-d.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\bin\input-d.dll&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)..\..\lib\scripting-d.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\bin\scripting-d.dll&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)..\..\lib\network-d.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\bin\network-d.dll&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -156,7 +156,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy &quot;$(SolutionDir)..\..\lib\render.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\bin\render.dll&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)..\..\lib\input.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\bin\input.dll&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)..\..\lib\scripting.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\bin\scripting.dll&quot;&#x0D;&#x0A;"
+				CommandLine="copy &quot;$(SolutionDir)..\..\lib\render.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\bin\render.dll&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)..\..\lib\input.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\bin\input.dll&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)..\..\lib\scripting.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\bin\scripting.dll&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)..\..\lib\network.dll&quot; &quot;$(SolutionDir)..\..\Passion\bin\bin\network.dll&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -178,6 +178,30 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="..\..\src\ErrorHandling.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\Interfaces.hpp"
+				>
+			</File>
+			<Filter
+				Name="Libraries"
+				>
+				<File
+					RelativePath="..\..\src\render.hpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Lua"
+				>
+				<File
+					RelativePath="..\..\src\util.lua.hpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"

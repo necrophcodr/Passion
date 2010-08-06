@@ -41,10 +41,8 @@ namespace Passion
 		virtual std::auto_ptr<BaseScriptValue> NewTable() = 0;
 		virtual std::auto_ptr<BaseScriptValue> UserData( void* data, std::auto_ptr<BaseScriptValue> metatable ) = 0;
 
-		virtual void SetMetaTable( std::auto_ptr<BaseScriptValue> value, std::auto_ptr<BaseScriptValue> metatable ) = 0;
-		virtual std::auto_ptr<BaseScriptValue> GetMetaTable( std::auto_ptr<BaseScriptValue> value ) = 0;
-
 		virtual std::auto_ptr<BaseScriptValue> Globals() = 0;
+		virtual std::auto_ptr<BaseScriptValue> Registry() = 0;
 
 		virtual void Push( std::auto_ptr<BaseScriptValue> value ) = 0;
 		virtual void Push( BaseScriptValue* value ) = 0;

@@ -26,6 +26,7 @@
 
 #include <Passion/Scripting/ScriptState.hpp>
 #include <string.h>
+#include <iostream>
 
 namespace Passion
 {
@@ -88,32 +89,24 @@ namespace Passion
 		return std::auto_ptr<BaseScriptValue>( new ScriptValue( m_lua, ref, ref, 0 ) );
 	}
 
-	void ScriptState::SetMetaTable( std::auto_ptr<BaseScriptValue> value, std::auto_ptr<BaseScriptValue> metatable )
-	{
-		value->Push();
-		metatable->Push();
-		lua_setmetatable( m_lua, -2 );
-		lua_pop( m_lua, 1 );
-	}
-
-	std::auto_ptr<BaseScriptValue> ScriptState::GetMetaTable( std::auto_ptr<BaseScriptValue> value )
-	{
-		value->Push();
-		lua_getmetatable( m_lua, -1 );
-		
-		int ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
-		return std::auto_ptr<BaseScriptValue>( new ScriptValue( m_lua, ref, ref, 0 ) );
-	}
-
 	std::auto_ptr<BaseScriptValue> ScriptState::Globals()
 	{
-		lua_getglobal( m_lua, "_G" );
+		lua_pushvalue( m_lua, LUA_GLOBALSINDEX );
 
 		int ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
 		lua_pushstring( m_lua, "_G" );
 		int key = luaL_ref( m_lua, LUA_REGISTRYINDEX );
 
 		return std::auto_ptr<BaseScriptValue>( new ScriptValue( m_lua, ref, ref, key ) );
+	}
+
+	std::auto_ptr<BaseScriptValue> ScriptState::Registry()
+	{
+		lua_pushvalue( m_lua, LUA_REGISTRYINDEX );
+
+		int ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
+
+		return std::auto_ptr<BaseScriptValue>( new ScriptValue( m_lua, ref, ref, 0 ) );
 	}
 
 	void ScriptState::Push( BaseScriptValue* value ) { value->Push(); }
@@ -138,6 +131,7 @@ namespace Passion
 
 	std::auto_ptr<BaseScriptValue> ScriptState::Get( int index )
 	{
+		lua_pushvalue( m_lua, index );
 		int ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
 		return std::auto_ptr<BaseScriptValue>( new ScriptValue( m_lua, ref, ref, 0 ) );
 	}

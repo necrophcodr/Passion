@@ -27,6 +27,8 @@
 
 namespace Passion
 {
+	#define SCRIPT_FUNCTION( name ) static int name( void* p )
+
 	typedef int ( *ScriptFunction ) ( void* p );
 
 	////////////////////////////////////////////////////////////
@@ -63,6 +65,11 @@ namespace Passion
 		virtual void Set( const char* value ) = 0;
 		virtual void Set( std::auto_ptr<BaseScriptValue> value ) = 0;
 		virtual void Set( ScriptFunction value ) = 0;
+
+		virtual void SetMetaTable( std::auto_ptr<BaseScriptValue> metatable ) = 0;
+		virtual std::auto_ptr<BaseScriptValue> GetMetaTable() = 0;
+
+		virtual bool Equals( std::auto_ptr<BaseScriptValue> value ) = 0;
 
 		virtual void Push() = 0;
 	};
