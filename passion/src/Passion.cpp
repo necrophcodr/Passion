@@ -34,6 +34,7 @@
 
 // Lua files
 #include "util.lua.hpp"
+#include "file.lua.hpp"
 
 // Error handling
 #include "ErrorHandling.hpp"
@@ -91,7 +92,8 @@ int main( int argc, const char* argv[] )
 	// Load Lua files
 	////////////////////////////////////////////////////////////
 
-	g_Lua->DoString( utillua );
+	g_Lua->DoString( util_lua );
+	g_Lua->DoString( file_lua );
 
 	////////////////////////////////////////////////////////////
 	// Load specified code or default code
@@ -102,7 +104,8 @@ int main( int argc, const char* argv[] )
 		if ( i.is_open() ) {
 			i.close();
 
-			g_Lua->DoFile( argv[1] );
+			if ( !g_Lua->DoFile( argv[1] ) )
+				return Error( g_Lua->Error() );			
 		} else {
 			i.close();
 			

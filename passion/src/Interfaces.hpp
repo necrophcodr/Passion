@@ -20,6 +20,9 @@
 //
 ////////////////////////////////////////////////////////////
 
+#ifndef PASSION_INTERFACE_HPP
+#define PASSION_INTERFACE_HPP
+
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
@@ -46,3 +49,47 @@ extern Passion::IBaseNetwork*		g_Network;
 ////////////////////////////////////////////////////////////
 
 using Passion::BaseScriptValue;
+
+////////////////////////////////////////////////////////////
+// Type parsing
+////////////////////////////////////////////////////////////
+
+inline Passion::Vector GetVector( int index )
+{
+	float x = 0.0f;
+	float y = 0.0f;
+	float z = 0.0f;
+
+	std::auto_ptr<BaseScriptValue> vec = g_Lua->Get( index );
+
+	if ( vec->IsTable() )
+	{
+		x = vec->GetMember( "x" )->GetFloat();
+		y = vec->GetMember( "y" )->GetFloat();
+		z = vec->GetMember( "z" )->GetFloat();
+	}
+
+	return Passion::Vector( x, y, z );
+}
+
+inline Passion::Color GetColor( int index )
+{
+	float r = 1.0f;
+	float g = 1.0f;
+	float b = 1.0f;
+	float a = 1.0f;
+
+	std::auto_ptr<BaseScriptValue> col = g_Lua->Get( index );
+
+	if ( col->IsTable() )
+	{
+		r = col->GetMember( "r" )->GetFloat() / 255.0f;
+		g = col->GetMember( "g" )->GetFloat() / 255.0f;
+		b = col->GetMember( "b" )->GetFloat() / 255.0f;
+		a = col->GetMember( "a" )->GetFloat() / 255.0f;
+	}
+
+	return Passion::Color( r, g, b, a );
+}
+
+#endif

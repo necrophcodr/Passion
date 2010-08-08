@@ -33,27 +33,277 @@
 class render
 {
 public:
-	SCRIPT_FUNCTION( Clear )
+	SCRIPT_FUNCTION( SupportsShaders )
 	{
-		float r = 0.0f;
-		float g = 0.0f;
-		float b = 0.0f;
+		g_Lua->Push( g_Render->SupportsShaders() );
+		return 1;
+	}
 
+	SCRIPT_FUNCTION( SupportsRenderTargets )
+	{
+		g_Lua->Push( g_Render->SupportsRenderTargets() );
+		return 1;
+	}
+
+	SCRIPT_FUNCTION( SetWireframeEnabled )
+	{
+		g_Render->SetWireframeEnabled( g_Lua->Get( 1 )->GetBoolean() );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( SetDepthEnabled )
+	{
+		g_Render->SetDepthEnabled( g_Lua->Get( 1 )->GetBoolean() );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( SetCullingEnabled )
+	{
+		g_Render->SetCullingEnabled( g_Lua->Get( 1 )->GetBoolean() );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( SetScissorEnabled )
+	{
+		g_Render->SetScissorEnabled( g_Lua->Get( 1 )->GetBoolean() );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( SetAlphaBlendingEnabled )
+	{
+		g_Render->SetAlphaBlendingEnabled( g_Lua->Get( 1 )->GetBoolean() );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( SetTexturingEnabled )
+	{
+		g_Render->SetTexturingEnabled( g_Lua->Get( 1 )->GetBoolean() );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( LoadTexture )
+	{
+		g_Lua->Push( (int)g_Render->LoadTexture( g_Lua->Get( 1 )->GetString(), g_Lua->Get( 2 )->GetBoolean() ) );
+		return 1;
+	}
+
+	SCRIPT_FUNCTION( LoadModel )
+	{
+		Passion::Model model = g_Render->LoadModel( g_Lua->Get( 1 )->GetString() );
+
+		std::auto_ptr<BaseScriptValue> tbl = g_Lua->NewTable();
+		tbl->GetMember( "id" )->Set( (int)model.id );
+		tbl->GetMember( "vertices" )->Set( (int)model.vertices );
+
+		g_Lua->Push( tbl );
+
+		return 1;
+	}
+
+	SCRIPT_FUNCTION( DrawModel )
+	{
 		if ( g_Lua->Get( 1 )->IsTable() )
 		{
-			r = g_Lua->Get( 1 )->GetMember( "r" )->GetFloat() / 255.0f;
-			g = g_Lua->Get( 1 )->GetMember( "g" )->GetFloat() / 255.0f;
-			b = g_Lua->Get( 1 )->GetMember( "b" )->GetFloat() / 255.0f;
+			std::auto_ptr<BaseScriptValue> tbl = g_Lua->Get( 1 );
+			
+			Passion::Model model;
+			model.id = tbl->GetMember( "id" )->GetInteger();
+			model.vertices = tbl->GetMember( "vertices" )->GetInteger();
+
+			g_Render->DrawModel( model );
 		}
-		
-		g_Render->Clear( Passion::Color( r, g, b ) );
 
 		return 0;
 	}
 
+	SCRIPT_FUNCTION( CreateVertexShader )
+	{
+		if ( g_Lua->Get( 1 )->IsString() )
+		{
+			g_Lua->Push( (int)g_Render->CreateShader( g_Lua->Get( 1 )->GetString(), VERTEX_SHADER ) );
+			return 1;
+		}
+
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( CreatePixelShader )
+	{
+		if ( g_Lua->Get( 1 )->IsString() )
+		{
+			g_Lua->Push( (int)g_Render->CreateShader( g_Lua->Get( 1 )->GetString(), PIXEL_SHADER ) );
+			return 1;
+		}
+
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( CreateProgram )
+	{
+		if ( g_Lua->Get( 1 )->IsNumber() && g_Lua->Get( 2 )->IsNumber() )
+		{
+			Passion::Shader shaders[2] = { g_Lua->Get( 1 )->GetInteger(), g_Lua->Get( 2 )->GetInteger() };
+			g_Lua->Push( (int)g_Render->CreateProgram( shaders, 2 ) );
+			return 1;
+		}
+
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( SetProgramFloat )
+	{
+		if ( g_Lua->Get( 1 )->IsString() && g_Lua->Get( 2 )->IsNumber() )
+		{
+			g_Render->SetProgramFloat( g_Lua->Get( 1 )->GetString(), g_Lua->Get( 2 )->GetFloat() );
+		}
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( Clear )
+	{
+		g_Render->Clear( GetColor( 1 ) );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( ClearZ )
+	{
+		float val = 1.0f; if ( g_Lua->Get( 1 )->IsNumber() ) val = g_Lua->Get( 1 )->GetFloat();
+		g_Render->ClearZ( val );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( SetViewport )
+	{
+		g_Render->SetViewport( g_Lua->Get( 1 )->GetInteger(), g_Lua->Get( 2 )->GetInteger(), g_Lua->Get( 3 )->GetInteger(), g_Lua->Get( 4 )->GetInteger() );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( SetScissor )
+	{
+		g_Render->SetScissor( g_Lua->Get( 1 )->GetInteger(), g_Lua->Get( 2 )->GetInteger(), g_Lua->Get( 3 )->GetInteger(), g_Lua->Get( 4 )->GetInteger() );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( Start2D )
+	{
+		g_Render->Start2D();
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( End2D )
+	{
+		g_Render->End2D();
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( Start3D )
+	{
+		float fov = 45.0f; if ( g_Lua->Get( 3 )->IsNumber() ) fov = g_Lua->Get( 3 )->GetFloat();
+		float znear = 1.0f; if ( g_Lua->Get( 4 )->IsNumber() ) znear = g_Lua->Get( 4 )->GetFloat();
+		float zfar = 10000.0f; if ( g_Lua->Get( 5 )->IsNumber() ) zfar = g_Lua->Get( 5 )->GetFloat();
+		Passion::Vector up( 0.0f, 1.0f, 0.0f ); if ( g_Lua->Get( 6 )->IsTable() ) up = GetVector( 5 );
+
+		g_Render->Start3D( GetVector( 1 ), GetVector( 2 ), fov, znear, zfar, up );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( End3D )
+	{
+		g_Render->End3D();
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( SetDrawColor )
+	{
+		g_Render->SetDrawColor( GetColor( 1 ) );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( SetTexture )
+	{
+		g_Render->SetTexture( g_Lua->Get( 1 )->GetInteger() );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( SetProgram )
+	{
+		g_Render->SetProgram( g_Lua->Get( 1 )->GetInteger() );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( DrawPoint )
+	{
+		g_Render->DrawPoint( GetVector( 1 ) );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( DrawLine )
+	{
+		g_Render->DrawLine( GetVector( 1 ), GetVector( 2 ) );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( DrawTriangle )
+	{
+		g_Render->DrawTriangle( GetVector( 1 ), GetVector( 2 ), GetVector( 3 ) );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( DrawQuad )
+	{
+		g_Render->DrawQuad( GetVector( 1 ), GetVector( 2 ), GetVector( 3 ), GetVector( 4 ) );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( DrawRect )
+	{
+		g_Render->DrawRect( g_Lua->Get( 1 )->GetFloat(), g_Lua->Get( 2 )->GetFloat(), g_Lua->Get( 3 )->GetFloat(), g_Lua->Get( 4 )->GetFloat() );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( DrawBox )
+	{
+		g_Render->DrawBox( GetVector( 1 ), GetVector( 2 ) );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( WorldToScreen )
+	{
+		Passion::Vector pos = g_Render->WorldToScreen( GetVector( 1 ) );
+
+		std::auto_ptr<BaseScriptValue> vec = g_Lua->NewTable();
+		vec->GetMember( "x" )->Set( pos.x );
+		vec->GetMember( "y" )->Set( pos.y );
+		vec->GetMember( "z" )->Set( pos.z );
+
+		g_Lua->Push( vec );
+
+		return 1;
+	}
+
+	SCRIPT_FUNCTION( ScreenToWorld )
+	{
+		Passion::Vector pos = g_Render->ScreenToWorld( g_Lua->Get( 1 )->GetFloat(), g_Lua->Get( 2 )->GetFloat() );
+
+		std::auto_ptr<BaseScriptValue> vec = g_Lua->NewTable();
+		vec->GetMember( "x" )->Set( pos.x );
+		vec->GetMember( "y" )->Set( pos.y );
+		vec->GetMember( "z" )->Set( pos.z );
+
+		g_Lua->Push( vec );
+
+		return 1;
+	}
+
+	SCRIPT_FUNCTION( FrameTime )
+	{
+		g_Lua->Push( g_Render->FrameTime() );
+		return 1;
+	}
+
 	SCRIPT_FUNCTION( Present )
 	{
-		g_Render->Present();
+		g_Render->Present( g_Lua->Get( 1 )->GetBoolean() );
 		return 0;
 	}
 
@@ -61,7 +311,54 @@ public:
 	{
 		std::auto_ptr<BaseScriptValue> render = g_Lua->NewTable();
 
+		render->GetMember( "SupportsShaders" )->Set( SupportsShaders );
+		render->GetMember( "SupportsRenderTargets" )->Set( SupportsRenderTargets );
+
+		render->GetMember( "SetWireframeEnabled" )->Set( SetWireframeEnabled );
+		render->GetMember( "SetDepthEnabled" )->Set( SetDepthEnabled );
+		render->GetMember( "SetCullingEnabled" )->Set( SetCullingEnabled );
+		render->GetMember( "SetScissorEnabled" )->Set( SetScissorEnabled );
+		render->GetMember( "SetAlphaBlendingEnabled" )->Set( SetAlphaBlendingEnabled );
+		render->GetMember( "SetTexturingEnabled" )->Set( SetTexturingEnabled );
+
+		render->GetMember( "LoadTexture" )->Set( LoadTexture );
+
+		render->GetMember( "LoadModel" )->Set( LoadModel );
+		render->GetMember( "DrawModel" )->Set( DrawModel );
+
+		render->GetMember( "CreateVertexShader" )->Set( CreateVertexShader );
+		render->GetMember( "CreatePixelShader" )->Set( CreatePixelShader );
+		render->GetMember( "CreateProgram" )->Set( CreateProgram );
+
+		render->GetMember( "SetProgramFloat" )->Set( SetProgramFloat );
+
 		render->GetMember( "Clear" )->Set( Clear );
+		render->GetMember( "ClearZ" )->Set( ClearZ );
+
+		render->GetMember( "SetViewport" )->Set( SetViewport );
+		render->GetMember( "SetScissor" )->Set( SetScissor );
+
+		render->GetMember( "Start2D" )->Set( Start2D );
+		render->GetMember( "End2D" )->Set( End2D );
+		render->GetMember( "Start3D" )->Set( Start3D );
+		render->GetMember( "End3D" )->Set( End3D );
+
+		render->GetMember( "SetDrawColor" )->Set( SetDrawColor );
+		render->GetMember( "SetTexture" )->Set( SetTexture );
+		render->GetMember( "SetProgram" )->Set( SetProgram );
+
+		render->GetMember( "DrawPoint" )->Set( DrawPoint );
+		render->GetMember( "DrawLine" )->Set( DrawLine );
+		render->GetMember( "DrawTriangle" )->Set( DrawTriangle );
+		render->GetMember( "DrawQuad" )->Set( DrawQuad );
+		render->GetMember( "DrawRect" )->Set( DrawRect );
+		render->GetMember( "DrawBox" )->Set( DrawBox );
+
+		render->GetMember( "WorldToScreen" )->Set( WorldToScreen );
+		render->GetMember( "ScreenToWorld" )->Set( ScreenToWorld );
+
+		render->GetMember( "FrameTime" )->Set( FrameTime );
+
 		render->GetMember( "Present" )->Set( Present );
 
 		g_Lua->Globals()->GetMember( "render" )->Set( render );

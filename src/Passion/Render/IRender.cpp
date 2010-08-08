@@ -370,7 +370,7 @@ namespace Passion
 
 	void IRender::SetViewport( int x, int y, int w, int h )
 	{
-		glViewport( x, y, w, h );
+		glViewport( x, m_renderWindow->GetHeight() - y - h, w, h );
 		m_viewW = (float)w;
 		m_viewH = (float)h;
 	}
@@ -378,7 +378,7 @@ namespace Passion
 	void IRender::SetScissor( int x, int y, int w, int h )
 	{
 		Flush();
-		glScissor( x, (int)m_viewH / 2 - y, w, h );
+		glScissor( x, m_viewH - y - h, w, h );
 	}
 
 	void IRender::SetStencilCompareFunction( unsigned int function, int reference, int mask )
@@ -495,15 +495,18 @@ namespace Passion
 
 	void IRender::DrawQuad( Vector p1, Vector p2, Vector p3, Vector p4, float repeat )
 	{
-		if ( m_shape != GL_QUADS || m_vertexIndex > 4092 ) {
+		if ( m_shape != GL_TRIANGLES || m_vertexIndex > 4090 ) {
 			Flush();
-			m_shape = GL_QUADS;
+			m_shape = GL_TRIANGLES;
 		}
 
-		m_vertices[m_vertexIndex++] = Vertex( p1.x, p1.y, p1.z, m_drawColor, 0.0f, repeat );
-		m_vertices[m_vertexIndex++] = Vertex( p2.x, p2.y, p2.z, m_drawColor, repeat, repeat );
-		m_vertices[m_vertexIndex++] = Vertex( p3.x, p3.y, p3.z, m_drawColor, repeat, 0.0f );
-		m_vertices[m_vertexIndex++] = Vertex( p4.x, p4.y, p4.z, m_drawColor, 0.0f, 0.0f );
+		m_vertices[m_vertexIndex++] = Vertex( p1.x, p1.y, p1.z, m_drawColor, 0.0f, 0.0f );
+		m_vertices[m_vertexIndex++] = Vertex( p2.x, p2.y, p2.z, m_drawColor, repeat, 0.0f );
+		m_vertices[m_vertexIndex++] = Vertex( p3.x, p3.y, p3.z, m_drawColor, repeat, repeat );
+
+		m_vertices[m_vertexIndex++] = Vertex( p3.x, p3.y, p3.z, m_drawColor, repeat, repeat );
+		m_vertices[m_vertexIndex++] = Vertex( p4.x, p4.y, p4.z, m_drawColor, 0.0f, repeat );
+		m_vertices[m_vertexIndex++] = Vertex( p1.x, p1.y, p1.z, m_drawColor, 0.0f, 0.0f );
 	}
 
 	void IRender::DrawRect( float x, float y, float w, float h, float repeat )
@@ -559,7 +562,7 @@ namespace Passion
 		return m_frameTime;
 	}
 
-	void IRender::Present()
+	void IRender::Present( bool immediate )
 	{
 		m_renderWindow->Display();
 
@@ -569,7 +572,8 @@ namespace Passion
 		m_frameTime = (float)( t.QuadPart - m_time.QuadPart ) / (float)m_freq.QuadPart;
 
 		#ifndef _DEBUG_
-			sf::Sleep( 0.001f );
+			if ( !immediate )
+				sf::Sleep( 0.001f );
 		#endif
 
 		QueryPerformanceCounter( &m_time );

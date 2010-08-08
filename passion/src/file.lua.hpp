@@ -21,19 +21,31 @@
 ////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////
-// util.lua - Contains utility functions
+// file.lua - Contains file functions
 ////////////////////////////////////////////////////////////
 
-const char* util_lua =
-"function math.Clamp( val, min, max ) \
-	return math.max( min, math.min( val, max ) ) \
+const char* file_lua =
+"file = {} \
+\
+function file.Exists( filename ) \
+	local f = io.open( filename ) \
+	local e = f ~= nil \
+	f:close() \
+	return e \
 end \
 \
-function Color( r, g, b, a ) \
-	return { r = math.Clamp( r, 0, 255 ), g = math.Clamp( g, 0, 255 ), b = math.Clamp( b, 0, 255 ), a = math.Clamp( a or 255, 0, 255 ) } \
+function file.Read( filename ) \
+	local f = io.open( filename, \"r\" ) \
+	if ( not f ) then return nil end \
+	local c = f:read( \"*all\" ) \
+	f:close() \
+	return c \
 end \
- \
-function Vector( x, y, z ) \
-	return { x = x, y = y, z = z or 0 } \
+\
+function file.Write( filename, ... ) \
+	local f = io.open( filename, \"w\" ) \
+	if ( not f ) then return nil end \
+	f:write( ... ) \
+	f:close() \
 end \
 ";

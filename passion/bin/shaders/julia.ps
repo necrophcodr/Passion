@@ -1,0 +1,51 @@
+varying vec2 texCoord;
+
+uniform float centerRe;
+uniform float centerIm;
+uniform float scaleRe;
+uniform float scaleIm;
+
+uniform float time;
+
+void main()
+{
+	unsigned int maxIterations = 120;
+	
+	float minRe = centerRe - scaleRe;
+	float maxRe = centerRe + scaleRe;
+	float minIm = centerIm - scaleIm;
+	float maxIm = centerIm + scaleIm;
+	
+	float c_re = minRe + ( maxRe - minRe ) * texCoord.x;
+	float c_im = maxIm - ( maxIm - minIm ) * texCoord.y;
+	
+	float z_re = c_re;
+	float z_im = c_im;
+	
+	bool inside = true;
+	unsigned int n;
+	
+	for ( n = 0; n < maxIterations; n++ )
+	{
+		float z_re2 = z_re * z_re;
+		float z_im2 = z_im * z_im;
+		
+		if ( z_re2 + z_im2 > 4 ) {
+			inside = false;
+			break;
+		}
+		
+		z_im = 2 * z_re * z_im + 0.471f + ( sin( time ) + 1.0f ) / 16.0f;
+		z_re = z_re2 - z_im2 + 0.288f;
+	}
+	
+	if ( inside )
+	{
+		gl_FragColor = vec4( 0.0f, 0.0f, 0.0f, 1.0f );
+	} else if ( n <= maxIterations / 2 - 1 ) {
+		gl_FragColor = vec4( float( n ) / float( maxIterations / 2 - 1 ), 0.0f, 0.0f, 1.0f );
+	} else {
+		float col = ( float( n ) - float( maxIterations / 2 ) ) / float( maxIterations / 2 );
+		gl_FragColor = vec4( 1.0f, col, col, 1.0f );
+	}
+}

@@ -141,7 +141,7 @@ namespace Passion
 
 		virtual float FrameTime() = 0;
 
-		virtual void Present() = 0;
+		virtual void Present( bool immediate = false ) = 0;
 	};
 }
 

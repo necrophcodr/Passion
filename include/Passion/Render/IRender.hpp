@@ -105,7 +105,7 @@ namespace Passion
 
 		float FrameTime();
 
-		void Present();
+		void Present( bool immediate );
 		
 	private:
 		sf::Window* m_renderWindow;
