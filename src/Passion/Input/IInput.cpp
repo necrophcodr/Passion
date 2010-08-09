@@ -73,4 +73,9 @@ namespace Passion
 	{
 		return m_input->IsMouseButtonDown( (sf::Mouse::Button)button );
 	}
+
+	bool IInput::IsKeyDown( Key key )
+	{
+		return m_input->IsKeyDown( (sf::Key::Code)key );
+	}
 }

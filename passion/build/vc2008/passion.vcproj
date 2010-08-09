@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="passion"
 	ProjectGUID="{36A3547F-1F25-4BFC-AADC-FCCAA13B18EC}"
 	RootNamespace="passion"
@@ -190,6 +190,10 @@
 				Name="Libraries"
 				>
 				<File
+					RelativePath="..\..\src\input.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\render.hpp"
 					>
 				</File>
@@ -197,6 +201,10 @@
 			<Filter
 				Name="Lua"
 				>
+				<File
+					RelativePath="..\..\src\enums.lua.hpp"
+					>
+				</File>
 				<File
 					RelativePath="..\..\src\file.lua.hpp"
 					>

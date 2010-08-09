@@ -49,6 +49,7 @@ namespace Passion
 		int GetMouseWheel();
 
 		bool IsMouseDown( MouseButton button );
+		bool IsKeyDown( Key key );
 
 	private:
 		sf::Window* m_window;

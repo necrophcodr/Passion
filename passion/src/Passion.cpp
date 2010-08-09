@@ -31,10 +31,12 @@
 
 // Libraries
 #include "render.hpp"
+#include "input.hpp"
 
 // Lua files
 #include "util.lua.hpp"
 #include "file.lua.hpp"
+#include "enums.lua.hpp"
 
 // Error handling
 #include "ErrorHandling.hpp"
@@ -49,7 +51,7 @@ Passion::IBaseInput*		g_Input		= NULL;
 Passion::IBaseScripting*	g_Scripting	= NULL;
 Passion::BaseScriptState*	g_Lua		= NULL;
 
-Passion::IBaseNetwork*		g_Network	= NULL;
+//Passion::IBaseNetwork*		g_Network	= NULL;
 
 ////////////////////////////////////////////////////////////
 // Main
@@ -65,12 +67,12 @@ int main( int argc, const char* argv[] )
 		g_Render	= Passion::CreateInterface<Passion::IBaseRender>( "bin/render" );
 		g_Input		= Passion::CreateInterface<Passion::IBaseInput>( "bin/input" );
 		g_Scripting	= Passion::CreateInterface<Passion::IBaseScripting>( "bin/scripting" );
-		g_Network	= Passion::CreateInterface<Passion::IBaseNetwork>( "bin/network" );
+		//g_Network	= Passion::CreateInterface<Passion::IBaseNetwork>( "bin/network" );
 	#else
 		g_Render	= Passion::CreateInterface<Passion::IBaseRender>( "bin/render-d" );
 		g_Input		= Passion::CreateInterface<Passion::IBaseInput>( "bin/input-d" );
 		g_Scripting	= Passion::CreateInterface<Passion::IBaseScripting>( "bin/scripting-d" );
-		g_Network	= Passion::CreateInterface<Passion::IBaseNetwork>( "bin/network-d" );
+		//g_Network	= Passion::CreateInterface<Passion::IBaseNetwork>( "bin/network-d" );
 	#endif
 
 	////////////////////////////////////////////////////////////
@@ -87,6 +89,7 @@ int main( int argc, const char* argv[] )
 	////////////////////////////////////////////////////////////
 
 	render::Bind();
+	input::Bind();
 
 	////////////////////////////////////////////////////////////
 	// Load Lua files
@@ -94,6 +97,7 @@ int main( int argc, const char* argv[] )
 
 	g_Lua->DoString( util_lua );
 	g_Lua->DoString( file_lua );
+	g_Lua->DoString( enums_lua );
 
 	////////////////////////////////////////////////////////////
 	// Load specified code or default code
@@ -219,7 +223,7 @@ int main( int argc, const char* argv[] )
 	Passion::DestroyInterface<Passion::IBaseRender>( g_Render );
 	Passion::DestroyInterface<Passion::IBaseInput>( g_Input );
 	Passion::DestroyInterface<Passion::IBaseScripting>( g_Scripting );
-	Passion::DestroyInterface<Passion::IBaseNetwork>( g_Network );
+	//Passion::DestroyInterface<Passion::IBaseNetwork>( g_Network );
 	
 	return 0;
 }
