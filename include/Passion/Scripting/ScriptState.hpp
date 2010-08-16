@@ -66,7 +66,7 @@ namespace Passion
 		void Push( double value );
 		void Push( float value );
 		void Push( int value );
-		void Push( void* value, std::auto_ptr<BaseScriptValue> metatable );
+		void Push( void* data, size_t length, std::auto_ptr<BaseScriptValue> metatable );
 
 		void Pop( int values );
 		std::auto_ptr<BaseScriptValue> Get( int index );

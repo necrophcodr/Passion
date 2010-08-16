@@ -214,6 +214,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Objects"
+				>
+				<File
+					RelativePath="..\..\src\Model.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\RenderTarget.hpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"

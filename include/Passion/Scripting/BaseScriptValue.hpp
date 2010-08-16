@@ -45,6 +45,7 @@ namespace Passion
 		virtual bool IsTable() = 0;
 		virtual bool IsString() = 0;
 		virtual bool IsFunction() = 0;
+		virtual bool IsUserData() = 0;
 		virtual bool IsNil() = 0;
 
 		virtual int GetInteger() = 0;

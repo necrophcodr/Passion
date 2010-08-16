@@ -125,7 +125,7 @@ int main()
 		if ( input->IsMouseDown( Passion::MOUSE_LEFT ) ) {
 			if ( dragging ) {
 				centerRe += (float)( lastX - input->GetMouseX() ) / 1280.0f * scaleRe * 2.0f;
-				centerIm += (float)( lastY - input->GetMouseY() ) / 800.0f * scaleIm * 2.0f;
+				centerIm -= (float)( lastY - input->GetMouseY() ) / 720.0f * scaleIm * 2.0f;
 			} else {
 				dragging = true;
 			}

@@ -83,7 +83,7 @@ namespace Passion
 
 	std::auto_ptr<BaseScriptValue> ScriptState::UserData( void* data, std::auto_ptr<BaseScriptValue> metatable )
 	{
-		Push( data, metatable );
+		Push( &data, sizeof( void* ), metatable );
 
 		int ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
 		return std::auto_ptr<BaseScriptValue>( new ScriptValue( m_lua, ref, ref, 0 ) );
@@ -118,11 +118,11 @@ namespace Passion
 	void ScriptState::Push( float value ) { lua_pushnumber( m_lua, value ); }
 	void ScriptState::Push( int value ) { lua_pushinteger( m_lua, value ); }
 
-	void ScriptState::Push( void* value, std::auto_ptr<BaseScriptValue> metatable )
+	void ScriptState::Push( void* data, size_t length, std::auto_ptr<BaseScriptValue> metatable )
 	{
-		void* block = lua_newuserdata( m_lua, sizeof( void* ) );
-		memcpy( block, &value, sizeof( void* ) );
-		
+		void* block = lua_newuserdata( m_lua, length );
+		memcpy( block, data, length );
+
 		metatable->Push();
 		lua_setmetatable( m_lua, -2 );
 	}

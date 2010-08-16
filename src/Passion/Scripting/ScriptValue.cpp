@@ -110,6 +110,15 @@ namespace Passion
 		return t;
 	}
 
+	bool ScriptValue::IsUserData()
+	{
+		bool t;
+		Push();
+			t = lua_isuserdata( m_lua, -1 ) == 1;
+		lua_pop( m_lua, 1 );
+		return t;
+	}
+
 	int ScriptValue::GetInteger()
 	{
 		int val;
@@ -157,11 +166,11 @@ namespace Passion
 
 	void* ScriptValue::GetUserData()
 	{
-		void** val;
+		void* val;
 		Push();
-		val = (void**)lua_touserdata( m_lua, -1 );
+		val = (void*)lua_touserdata( m_lua, -1 );
 		lua_pop( m_lua, 1 );
-		return *val;
+		return val;
 	}
 
 	std::auto_ptr<BaseScriptValue> ScriptValue::GetMember( const char* key )

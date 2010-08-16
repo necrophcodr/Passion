@@ -52,7 +52,7 @@ namespace Passion
 		virtual void Push( double value ) = 0;
 		virtual void Push( float value ) = 0;
 		virtual void Push( int value ) = 0;
-		virtual void Push( void* value, std::auto_ptr<BaseScriptValue> metatable ) = 0;
+		virtual void Push( void* data, size_t length, std::auto_ptr<BaseScriptValue> metatable ) = 0;
 
 		virtual void Pop( int values ) = 0;
 		virtual std::auto_ptr<BaseScriptValue> Get( int index ) = 0;

@@ -25,6 +25,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "Interfaces.hpp"
+#include <vector>
 
 ////////////////////////////////////////////////////////////
 // Render library
@@ -54,6 +55,18 @@ public:
 	SCRIPT_FUNCTION( SetDepthEnabled )
 	{
 		g_Render->SetDepthEnabled( g_Lua->Get( 1 )->GetBoolean() );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( SetColorEnabled )
+	{
+		g_Render->SetColorEnabled( g_Lua->Get( 1 )->GetBoolean() );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( SetStencilEnabled )
+	{
+		g_Render->SetStencilEnabled( g_Lua->Get( 1 )->GetBoolean() );
 		return 0;
 	}
 
@@ -87,30 +100,72 @@ public:
 		return 1;
 	}
 
+	SCRIPT_FUNCTION( CreateRenderTarget )
+	{
+		if ( g_Lua->Get( 1 )->IsNumber() && g_Lua->Get( 2 )->IsNumber() )
+		{
+			Passion::BaseRenderTarget* rt = g_Render->CreateRenderTarget( g_Lua->Get( 1 )->GetInteger(), g_Lua->Get( 2 )->GetInteger() );
+
+			g_Lua->Push( &rt, sizeof( Passion::BaseRenderTarget* ), g_Lua->Registry()->GetMember( "RenderTarget" ) );
+
+			return 1;
+		}
+
+		return 0;
+	}
+
 	SCRIPT_FUNCTION( LoadModel )
 	{
 		Passion::Model model = g_Render->LoadModel( g_Lua->Get( 1 )->GetString() );
 
-		std::auto_ptr<BaseScriptValue> tbl = g_Lua->NewTable();
-		tbl->GetMember( "id" )->Set( (int)model.id );
-		tbl->GetMember( "vertices" )->Set( (int)model.vertices );
-
-		g_Lua->Push( tbl );
+		g_Lua->Push( &model, sizeof( Passion::Model ), g_Lua->Registry()->GetMember( "Model" ) );
 
 		return 1;
 	}
 
-	SCRIPT_FUNCTION( DrawModel )
+	SCRIPT_FUNCTION( CreateModel )
 	{
 		if ( g_Lua->Get( 1 )->IsTable() )
 		{
-			std::auto_ptr<BaseScriptValue> tbl = g_Lua->Get( 1 );
+			std::auto_ptr<BaseScriptValue> vertexTable = g_Lua->Get( 1 );
+			std::vector<Passion::Vertex> vertices;
 			
-			Passion::Model model;
-			model.id = tbl->GetMember( "id" )->GetInteger();
-			model.vertices = tbl->GetMember( "vertices" )->GetInteger();
+			for ( int i = 1; vertexTable->GetMember( i )->IsTable(); i++ )
+			{				
+				vertexTable->GetMember( i )->GetMember( "pos" )->Push();
+				Passion::Vector pos = GetVector( -1 );
 
-			g_Render->DrawModel( model );
+				vertexTable->GetMember( i )->GetMember( "color" )->Push();
+				Passion::Color color = GetColor( -1 );
+
+				vertices.push_back( Passion::Vertex( pos.x, pos.y, pos.z, color, vertexTable->GetMember( i )->GetMember( "u" )->GetFloat(), vertexTable->GetMember( i )->GetMember( "v" )->GetFloat() ) );
+			}
+
+			Passion::Vertex* vertexArray = new Passion::Vertex[vertices.size()];
+
+			for ( unsigned int i = 0; i < vertices.size(); i++ )
+			{
+				vertexArray[i] = vertices[i];
+			}
+
+			Passion::Model model = g_Render->CreateModel( vertexArray, vertices.size() );
+			g_Lua->Push( &model, sizeof( Passion::Model ), g_Lua->Registry()->GetMember( "Model" ) );
+
+			delete [] vertexArray;
+
+			return 1;
+		}
+
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( DrawModel )
+	{
+		if ( g_Lua->Get( 1 )->IsUserData() && g_Lua->Get( 1 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "Model" ) ) )
+		{
+			Passion::Model* model = (Passion::Model*)g_Lua->Get( 1 )->GetUserData();
+
+			g_Render->DrawModel( *model );
 		}
 
 		return 0;
@@ -221,7 +276,22 @@ public:
 
 	SCRIPT_FUNCTION( SetTexture )
 	{
-		g_Render->SetTexture( g_Lua->Get( 1 )->GetInteger() );
+		if ( g_Lua->Get( 1 )->IsUserData() && g_Lua->Get( 1 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "RenderTarget" ) ) )
+		{
+			g_Render->SetTexture( (*(Passion::BaseRenderTarget**)g_Lua->Get( 1 )->GetUserData())->GetTexture() );
+		} else
+			g_Render->SetTexture( g_Lua->Get( 1 )->GetInteger() );
+
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( SetRenderTarget )
+	{
+		if ( g_Lua->Get( 1 )->IsUserData() && g_Lua->Get( 1 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "RenderTarget" ) ) )
+			g_Render->SetRenderTarget( *(Passion::BaseRenderTarget**)g_Lua->Get( 1 )->GetUserData() );
+		else
+			g_Render->SetRenderTarget();
+
 		return 0;
 	}
 
@@ -308,7 +378,8 @@ public:
 	}
 
 	static void Bind()
-	{
+	{		
+		// Library
 		std::auto_ptr<BaseScriptValue> render = g_Lua->NewTable();
 
 		render->GetMember( "SupportsShaders" )->Set( SupportsShaders );
@@ -316,14 +387,18 @@ public:
 
 		render->GetMember( "SetWireframeEnabled" )->Set( SetWireframeEnabled );
 		render->GetMember( "SetDepthEnabled" )->Set( SetDepthEnabled );
+		render->GetMember( "SetColorEnabled" )->Set( SetColorEnabled );
+		render->GetMember( "SetStencilEnabled" )->Set( SetStencilEnabled );
 		render->GetMember( "SetCullingEnabled" )->Set( SetCullingEnabled );
 		render->GetMember( "SetScissorEnabled" )->Set( SetScissorEnabled );
 		render->GetMember( "SetAlphaBlendingEnabled" )->Set( SetAlphaBlendingEnabled );
 		render->GetMember( "SetTexturingEnabled" )->Set( SetTexturingEnabled );
 
 		render->GetMember( "LoadTexture" )->Set( LoadTexture );
+		render->GetMember( "CreateRenderTarget" )->Set( CreateRenderTarget );
 
 		render->GetMember( "LoadModel" )->Set( LoadModel );
+		render->GetMember( "CreateModel" )->Set( CreateModel );
 		render->GetMember( "DrawModel" )->Set( DrawModel );
 
 		render->GetMember( "CreateVertexShader" )->Set( CreateVertexShader );
@@ -334,17 +409,23 @@ public:
 
 		render->GetMember( "Clear" )->Set( Clear );
 		render->GetMember( "ClearZ" )->Set( ClearZ );
+		render->GetMember( "ClearStencil" )->Set( 3 );
 
 		render->GetMember( "SetViewport" )->Set( SetViewport );
 		render->GetMember( "SetScissor" )->Set( SetScissor );
+
+		render->GetMember( "SetStencilCompareFunction" )->Set( 3 );
+		render->GetMember( "SetStencilOperations" )->Set( 3 );
 
 		render->GetMember( "Start2D" )->Set( Start2D );
 		render->GetMember( "End2D" )->Set( End2D );
 		render->GetMember( "Start3D" )->Set( Start3D );
 		render->GetMember( "End3D" )->Set( End3D );
 
+		render->GetMember( "SetTransform" )->Set( 3 );
 		render->GetMember( "SetDrawColor" )->Set( SetDrawColor );
 		render->GetMember( "SetTexture" )->Set( SetTexture );
+		render->GetMember( "SetRenderTarget" )->Set( SetRenderTarget );
 		render->GetMember( "SetProgram" )->Set( SetProgram );
 
 		render->GetMember( "DrawPoint" )->Set( DrawPoint );

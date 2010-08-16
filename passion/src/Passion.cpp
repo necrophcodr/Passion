@@ -33,6 +33,10 @@
 #include "render.hpp"
 #include "input.hpp"
 
+// Objects
+#include "Model.hpp"
+#include "RenderTarget.hpp"
+
 // Lua files
 #include "util.lua.hpp"
 #include "file.lua.hpp"
@@ -90,6 +94,13 @@ int main( int argc, const char* argv[] )
 
 	render::Bind();
 	input::Bind();
+
+	////////////////////////////////////////////////////////////
+	// Create object meta tables
+	////////////////////////////////////////////////////////////
+
+	Model::Bind();
+	RenderTarget::Bind();
 
 	////////////////////////////////////////////////////////////
 	// Load Lua files

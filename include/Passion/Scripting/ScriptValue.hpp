@@ -54,6 +54,7 @@ namespace Passion
 		bool IsTable();
 		bool IsString();
 		bool IsFunction();
+		bool IsUserData();
 		bool IsNil();
 
 		int GetInteger();
