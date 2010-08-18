@@ -70,6 +70,14 @@ namespace Passion
 		Program CreateProgram( Shader* shaders, int count );
 
 		void SetProgramFloat( const char* name, float value );
+		void SetProgramFloat( const char* name, float value1, float value2 );
+		void SetProgramFloat( const char* name, float value1, float value2, float value3 );
+		void SetProgramFloat( const char* name, float value1, float value2, float value3, float value4 );
+
+		void SetProgramInt( const char* name, int value );
+		void SetProgramInt( const char* name, int value1, int value2 );
+		void SetProgramInt( const char* name, int value1, int value2, int value3 );
+		void SetProgramInt( const char* name, int value1, int value2, int value3, int value4 );
 
 		void Clear( Color color );
 		void ClearZ( float value = 1.0f );

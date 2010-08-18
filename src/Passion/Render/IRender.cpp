@@ -345,6 +345,48 @@ namespace Passion
 		glUniform1f( loc, value );
 	}
 
+	void IRender::SetProgramFloat( const char* name, float value1, float value2 )
+	{
+		int loc = glGetUniformLocation( m_activeProgram, name );
+		glUniform2f( loc, value1, value2 );
+	}
+
+	void IRender::SetProgramFloat( const char* name, float value1, float value2, float value3 )
+	{
+		int loc = glGetUniformLocation( m_activeProgram, name );
+		glUniform3f( loc, value1, value2, value3 );
+	}
+
+	void IRender::SetProgramFloat( const char* name, float value1, float value2, float value3, float value4 )
+	{
+		int loc = glGetUniformLocation( m_activeProgram, name );
+		glUniform4f( loc, value1, value2, value3, value4 );
+	}
+
+	void IRender::SetProgramInt( const char* name, int value )
+	{
+		int loc = glGetUniformLocation( m_activeProgram, name );
+		glUniform1i( loc, value );
+	}
+
+	void IRender::SetProgramInt( const char* name, int value1, int value2 )
+	{
+		int loc = glGetUniformLocation( m_activeProgram, name );
+		glUniform2i( loc, value1, value2 );
+	}
+
+	void IRender::SetProgramInt( const char* name, int value1, int value2, int value3 )
+	{
+		int loc = glGetUniformLocation( m_activeProgram, name );
+		glUniform3i( loc, value1, value2, value3 );
+	}
+
+	void IRender::SetProgramInt( const char* name, int value1, int value2, int value3, int value4 )
+	{
+		int loc = glGetUniformLocation( m_activeProgram, name );
+		glUniform4i( loc, value1, value2, value3, value4 );
+	}
+
 	void IRender::SetRenderWindow( RenderWindow* window )
 	{
 		((sf::Window*)window)->SetActive();
@@ -378,7 +420,7 @@ namespace Passion
 	void IRender::SetScissor( int x, int y, int w, int h )
 	{
 		Flush();
-		glScissor( x, m_viewH - y - h, w, h );
+		glScissor( x, (int)m_viewH - y - h, w, h );
 	}
 
 	void IRender::SetStencilCompareFunction( unsigned int function, int reference, int mask )

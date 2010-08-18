@@ -1,0 +1,18 @@
+varying vec2 uv;
+varying vec4 gl_Color;
+uniform sampler2D tex;
+
+uniform vec2 lightPos;
+uniform vec4 lightColor;
+
+void main()
+{
+	float dist = sqrt( (uv.x-lightPos.x)*(uv.x-lightPos.x)*1.6f + (uv.y-lightPos.y)*(uv.y-lightPos.y) );
+	
+	gl_FragColor = texture2D( tex, uv ) * vec4( lightColor.xyz, 1.0f );
+	
+	if ( dist > lightColor.w )
+		gl_FragColor *= 0;
+	else
+		gl_FragColor *= 1.0f - dist / lightColor.w;
+}

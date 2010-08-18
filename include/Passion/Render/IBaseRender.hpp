@@ -106,6 +106,14 @@ namespace Passion
 		virtual Program CreateProgram( Shader* shaders, int count ) = 0;
 
 		virtual void SetProgramFloat( const char* name, float value ) = 0;
+		virtual void SetProgramFloat( const char* name, float value1, float value2 ) = 0;
+		virtual void SetProgramFloat( const char* name, float value1, float value2, float value3 ) = 0;
+		virtual void SetProgramFloat( const char* name, float value1, float value2, float value3, float value4 ) = 0;
+
+		virtual void SetProgramInt( const char* name, int value ) = 0;
+		virtual void SetProgramInt( const char* name, int value1, int value2 ) = 0;
+		virtual void SetProgramInt( const char* name, int value1, int value2, int value3 ) = 0;
+		virtual void SetProgramInt( const char* name, int value1, int value2, int value3, int value4 ) = 0;
 
 		virtual void Clear( Color color = Color( 0.0f, 0.0f, 0.0f ) ) = 0;
 		virtual void ClearZ( float value = 1.0f ) = 0;

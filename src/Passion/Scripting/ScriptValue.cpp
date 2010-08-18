@@ -306,6 +306,19 @@ namespace Passion
 		m_ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
 	}
 
+	void ScriptValue::Set( BaseScriptValue* value )
+	{
+		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_tbl );
+		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_key );
+		value->Push();
+		lua_settable( m_lua, -3 );
+		lua_pop( m_lua, 1 );
+
+		luaL_unref( m_lua, LUA_REGISTRYINDEX, m_ref );
+		value->Push();
+		m_ref = luaL_ref( m_lua, LUA_REGISTRYINDEX );
+	}
+
 	void ScriptValue::Set( ScriptFunction value )
 	{
 		lua_rawgeti( m_lua, LUA_REGISTRYINDEX, m_tbl );

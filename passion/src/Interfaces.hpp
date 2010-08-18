@@ -62,11 +62,13 @@ inline Passion::Vector GetVector( int index )
 
 	std::auto_ptr<BaseScriptValue> vec = g_Lua->Get( index );
 
-	if ( vec->IsTable() )
+	if ( vec->IsTable() && vec->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "Vector" ) ) )
 	{
 		x = vec->GetMember( "x" )->GetFloat();
 		y = vec->GetMember( "y" )->GetFloat();
 		z = vec->GetMember( "z" )->GetFloat();
+	} else {
+		g_Lua->Error( index, "Vector" );
 	}
 
 	return Passion::Vector( x, y, z );

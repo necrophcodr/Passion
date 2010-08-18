@@ -62,6 +62,8 @@ namespace Passion
 		virtual bool Call( int args, int returns = -1 ) = 0;
 
 		virtual const char* Error() = 0;
+		virtual void Error( const char* error ) = 0;
+		virtual void Error( int arg, const char* expectedType ) = 0;
 	};
 }
 

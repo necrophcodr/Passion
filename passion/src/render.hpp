@@ -207,10 +207,57 @@ public:
 
 	SCRIPT_FUNCTION( SetProgramFloat )
 	{
-		if ( g_Lua->Get( 1 )->IsString() && g_Lua->Get( 2 )->IsNumber() )
+		if ( g_Lua->Get( 1 )->IsString() )
 		{
-			g_Render->SetProgramFloat( g_Lua->Get( 1 )->GetString(), g_Lua->Get( 2 )->GetFloat() );
+			int floats = 0;
+			for ( int i = 2; g_Lua->Get( i )->IsNumber(); i++ )
+				floats++;
+
+			switch ( floats )
+			{
+			case 1:
+				g_Render->SetProgramFloat( g_Lua->Get( 1 )->GetString(), g_Lua->Get( 2 )->GetFloat() );
+				break;
+			case 2:
+				g_Render->SetProgramFloat( g_Lua->Get( 1 )->GetString(), g_Lua->Get( 2 )->GetFloat(), g_Lua->Get( 3 )->GetFloat() );
+				break;
+			case 3:
+				g_Render->SetProgramFloat( g_Lua->Get( 1 )->GetString(), g_Lua->Get( 2 )->GetFloat(), g_Lua->Get( 3 )->GetFloat(), g_Lua->Get( 4 )->GetFloat() );
+				break;
+			case 4:
+				g_Render->SetProgramFloat( g_Lua->Get( 1 )->GetString(), g_Lua->Get( 2 )->GetFloat(), g_Lua->Get( 3 )->GetFloat(), g_Lua->Get( 4 )->GetFloat(), g_Lua->Get( 5 )->GetFloat() );
+				break;
+			}
 		}
+
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( SetProgramInt )
+	{
+		if ( g_Lua->Get( 1 )->IsString() )
+		{
+			int ints = 0;
+			for ( int i = 2; g_Lua->Get( i )->IsNumber(); i++ )
+				ints++;
+
+			switch ( ints )
+			{
+			case 1:
+				g_Render->SetProgramInt( g_Lua->Get( 1 )->GetString(), g_Lua->Get( 2 )->GetInteger() );
+				break;
+			case 2:
+				g_Render->SetProgramInt( g_Lua->Get( 1 )->GetString(), g_Lua->Get( 2 )->GetInteger(), g_Lua->Get( 3 )->GetInteger() );
+				break;
+			case 3:
+				g_Render->SetProgramInt( g_Lua->Get( 1 )->GetString(), g_Lua->Get( 2 )->GetInteger(), g_Lua->Get( 3 )->GetInteger(), g_Lua->Get( 4 )->GetInteger() );
+				break;
+			case 4:
+				g_Render->SetProgramInt( g_Lua->Get( 1 )->GetString(), g_Lua->Get( 2 )->GetInteger(), g_Lua->Get( 3 )->GetInteger(), g_Lua->Get( 4 )->GetInteger(), g_Lua->Get( 5 )->GetInteger() );
+				break;
+			}
+		}
+
 		return 0;
 	}
 
@@ -227,6 +274,12 @@ public:
 		return 0;
 	}
 
+	SCRIPT_FUNCTION( ClearStencil )
+	{
+		g_Render->ClearStencil();
+		return 0;
+	}
+
 	SCRIPT_FUNCTION( SetViewport )
 	{
 		g_Render->SetViewport( g_Lua->Get( 1 )->GetInteger(), g_Lua->Get( 2 )->GetInteger(), g_Lua->Get( 3 )->GetInteger(), g_Lua->Get( 4 )->GetInteger() );
@@ -236,6 +289,18 @@ public:
 	SCRIPT_FUNCTION( SetScissor )
 	{
 		g_Render->SetScissor( g_Lua->Get( 1 )->GetInteger(), g_Lua->Get( 2 )->GetInteger(), g_Lua->Get( 3 )->GetInteger(), g_Lua->Get( 4 )->GetInteger() );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( SetStencilCompareFunction )
+	{
+		g_Render->SetStencilCompareFunction( g_Lua->Get( 1 )->GetInteger(), g_Lua->Get( 2 )->GetInteger(), g_Lua->Get( 3 )->GetInteger() );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( SetStencilOperations )
+	{
+		g_Render->SetStencilOperations( g_Lua->Get( 1 )->GetInteger(), g_Lua->Get( 2 )->GetInteger(), g_Lua->Get( 3 )->GetInteger() );
 		return 0;
 	}
 
@@ -406,16 +471,17 @@ public:
 		render->GetMember( "CreateProgram" )->Set( CreateProgram );
 
 		render->GetMember( "SetProgramFloat" )->Set( SetProgramFloat );
+		render->GetMember( "SetProgramInt" )->Set( SetProgramInt );
 
 		render->GetMember( "Clear" )->Set( Clear );
 		render->GetMember( "ClearZ" )->Set( ClearZ );
-		render->GetMember( "ClearStencil" )->Set( 3 );
+		render->GetMember( "ClearStencil" )->Set( ClearStencil );
 
 		render->GetMember( "SetViewport" )->Set( SetViewport );
 		render->GetMember( "SetScissor" )->Set( SetScissor );
 
-		render->GetMember( "SetStencilCompareFunction" )->Set( 3 );
-		render->GetMember( "SetStencilOperations" )->Set( 3 );
+		render->GetMember( "SetStencilCompareFunction" )->Set( SetStencilCompareFunction );
+		render->GetMember( "SetStencilOperations" )->Set( SetStencilOperations );
 
 		render->GetMember( "Start2D" )->Set( Start2D );
 		render->GetMember( "End2D" )->Set( End2D );

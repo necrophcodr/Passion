@@ -76,6 +76,8 @@ namespace Passion
 		bool Call( int args, int returns );
 
 		const char* Error();
+		void Error( const char* error );
+		void Error( int arg, const char* expectedType );
 
 	private:
 		lua_State* m_lua;

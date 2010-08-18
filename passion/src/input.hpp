@@ -21,19 +21,59 @@
 ////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////
-// util.lua - Contains utility functions
+// Headers
 ////////////////////////////////////////////////////////////
 
-const char* util_lua =
-"function math.Clamp( val, min, max ) \
-	return math.max( min, math.min( val, max ) ) \
-end \
-\
-function Color( r, g, b, a ) \
-	return { r = math.Clamp( r, 0, 255 ), g = math.Clamp( g, 0, 255 ), b = math.Clamp( b, 0, 255 ), a = math.Clamp( a or 255, 0, 255 ) } \
-end \
-\
-function Vertex( pos, color, u, v ) \
-	return { pos = pos, color = color or Color( 255, 255, 255, 255 ), u = u or 0, v = v or 0 } \
-end \
-";
+#include "Interfaces.hpp"
+
+////////////////////////////////////////////////////////////
+// Input library
+////////////////////////////////////////////////////////////
+
+class input
+{
+public:
+	SCRIPT_FUNCTION( MouseX )
+	{
+		g_Lua->Push( g_Input->GetMouseX() );
+		return 1;
+	}
+
+	SCRIPT_FUNCTION( MouseY )
+	{
+		g_Lua->Push( g_Input->GetMouseY() );
+		return 1;
+	}
+
+	SCRIPT_FUNCTION( MouseWheel )
+	{
+		g_Lua->Push( g_Input->GetMouseWheel() );
+		return 1;
+	}
+
+	SCRIPT_FUNCTION( IsMouseDown )
+	{
+		g_Lua->Push( g_Input->IsMouseDown( (Passion::MouseButton)g_Lua->Get( 1 )->GetInteger() ) );
+		return 1;
+	}
+
+	SCRIPT_FUNCTION( IsKeyDown )
+	{
+		g_Lua->Push( g_Input->IsKeyDown( (Passion::Key)g_Lua->Get( 1 )->GetInteger() ) );
+		return 1;
+	}
+
+	static void Bind()
+	{
+		std::auto_ptr<BaseScriptValue> input = g_Lua->NewTable();
+
+		input->GetMember( "MouseX" )->Set( MouseX );
+		input->GetMember( "MouseY" )->Set( MouseY );
+		input->GetMember( "MouseWheel" )->Set( MouseWheel );
+
+		input->GetMember( "IsMouseDown" )->Set( IsMouseDown );
+		input->GetMember( "IsKeyDown" )->Set( IsKeyDown );
+
+		g_Lua->Globals()->GetMember( "input" )->Set( input );
+	}
+};

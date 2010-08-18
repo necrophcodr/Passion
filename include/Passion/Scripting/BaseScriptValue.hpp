@@ -65,6 +65,7 @@ namespace Passion
 		virtual void Set( bool value ) = 0;
 		virtual void Set( const char* value ) = 0;
 		virtual void Set( std::auto_ptr<BaseScriptValue> value ) = 0;
+		virtual void Set( BaseScriptValue* value ) = 0;
 		virtual void Set( ScriptFunction value ) = 0;
 
 		virtual void SetMetaTable( std::auto_ptr<BaseScriptValue> metatable ) = 0;

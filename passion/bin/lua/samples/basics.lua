@@ -1,5 +1,13 @@
--- Include the configuration
-dofile( "lua/config.lua" )
+-- Configuration
+function GAME:Config( cfg )
+	-- Change window parameters
+	cfg.Title 				= "Example - Basics"
+	cfg.Width 			= 800
+	cfg.Height 			= 600
+	cfg.Fullscreen 	= false
+	
+	return cfg
+end
 
 function GAME:Initialize()	
 	-- Alter render settings
@@ -26,7 +34,7 @@ function GAME:Initialize()
 	-- Make the 'wave' the current program
 	render.SetProgram( self.Program )
 	
-	self.RT = render.CreateRenderTarget( 1280, 720 )
+	self.RT = render.CreateRenderTarget( 800, 600 )
 end
 
 function GAME:Update( dt )
@@ -60,10 +68,10 @@ function GAME:Draw()
 	
 	render.Start2D()
 		render.SetDrawColor( 255, 255, 255, 255 )
-		render.DrawQuad( Vector( 0, 360 ), Vector( 640, 360 ), Vector( 640, 0 ), Vector( 0, 0 ) )
-		render.DrawQuad( Vector( 640, 360 ), Vector( 1280, 360 ), Vector( 1280, 0 ), Vector( 640, 0 ) )
-		render.DrawQuad( Vector( 0, 720 ), Vector( 640, 720 ), Vector( 640, 360 ), Vector( 0, 360 ) )
-		render.DrawQuad( Vector( 640, 720 ), Vector( 1280, 720 ), Vector( 1280, 360 ), Vector( 640, 360 ) )
+		render.DrawQuad( Vector( 0, 300 ), Vector( 400, 300 ), Vector( 400, 0 ), Vector( 0, 0 ) )
+		render.DrawQuad( Vector( 400, 300 ), Vector( 800, 300 ), Vector( 800, 0 ), Vector( 400, 0 ) )
+		render.DrawQuad( Vector( 0, 600 ), Vector( 400, 600 ), Vector( 400, 300 ), Vector( 0, 300 ) )
+		render.DrawQuad( Vector( 400, 600 ), Vector( 800, 600 ), Vector( 800, 300 ), Vector( 400, 300 ) )
 	render.End2D()
 	
 	-- Present the image to the screen

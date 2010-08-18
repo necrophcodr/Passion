@@ -36,6 +36,7 @@
 // Objects
 #include "Model.hpp"
 #include "RenderTarget.hpp"
+#include "Vector.hpp"
 
 // Lua files
 #include "util.lua.hpp"
@@ -101,6 +102,7 @@ int main( int argc, const char* argv[] )
 
 	Model::Bind();
 	RenderTarget::Bind();
+	Vector::Bind();
 
 	////////////////////////////////////////////////////////////
 	// Load Lua files

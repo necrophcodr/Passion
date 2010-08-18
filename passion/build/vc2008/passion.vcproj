@@ -225,6 +225,10 @@
 					RelativePath="..\..\src\RenderTarget.hpp"
 					>
 				</File>
+				<File
+					RelativePath="..\..\src\Vector.hpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

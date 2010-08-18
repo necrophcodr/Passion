@@ -158,6 +158,17 @@ namespace Passion
 		return m_error;
 	}
 
+	void ScriptState::Error( const char* error )
+	{
+		Push( error );
+		lua_error( m_lua );
+	}
+
+	void ScriptState::Error( int arg, const char* expectedType )
+	{
+		luaL_error( m_lua, "bad argument #%d (%s expected, got %s)", arg, expectedType, lua_typename( m_lua, lua_type( m_lua, arg ) ) );
+	}
+
 	void ScriptState::SetError( const char* error )
 	{
 		if ( error )
