@@ -32,9 +32,23 @@
 
 class RenderTarget
 {
-public:	
+public:
+	SCRIPT_FUNCTION( GetTexture )
+	{
+		if ( !g_Lua->Get( 1 )->IsUserData() || !g_Lua->Get( 1 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "RenderTarget" ) ) )
+			g_Lua->Error( 1, "RenderTarget" );
+
+		g_Lua->Push( (int)(*(Passion::BaseRenderTarget**)g_Lua->Get( 1 )->GetUserData())->GetTexture() );
+
+		return 1;
+	}
+
 	static void Bind()
 	{
-		g_Lua->Registry()->GetMember( "RenderTarget" )->Set( g_Lua->NewTable() );
+		std::auto_ptr<BaseScriptValue> meta = g_Lua->NewTable();
+			meta->GetMember( "GetTexture" )->Set( GetTexture );
+
+			meta->GetMember( "__index" )->Set( meta.get() );
+		g_Lua->Registry()->GetMember( "RenderTarget" )->Set( meta );
 	}
 };

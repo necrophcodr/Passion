@@ -40,7 +40,7 @@ end
 function GAME:Update( dt )
 end
 
-function GAME:Draw()
+function GAME:Draw()	
 	-- Draw the main scene to a render target
 	render.SetRenderTarget( self.RT )
 	render.SetTexture( self.Texture )
@@ -55,19 +55,20 @@ function GAME:Draw()
 	render.SetProgramFloat( "time", os.clock() )
 	
 	-- Start a 3D projection from the specified position, looking at 30 units above the center of the world
-	render.Start3D( Vector( math.cos( os.clock() / 3 ) * 300, math.sin( os.clock() / 3 ) * 300, 200 ), Vector( 0, 0, 30 ) )				
+	render.Start3D( Vector( math.cos( os.clock() / 3 ) * 500, math.sin( os.clock() / 3 ) * 500, 300 ), Vector( 0, 0, 30 ) )				
 		-- Draw the tank model
 		render.DrawModel( self.Model )
 	render.End3D()
 	
 	-- Draw the render target 4 times, in each corner of the screen
 	render.SetRenderTarget()
-	render.SetTexture( self.RT )
+	render.SetTexture( self.RT:GetTexture() )
 	render.SetProgram()
 	render.SetDepthEnabled( false )
+	render.SetTransform()
 	
 	render.Start2D()
-		render.SetDrawColor( 255, 255, 255, 255 )
+		render.SetDrawColor( Color( 255, 255, 255, 255 ) )
 		render.DrawQuad( Vector( 0, 300 ), Vector( 400, 300 ), Vector( 400, 0 ), Vector( 0, 0 ) )
 		render.DrawQuad( Vector( 400, 300 ), Vector( 800, 300 ), Vector( 800, 0 ), Vector( 400, 0 ) )
 		render.DrawQuad( Vector( 0, 600 ), Vector( 400, 600 ), Vector( 400, 300 ), Vector( 0, 300 ) )

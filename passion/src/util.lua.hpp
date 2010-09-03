@@ -36,4 +36,6 @@ end \
 function Vertex( pos, color, u, v ) \
 	return { pos = pos, color = color or Color( 255, 255, 255, 255 ), u = u or 0, v = v or 0 } \
 end \
+\
+include = dofile \
 ";

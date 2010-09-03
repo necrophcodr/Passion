@@ -89,6 +89,8 @@ inline Passion::Color GetColor( int index )
 		g = col->GetMember( "g" )->GetFloat() / 255.0f;
 		b = col->GetMember( "b" )->GetFloat() / 255.0f;
 		a = col->GetMember( "a" )->GetFloat() / 255.0f;
+	} else {
+		g_Lua->Error( index, "Color" );
 	}
 
 	return Passion::Color( r, g, b, a );

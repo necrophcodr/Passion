@@ -160,7 +160,7 @@ function GAME:Draw()
 	render.End2D()
 	
 	render.SetRenderTarget()
-	render.SetTexture( self.RT )
+	render.SetTexture( self.RT:GetTexture() )
 	render.SetProgram( self.LightShader )
 	render.SetDepthEnabled( false )
 	

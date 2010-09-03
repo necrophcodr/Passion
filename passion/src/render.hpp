@@ -333,6 +333,21 @@ public:
 		return 0;
 	}
 
+	SCRIPT_FUNCTION( SetTransform )
+	{
+		if ( g_Lua->Get( 1 )->IsNil() )
+		{
+			g_Render->SetTransform( Passion::Matrix() );
+		} else {
+			if ( !g_Lua->Get( 1 )->IsUserData() || !g_Lua->Get( 1 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "Matrix" ) ) )
+				g_Lua->Error( 1, "Matrix" );
+
+			g_Render->SetTransform( *(Passion::Matrix*)g_Lua->Get( 1 )->GetUserData() );
+		}
+
+		return 0;
+	}
+
 	SCRIPT_FUNCTION( SetDrawColor )
 	{
 		g_Render->SetDrawColor( GetColor( 1 ) );
@@ -341,11 +356,10 @@ public:
 
 	SCRIPT_FUNCTION( SetTexture )
 	{
-		if ( g_Lua->Get( 1 )->IsUserData() && g_Lua->Get( 1 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "RenderTarget" ) ) )
-		{
-			g_Render->SetTexture( (*(Passion::BaseRenderTarget**)g_Lua->Get( 1 )->GetUserData())->GetTexture() );
-		} else
-			g_Render->SetTexture( g_Lua->Get( 1 )->GetInteger() );
+		if ( !g_Lua->Get( 1 )->IsNumber() && !g_Lua->Get( 1 )->IsNil() )
+			g_Lua->Error( 1, "Texture" );
+
+		g_Render->SetTexture( g_Lua->Get( 1 )->GetInteger() );
 
 		return 0;
 	}
@@ -488,7 +502,7 @@ public:
 		render->GetMember( "Start3D" )->Set( Start3D );
 		render->GetMember( "End3D" )->Set( End3D );
 
-		render->GetMember( "SetTransform" )->Set( 3 );
+		render->GetMember( "SetTransform" )->Set( SetTransform );
 		render->GetMember( "SetDrawColor" )->Set( SetDrawColor );
 		render->GetMember( "SetTexture" )->Set( SetTexture );
 		render->GetMember( "SetRenderTarget" )->Set( SetRenderTarget );

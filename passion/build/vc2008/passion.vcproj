@@ -218,6 +218,10 @@
 				Name="Objects"
 				>
 				<File
+					RelativePath="..\..\src\Matrix.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model.hpp"
 					>
 				</File>

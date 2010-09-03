@@ -37,6 +37,7 @@
 #include "Model.hpp"
 #include "RenderTarget.hpp"
 #include "Vector.hpp"
+#include "Matrix.hpp"
 
 // Lua files
 #include "util.lua.hpp"
@@ -103,6 +104,7 @@ int main( int argc, const char* argv[] )
 	Model::Bind();
 	RenderTarget::Bind();
 	Vector::Bind();
+	Matrix::Bind();
 
 	////////////////////////////////////////////////////////////
 	// Load Lua files
