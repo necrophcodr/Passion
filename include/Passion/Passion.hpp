@@ -28,7 +28,7 @@ namespace Passion
 	_interface* CreateInterface( const char* filename )
 	{
 		std::string fullPath = filename;
-		typedef void* (*Factory) ();
+		typedef _interface* (*Factory) ();
 
 		#ifdef PASSION_PLATFORM_LINUX
 			fullPath += ".so";
