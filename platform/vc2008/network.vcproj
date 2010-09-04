@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="network"
 	ProjectGUID="{8CCEEE4F-DE54-4345-8111-0EE22449A1CE}"
 	RootNamespace="network"
@@ -65,7 +65,7 @@
 				OutputFile="$(SolutionDir)\..\..\lib\$(ProjectName)-d.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\extlibs\lib"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="false"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -141,7 +141,7 @@
 				OutputFile="$(SolutionDir)\..\..\lib\$(ProjectName).dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\extlibs\lib"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"

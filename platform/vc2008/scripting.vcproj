@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="scripting"
 	ProjectGUID="{B749F58A-CA7C-4C8C-A173-C2B23E8115CE}"
 	RootNamespace="scripting"
@@ -46,6 +46,7 @@
 				RuntimeLibrary="3"
 				WarningLevel="3"
 				DebugInformationFormat="4"
+				DisableSpecificWarnings="4996"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -61,7 +62,7 @@
 				AdditionalDependencies="Lua-d.lib"
 				OutputFile="$(SolutionDir)\..\..\lib\$(ProjectName)-d.dll"
 				AdditionalLibraryDirectories="..\..\extlibs\lib"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="false"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -118,6 +119,7 @@
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
 				DebugInformationFormat="3"
+				DisableSpecificWarnings="4996"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -133,7 +135,7 @@
 				AdditionalDependencies="Lua.lib"
 				OutputFile="$(SolutionDir)\..\..\lib\$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\..\extlibs\lib"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="false"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"

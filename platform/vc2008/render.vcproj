@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="render"
 	ProjectGUID="{2B47C2D6-BA4A-4741-A22A-DA16617279EF}"
 	RootNamespace="Passion"
@@ -47,6 +47,7 @@
 				RuntimeLibrary="3"
 				WarningLevel="3"
 				DebugInformationFormat="4"
+				DisableSpecificWarnings="4996"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -59,10 +60,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="sfml-system-s-d.lib sfml-window-s-d.lib glu32.lib SOIL.lib"
+				AdditionalDependencies="opengl32.lib glu32.lib SOIL.lib"
 				OutputFile="$(SolutionDir)\..\..\lib\$(ProjectName)-d.dll"
 				AdditionalLibraryDirectories="..\..\extlibs\lib"
-				GenerateDebugInformation="true"
+				IgnoreDefaultLibraryNames="MSVCRT"
+				GenerateDebugInformation="false"
+				LinkTimeCodeGeneration="1"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -121,6 +124,7 @@
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
 				DebugInformationFormat="3"
+				DisableSpecificWarnings="4996"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -133,10 +137,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="sfml-system-s.lib sfml-window-s.lib glu32.lib SOIL.lib"
+				AdditionalDependencies="opengl32.lib glu32.lib SOIL.lib"
 				OutputFile="$(SolutionDir)\..\..\lib\$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\..\extlibs\lib"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="false"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -184,6 +188,10 @@
 				RelativePath="..\..\src\Passion\Render\Render.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\src\Passion\Render\RenderWindow.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -220,6 +228,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\Passion\Render\RenderTarget.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\Passion\Render\RenderWindow.hpp"
 				>
 			</File>
 			<File

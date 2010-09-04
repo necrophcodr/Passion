@@ -30,7 +30,8 @@
 #include <Passion/Render/IBaseRender.hpp>
 #include <Passion/Render/RenderTarget.hpp>
 #include <Passion/Render/GLee/GLee.h>
-#include <SFML/Window.hpp>
+
+#include <Passion/Render/RenderWindow.hpp>
 
 namespace Passion
 {	
@@ -44,8 +45,8 @@ namespace Passion
 		IRender();
 		~IRender();
 
-		RenderWindow* CreateRenderWindow( unsigned int width, unsigned int height, const char* title, bool fullscreen );
-		void SetRenderWindow( RenderWindow* window );
+		Window* CreateRenderWindow( unsigned int width, unsigned int height, const char* title, bool fullscreen );
+		Window* GetRenderWindow();
 
 		bool SupportsShaders();
 		bool SupportsRenderTargets();
@@ -116,7 +117,7 @@ namespace Passion
 		void Present( bool immediate );
 		
 	private:
-		sf::Window* m_renderWindow;
+		RenderWindow* m_renderWindow;
 		float m_viewW, m_viewH;
 
 		Vertex m_vertices[4096];

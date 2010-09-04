@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="input"
 	ProjectGUID="{2C4474FE-FCDE-463E-B6BE-197394990C89}"
 	RootNamespace="passioninput"
@@ -58,7 +58,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="sfml-system-s-d.lib sfml-window-s-d.lib"
+				AdditionalDependencies="opengl32.lib"
 				OutputFile="$(SolutionDir)\..\..\lib\$(ProjectName)-d.dll"
 				AdditionalLibraryDirectories="..\..\extlibs\lib"
 				GenerateDebugInformation="true"
@@ -130,7 +130,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="sfml-system-s.lib sfml-window-s.lib"
+				AdditionalDependencies="opengl32.lib"
 				OutputFile="$(SolutionDir)\..\..\lib\$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\..\extlibs\lib"
 				GenerateDebugInformation="true"
@@ -175,6 +175,10 @@
 			</File>
 			<File
 				RelativePath="..\..\src\Passion\Input\Input.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\Passion\Render\RenderWindow.cpp"
 				>
 			</File>
 		</Filter>

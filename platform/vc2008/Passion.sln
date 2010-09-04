@@ -6,9 +6,13 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gameoflife", "..\..\samples\build\gameoflife.vcproj", "{3B7C15FF-1DB0-4E62-B170-DDC0077CF698}"
 	ProjectSection(ProjectDependencies) = postProject
 		{2B47C2D6-BA4A-4741-A22A-DA16617279EF} = {2B47C2D6-BA4A-4741-A22A-DA16617279EF}
+		{2C4474FE-FCDE-463E-B6BE-197394990C89} = {2C4474FE-FCDE-463E-B6BE-197394990C89}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "input", "input.vcproj", "{2C4474FE-FCDE-463E-B6BE-197394990C89}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2B47C2D6-BA4A-4741-A22A-DA16617279EF} = {2B47C2D6-BA4A-4741-A22A-DA16617279EF}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "julia", "..\..\samples\build\julia.vcproj", "{82DBCCC3-CC29-4F9D-A8A0-2B7B337A6A84}"
 	ProjectSection(ProjectDependencies) = postProject

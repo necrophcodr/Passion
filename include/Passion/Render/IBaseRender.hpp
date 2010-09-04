@@ -51,7 +51,7 @@
 
 namespace Passion
 {
-	typedef void RenderWindow;
+	typedef void Window;
 	typedef unsigned int Texture;
 	typedef unsigned int Shader;
 	typedef unsigned int Program;
@@ -80,8 +80,8 @@ namespace Passion
 	class IBaseRender
 	{
 	public:		
-		virtual RenderWindow* CreateRenderWindow( unsigned int width, unsigned int height, const char* title, bool fullscreen = false ) = 0;
-		virtual void SetRenderWindow( RenderWindow* window ) = 0;
+		virtual Window* CreateRenderWindow( unsigned int width, unsigned int height, const char* title, bool fullscreen = false ) = 0;
+		virtual Window* GetRenderWindow() = 0;
 
 		virtual bool SupportsShaders() = 0;
 		virtual bool SupportsRenderTargets() = 0;

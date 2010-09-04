@@ -30,52 +30,36 @@ namespace Passion
 {
 	void IInput::SetWindow( Window* window )
 	{
-		m_window = (sf::Window*)window;
-		m_input = const_cast<sf::Input*>( &m_window->GetInput() );
+		m_window = (RenderWindow*)window;
 	}
 
 	bool IInput::GetEvents()
 	{
-		m_wheelDelta = 0;
-
-		sf::Event Event;
-		while ( m_window->GetEvent( Event ) )
-		{
-			switch ( Event.Type )
-			{
-			case sf::Event::Closed:
-				return false;
-			case sf::Event::MouseWheelMoved:
-				m_wheelDelta += Event.MouseWheel.Delta;
-				break;
-			}
-        }
-
-		return true;
+		return m_window->GetEvents();
 	}
 
 	int IInput::GetMouseX()
 	{
-		return m_input->GetMouseX();
+		return m_window->MouseX();
 	}
 
 	int IInput::GetMouseY()
 	{
-		return m_input->GetMouseY();
+		return m_window->MouseY();
 	}
 
 	int IInput::GetMouseWheel()
 	{
-		return m_wheelDelta;
+		return m_window->MouseWheel();
 	}
 
 	bool IInput::IsMouseDown( MouseButton button )
 	{
-		return m_input->IsMouseButtonDown( (sf::Mouse::Button)button );
+		return m_window->IsMouseDown( button );
 	}
 
 	bool IInput::IsKeyDown( Key key )
 	{
-		return m_input->IsKeyDown( (sf::Key::Code)key );
+		return m_window->IsKeyDown( key );
 	}
 }

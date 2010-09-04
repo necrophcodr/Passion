@@ -65,7 +65,7 @@ int main()
 		Passion::IBaseInput* input = Passion::CreateInterface<Passion::IBaseInput>( "../../lib/input" );
 	#endif
 
-	Passion::RenderWindow* window = render->CreateRenderWindow( 1280, 720, "Deform" );
+	Passion::Window* window = render->CreateRenderWindow( 1280, 720, "Deform" );
 
 	Passion::Model tankModel = render->LoadModel( "models/tank.obj" );
 	Passion::Texture tankTexture = render->LoadTexture( "textures/models/tank.jpg", false );

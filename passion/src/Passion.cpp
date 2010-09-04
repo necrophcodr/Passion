@@ -140,7 +140,7 @@ int main( int argc, const char* argv[] )
 	// Configure the window
 	////////////////////////////////////////////////////////////
 
-	Passion::RenderWindow* window;
+	Passion::Window* window;
 
 	int w = 1280;
 	int h = 720;

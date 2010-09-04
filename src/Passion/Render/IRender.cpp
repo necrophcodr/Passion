@@ -28,6 +28,8 @@
 #include <SOIL.h>
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include <string>
 
 namespace Passion
 {
@@ -48,14 +50,11 @@ namespace Passion
 		if ( m_renderWindow ) delete m_renderWindow;
 	}
 
-	RenderWindow* IRender::CreateRenderWindow( unsigned int width, unsigned int height, const char* title, bool fullscreen )
+	Window* IRender::CreateRenderWindow( unsigned int width, unsigned int height, const char* title, bool fullscreen )
 	{
 		if ( m_renderWindow ) return m_renderWindow;
 
-		if ( fullscreen )
-			m_renderWindow = new sf::Window( sf::VideoMode( width, height, 32 ), title, sf::Style::Fullscreen );
-		else
-			m_renderWindow = new sf::Window( sf::VideoMode( width, height, 32 ), title, sf::Style::Close );
+		m_renderWindow = new RenderWindow( title, width, height );
 
 		SetViewport( 0, 0, width, height );
 
@@ -387,10 +386,9 @@ namespace Passion
 		glUniform4i( loc, value1, value2, value3, value4 );
 	}
 
-	void IRender::SetRenderWindow( RenderWindow* window )
+	Window* IRender::GetRenderWindow()
 	{
-		((sf::Window*)window)->SetActive();
-		m_renderWindow = (sf::Window*)window;
+		return m_renderWindow;
 	}
 
 	void IRender::Clear( Color color )
@@ -606,7 +604,7 @@ namespace Passion
 
 	void IRender::Present( bool immediate )
 	{
-		m_renderWindow->Display();
+		m_renderWindow->Present();
 
 		LARGE_INTEGER t;
 		QueryPerformanceCounter( &t );
@@ -615,7 +613,7 @@ namespace Passion
 
 		#ifndef _DEBUG_
 			if ( !immediate )
-				sf::Sleep( 0.001f );
+				Sleep( 1 );
 		#endif
 
 		QueryPerformanceCounter( &m_time );

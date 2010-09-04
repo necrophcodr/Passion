@@ -65,7 +65,7 @@ int main()
 		Passion::IBaseInput* input = Passion::CreateInterface<Passion::IBaseInput>( "../../lib/input" );
 	#endif
 
-	Passion::RenderWindow* window = render->CreateRenderWindow( 1280, 720, "Post-processing" );
+	Passion::Window* window = render->CreateRenderWindow( 1280, 720, "Post-processing" );
 
 	if ( !render->SupportsShaders() || !render->SupportsRenderTargets() )
 	{

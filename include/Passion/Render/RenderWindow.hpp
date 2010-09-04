@@ -20,41 +20,71 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef PASSION_IINPUT_HPP
-#define PASSION_IINPUT_HPP
+#ifndef PASSION_RENDERWINDOW_HPP
+#define PASSION_RENDERWINDOW_HPP
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <windows.h>
+#include <windowsx.h>
+#include <gl/GL.h>
+#include <gl/GLU.h>
+
 #include <Passion/Input/IBaseInput.hpp>
-#include <Passion/Render/RenderWindow.hpp>
 
 namespace Passion
-{	
+{
 	////////////////////////////////////////////////////////////
-	// SFML implementation of IBaseInput
+	// Cross-platform render window
 	////////////////////////////////////////////////////////////
 
-	class IInput : public IBaseInput
+	class RenderWindow
 	{
 	public:
-		IInput() { m_wheelDelta = 0; }
-		
-		void SetWindow( Window* window );
+		RenderWindow( const char* title, unsigned int width, unsigned int height );
+		~RenderWindow();
+
 		bool GetEvents();
 
-		int GetMouseX();
-		int GetMouseY();
-		int GetMouseWheel();
+		unsigned int GetHeight();
+		unsigned int GetWidth();
+
+		int GetX();
+		int GetY();
+
+		int MouseX();
+		int MouseY();
 
 		bool IsMouseDown( MouseButton button );
 		bool IsKeyDown( Key key );
 
-	private:
-		RenderWindow* m_window;
+		int MouseWheel();
 
+		void Present();
+
+		static LRESULT CALLBACK WindowEvent( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
+		
+	private:
+		HWND	m_window;
+		HDC		m_dc;
+		HGLRC	m_context;
+		
+		// Window open?
+		bool	m_open;
+		
+		// Mouse coordinates
+		int m_x, m_y;
+
+		// Mouse states
+		bool m_mouseLeft, m_mouseRight, m_mouseMiddle;
 		int m_wheelDelta;
+
+		// Key states
+		bool m_keys[256];
+
+		LRESULT Event( UINT msg, WPARAM wParam, LPARAM lParam );
 	};
 }
 
