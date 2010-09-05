@@ -27,10 +27,19 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <windows.h>
-#include <windowsx.h>
-#include <gl/GL.h>
-#include <gl/GLU.h>
+#ifdef WIN32
+    #include <windows.h>
+    #include <windowsx.h>
+    #include <gl/GL.h>
+    #include <gl/GLU.h>
+#else
+    #include <GL/glx.h>
+    #include <GL/gl.h>
+    #include <GL/glu.h>
+
+    #include <X11/X.h>
+    #include <X11/keysym.h>
+#endif
 
 #include <Passion/Input/IBaseInput.hpp>
 
@@ -51,9 +60,6 @@ namespace Passion
 		unsigned int GetHeight();
 		unsigned int GetWidth();
 
-		int GetX();
-		int GetY();
-
 		int MouseX();
 		int MouseY();
 
@@ -64,16 +70,28 @@ namespace Passion
 
 		void Present();
 
+#ifdef WIN32
 		static LRESULT CALLBACK WindowEvent( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
-		
+#endif
+
 	private:
+#ifdef WIN32
 		HWND	m_window;
 		HDC		m_dc;
 		HGLRC	m_context;
-		
+#else
+        Display*    m_dpy;
+        ::Window    m_win;
+
+        bool        m_doubleBuffered;
+#endif
+
+        // Window size
+        int m_w, m_h;
+
 		// Window open?
 		bool	m_open;
-		
+
 		// Mouse coordinates
 		int m_x, m_y;
 
@@ -84,7 +102,9 @@ namespace Passion
 		// Key states
 		bool m_keys[256];
 
+#ifdef WIN32
 		LRESULT Event( UINT msg, WPARAM wParam, LPARAM lParam );
+#endif
 	};
 }
 

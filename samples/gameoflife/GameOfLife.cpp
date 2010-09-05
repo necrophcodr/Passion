@@ -72,7 +72,7 @@ int main()
 
 	bool grid[gridSize][gridSize][generations];
 	memset( grid, 0, gridSize * gridSize * generations );
-	
+
 	srand( clock() );
 
 	for ( int x = 0; x < gridSize; x++ )
@@ -96,7 +96,7 @@ int main()
 					for ( int y = 0; y < gridSize; y++ )
 						grid[x][y][gen] = grid[x][y][gen-1];
 
-			// Now generate the new generation			
+			// Now generate the new generation
 			for ( int x = 0; x < gridSize; x++ )
 			{
 				for ( int y = 0; y < gridSize; y++ )
@@ -166,18 +166,18 @@ int main()
 					}
 				}
 			}
-			
+
 		render->End3D();
 
 		render->Present();
 	}
 
 	////////////////////////////////////////////////////////////
-	// Clean up
+	// Clean upŘ
 	////////////////////////////////////////////////////////////
 
 	Passion::DestroyInterface<Passion::IBaseRender>( render );
-	Passion::DestroyInterface<Passion::IBaseInput>( input );
+	//Passion::DestroyInterface<Passion::IBaseInput>( input );
 
 	return 0;
 }

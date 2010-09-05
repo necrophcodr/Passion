@@ -79,7 +79,7 @@ namespace Passion
 
 	class IBaseRender
 	{
-	public:		
+	public:
 		virtual Window* CreateRenderWindow( unsigned int width, unsigned int height, const char* title, bool fullscreen = false ) = 0;
 		virtual Window* GetRenderWindow() = 0;
 
@@ -146,8 +146,6 @@ namespace Passion
 
 		virtual Vector WorldToScreen( Vector pos ) = 0;
 		virtual Vector ScreenToWorld( float x, float y ) = 0;
-
-		virtual float FrameTime() = 0;
 
 		virtual void Present( bool immediate = false ) = 0;
 	};

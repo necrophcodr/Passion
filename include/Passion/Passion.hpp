@@ -8,10 +8,10 @@
 #include <string>
 #include <iostream>
 
-#ifdef PASSION_PLATFORM_LINUX
-	#include <dlfcn.h>
-#else
+#ifdef WIN32
 	#include <windows.h>
+#else
+	#include <dlfcn.h>
 #endif
 
 ////////////////////////////////////////////////////////////
@@ -30,22 +30,8 @@ namespace Passion
 		std::string fullPath = filename;
 		typedef _interface* (*Factory) ();
 
-		#ifdef PASSION_PLATFORM_LINUX
-			fullPath += ".so";
-
-			void* library = dlopen( fullPath.c_str(), RTLD_NOW );
-
-			if ( library == 0 ) { std::cout << "Couldn't load library: " << fullPath << "\n"; while( true ); }
-
-			Factory libFactory = (Factory)dlsym( library, "CreateInterface" );
-
-			if ( libFactory == 0 ) { std::cout << "Couldn't load factory in library: " << fullPath << "\n" << dlerror() << "\n"; while( true ); }
-
-			return (*libFactory) ();
-
-			return 0;
-		#else
-			fullPath += ".dll";
+		#ifdef WIN32
+            fullPath += ".dll";
 
 			HMODULE library = LoadLibrary( fullPath.c_str() );
 			if ( library == 0 )
@@ -56,6 +42,18 @@ namespace Passion
 
 			Factory libFactory = (Factory)GetProcAddress( library, "CreateInterface" );
 			return (_interface*) (*libFactory) ();
+		#else
+			fullPath += ".so";
+
+			void* library = dlopen( fullPath.c_str(), RTLD_NOW );
+
+			if ( library == 0 ) { std::cout << "Couldn't load library: " << fullPath << "\n" << dlerror() << "\n"; while( true ); }
+
+			Factory libFactory = (Factory)dlsym( library, "CreateInterface" );
+
+			if ( libFactory == 0 ) { std::cout << "Couldn't load factory in library: " << fullPath << "\n" << dlerror() << "\n"; while( true ); }
+
+			return (*libFactory) ();
 		#endif
 	}
 

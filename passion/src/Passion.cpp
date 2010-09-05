@@ -25,6 +25,7 @@
 ////////////////////////////////////////////////////////////
 
 #include <fstream>
+#include <cstring>
 
 // Base header
 #include "Interfaces.hpp"
@@ -117,17 +118,17 @@ int main( int argc, const char* argv[] )
 	////////////////////////////////////////////////////////////
 	// Load specified code or default code
 	////////////////////////////////////////////////////////////
-	
+
 	if ( argc > 1 ) {
 		std::ifstream i ( argv[1], std::ios::in );
 		if ( i.is_open() ) {
 			i.close();
 
 			if ( !g_Lua->DoFile( argv[1] ) )
-				return Error( g_Lua->Error() );			
+				return Error( g_Lua->Error() );
 		} else {
 			i.close();
-			
+
 			std::cout << argv[1] << ": No such file or directory!" << std::endl;
 
 			return 1;
@@ -154,7 +155,7 @@ int main( int argc, const char* argv[] )
 		config->GetMember( "Fullscreen" )->Set( fullscreen );
 		config->GetMember( "Width" )->Set( w );
 		config->GetMember( "Height" )->Set( h );
-		
+
 		g_Lua->Push( GAME->GetMember( "Config" ).get() );
 		g_Lua->Push( GAME.get() );
 		g_Lua->Push( config );
@@ -178,7 +179,7 @@ int main( int argc, const char* argv[] )
 
 	window = g_Render->CreateRenderWindow( w, h, title, fullscreen );
 	g_Input->SetWindow( window );
-	
+
 	////////////////////////////////////////////////////////////
 	// Initialize game and load resources
 	////////////////////////////////////////////////////////////
@@ -190,7 +191,7 @@ int main( int argc, const char* argv[] )
 		if ( !g_Lua->Call( 1, 0 ) )
 			return Error( g_Lua->Error() );
 	}
-	
+
 	while ( g_Input->GetEvents() )
 	{
 		////////////////////////////////////////////////////////////
@@ -200,9 +201,8 @@ int main( int argc, const char* argv[] )
 		if ( GAME->IsTable() && GAME->GetMember( "Update" )->IsFunction() ) {
 			g_Lua->Push( GAME->GetMember( "Update" ).get() );
 			g_Lua->Push( GAME.get() );
-			g_Lua->Push( g_Render->FrameTime() );
 
-			if ( !g_Lua->Call( 2, 0 ) )
+			if ( !g_Lua->Call( 1, 0 ) )
 				return Error( g_Lua->Error() );
 		}
 
@@ -239,6 +239,6 @@ int main( int argc, const char* argv[] )
 	Passion::DestroyInterface<Passion::IBaseInput>( g_Input );
 	Passion::DestroyInterface<Passion::IBaseScripting>( g_Scripting );
 	//Passion::DestroyInterface<Passion::IBaseNetwork>( g_Network );
-	
+
 	return 0;
 }

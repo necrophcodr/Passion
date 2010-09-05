@@ -48,8 +48,8 @@ namespace Passion
 
 	inline Matrix::Matrix()
 	{
-		for ( char c = 0; c < 4; c++ )
-			for ( char r = 0; r < 4; r++ )
+		for ( short c = 0; c < 4; c++ )
+			for ( short r = 0; r < 4; r++ )
 				if ( r == c )
 					m[c][r] = 1;
 				else
@@ -58,8 +58,8 @@ namespace Passion
 
 	inline Matrix::Matrix( float* v )
 	{
-		for ( char c = 0; c < 4; c++ )
-			for ( char r = 0; r < 4; r++ )
+		for ( short c = 0; c < 4; c++ )
+			for ( short r = 0; r < 4; r++ )
 				m[c][r] = v[r*4+c];
 	}
 
@@ -68,7 +68,7 @@ namespace Passion
 		float x = v.x * m[0][0] + v.y * m[1][0] + v.z * m[2][0] + m[3][0];
 		float y = v.x * m[0][1] + v.y * m[1][1] + v.z * m[2][1] + m[3][1];
 		float z = v.x * m[0][2] + v.y * m[1][2] + v.z * m[2][2] + m[3][2];
-		
+
 		return Vector( x, y, z );
 	}
 
@@ -76,9 +76,9 @@ namespace Passion
 	{
 		Matrix res;
 
-		for ( char c = 0; c < 4; c++ )
-			for ( char r = 0; r < 4; r++ )
-				res.m[c][r] = (*this).m[0][r] * mat.m[c][0] + (*this).m[1][r] * mat.m[c][1] + 
+		for ( short c = 0; c < 4; c++ )
+			for ( short r = 0; r < 4; r++ )
+				res.m[c][r] = (*this).m[0][r] * mat.m[c][0] + (*this).m[1][r] * mat.m[c][1] +
 					(*this).m[2][r] * mat.m[c][2] + (*this).m[3][r] * mat.m[c][3];
 
 		return res;

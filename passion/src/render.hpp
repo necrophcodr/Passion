@@ -129,9 +129,9 @@ public:
 		{
 			std::auto_ptr<BaseScriptValue> vertexTable = g_Lua->Get( 1 );
 			std::vector<Passion::Vertex> vertices;
-			
+
 			for ( int i = 1; vertexTable->GetMember( i )->IsTable(); i++ )
-			{				
+			{
 				vertexTable->GetMember( i )->GetMember( "pos" )->Push();
 				Passion::Vector pos = GetVector( -1 );
 
@@ -444,12 +444,6 @@ public:
 		return 1;
 	}
 
-	SCRIPT_FUNCTION( FrameTime )
-	{
-		g_Lua->Push( g_Render->FrameTime() );
-		return 1;
-	}
-
 	SCRIPT_FUNCTION( Present )
 	{
 		g_Render->Present( g_Lua->Get( 1 )->GetBoolean() );
@@ -457,7 +451,7 @@ public:
 	}
 
 	static void Bind()
-	{		
+	{
 		// Library
 		std::auto_ptr<BaseScriptValue> render = g_Lua->NewTable();
 
@@ -517,8 +511,6 @@ public:
 
 		render->GetMember( "WorldToScreen" )->Set( WorldToScreen );
 		render->GetMember( "ScreenToWorld" )->Set( ScreenToWorld );
-
-		render->GetMember( "FrameTime" )->Set( FrameTime );
 
 		render->GetMember( "Present" )->Set( Present );
 

@@ -30,6 +30,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <cstring>
 
 namespace Passion
 {
@@ -38,11 +39,6 @@ namespace Passion
 		m_renderWindow = 0;
 		m_vertexIndex = 0;
 		m_shape = 0;
-
-		QueryPerformanceCounter( &m_time );
-		QueryPerformanceFrequency( &m_freq );
-
-		m_frameTime = 0.0f;
 	}
 
 	IRender::~IRender()
@@ -252,11 +248,11 @@ namespace Passion
 		}
 
 		file.close();
-		
+
 		unsigned int vertexcount = triangles.size() * 3;
 
 		Vertex* vertices = new Vertex[vertexcount];
-		
+
 		for ( unsigned int i = 0; i < triangles.size(); i++ )
 		{
 			memcpy( &vertices[i*3], triangles[i], sizeof( Vertex ) * 3 );
@@ -273,10 +269,10 @@ namespace Passion
 	Model IRender::CreateModel( Passion::Vertex* points, unsigned int count )
 	{
 		if ( count % 3 != 0 ) return Model();
-		
+
 		Model model;
 		model.vertices = count;
-		
+
 		glGenBuffers( 1, &model.id );
 		glBindBuffer( GL_ARRAY_BUFFER, model.id );
 		glBufferData( GL_ARRAY_BUFFER, sizeof( Vertex ) * count, points, GL_STATIC_DRAW );
@@ -301,7 +297,7 @@ namespace Passion
 		{
 			glBindBuffer( GL_ARRAY_BUFFER, m_vertexBuffer );
 			glBufferSubData( GL_ARRAY_BUFFER, 0, m_vertexIndex * sizeof( Vertex ), m_vertices );
-			
+
 			glVertexPointer( 3, GL_FLOAT, sizeof( Vertex ), 0 );
 			glColorPointer( 4, GL_FLOAT, sizeof( Vertex ), reinterpret_cast<void*>( sizeof( Vector ) ) );
 			glTexCoordPointer( 2, GL_FLOAT, sizeof( Vertex ), reinterpret_cast<void*>( sizeof( Vector ) + sizeof( float ) * 4 ) );
@@ -317,7 +313,7 @@ namespace Passion
 		int shader = glCreateShader( type );
 		glShaderSource( shader, 1, &code, 0 );
 		glCompileShader( shader );
-		
+
 		char buffer[1024];
 		int length;
 		glGetShaderInfoLog( shader, 1024, &length, buffer );
@@ -597,25 +593,17 @@ namespace Passion
 		return aim;
 	}
 
-	float IRender::FrameTime()
-	{
-		return m_frameTime;
-	}
-
 	void IRender::Present( bool immediate )
 	{
 		m_renderWindow->Present();
 
-		LARGE_INTEGER t;
-		QueryPerformanceCounter( &t );
-
-		m_frameTime = (float)( t.QuadPart - m_time.QuadPart ) / (float)m_freq.QuadPart;
-
 		#ifndef _DEBUG_
-			if ( !immediate )
-				Sleep( 1 );
+            if ( !immediate )
+            #ifdef WIN32
+                Sleep( 1 );
+            #else
+                usleep( 1000 );
+            #endif
 		#endif
-
-		QueryPerformanceCounter( &m_time );
 	}
 }

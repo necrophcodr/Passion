@@ -2,13 +2,13 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="scripting" />
+		<Option title="input" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="include/;src/;" />
+		<Option virtualFolders="src/;include/;" />
 		<Build>
 			<Target title="Debug">
-				<Option output="../../lib/scripting-d" prefix_auto="1" extension_auto="1" />
+				<Option output="../../lib/input-d" prefix_auto="1" extension_auto="1" />
 				<Option object_output="../../temp" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -18,12 +18,9 @@
 					<Add option="-g" />
 					<Add option="-D_DEBUG_" />
 				</Compiler>
-				<Linker>
-					<Add library="Lua-d" />
-				</Linker>
 			</Target>
 			<Target title="Release">
-				<Option output="../../lib/scripting" prefix_auto="1" extension_auto="1" />
+				<Option output="../../lib/input" prefix_auto="1" extension_auto="1" />
 				<Option object_output="../../temp" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -34,46 +31,33 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="Lua" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
 			<Add directory="../../include" />
-			<Add directory="../../extlibs/headers" />
 		</Compiler>
 		<Linker>
-			<Add directory="../../extlibs/lib" />
+			<Add library="GL" />
+			<Add library="X11" />
 		</Linker>
-		<Unit filename="../../include/Passion/Scripting/BaseScriptState.hpp">
+		<Unit filename="../../include/Passion/Input.hpp">
 			<Option virtualFolder="include/" />
 		</Unit>
-		<Unit filename="../../include/Passion/Scripting/BaseScriptValue.hpp">
+		<Unit filename="../../include/Passion/Input/IBaseInput.hpp">
 			<Option virtualFolder="include/" />
 		</Unit>
-		<Unit filename="../../include/Passion/Scripting/IBaseScripting.hpp">
+		<Unit filename="../../include/Passion/Input/IInput.hpp">
 			<Option virtualFolder="include/" />
 		</Unit>
-		<Unit filename="../../include/Passion/Scripting/IScripting.hpp">
-			<Option virtualFolder="include/" />
-		</Unit>
-		<Unit filename="../../include/Passion/Scripting/ScriptState.hpp">
-			<Option virtualFolder="include/" />
-		</Unit>
-		<Unit filename="../../include/Passion/Scripting/ScriptValue.hpp">
-			<Option virtualFolder="include/" />
-		</Unit>
-		<Unit filename="../../src/Passion/Scripting/IScripting.cpp">
+		<Unit filename="../../src/Passion/Input/IInput.cpp">
 			<Option virtualFolder="src/" />
 		</Unit>
-		<Unit filename="../../src/Passion/Scripting/ScriptState.cpp">
+		<Unit filename="../../src/Passion/Input/Input.cpp">
 			<Option virtualFolder="src/" />
 		</Unit>
-		<Unit filename="../../src/Passion/Scripting/ScriptValue.cpp">
-			<Option virtualFolder="src/" />
-		</Unit>
-		<Unit filename="../../src/Passion/Scripting/Scripting.cpp">
+		<Unit filename="../../src/Passion/Render/RenderWindow.cpp">
 			<Option virtualFolder="src/" />
 		</Unit>
 		<Extensions>

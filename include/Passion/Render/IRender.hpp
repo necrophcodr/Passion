@@ -34,7 +34,7 @@
 #include <Passion/Render/RenderWindow.hpp>
 
 namespace Passion
-{	
+{
 	////////////////////////////////////////////////////////////
 	// OpenGL implementation of IBaseRender
 	////////////////////////////////////////////////////////////
@@ -86,7 +86,7 @@ namespace Passion
 
 		void SetViewport( int x, int y, int w, int h );
 		void SetScissor( int x, int y, int w, int h );
-		
+
 		void SetStencilCompareFunction( unsigned int function, int reference, int mask );
 		void SetStencilOperations( unsigned int fail, unsigned int zfail, unsigned int pass );
 
@@ -112,10 +112,8 @@ namespace Passion
 		Vector WorldToScreen( Vector pos );
 		Vector ScreenToWorld( float x, float y );
 
-		float FrameTime();
-
 		void Present( bool immediate );
-		
+
 	private:
 		RenderWindow* m_renderWindow;
 		float m_viewW, m_viewH;
@@ -128,10 +126,6 @@ namespace Passion
 		Color m_drawColor;
 
 		Program m_activeProgram;
-
-		LARGE_INTEGER m_freq;
-		LARGE_INTEGER m_time;
-		float m_frameTime;
 
 		void Flush();
 	};

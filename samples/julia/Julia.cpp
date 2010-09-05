@@ -112,7 +112,7 @@ int main()
 	while ( input->GetEvents() )
 	{
 		if ( clock() - lastTime > 0 ) {
-			time += (float)( clock() - lastTime ) / 1000.0f / ( 4.0f / scaleRe ) / 2.0f;
+			time += (float)( clock() - lastTime ) / (float)CLOCKS_PER_SEC / ( 4.0f / scaleRe ) / 2.0f;
 			lastTime = clock();
 		}
 

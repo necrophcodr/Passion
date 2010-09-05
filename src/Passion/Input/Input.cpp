@@ -30,13 +30,13 @@
 // Platform specific factory export method
 ////////////////////////////////////////////////////////////
 
-#ifdef PASSION_PLATFORM_LINUX
-	extern "C" void* CreateInterface()
+#ifdef WIN32
+	extern "C" __declspec(dllexport) void* CreateInterface()
 	{
 		return new Passion::IInput;
 	}
 #else
-	extern "C" __declspec(dllexport) void* CreateInterface()
+	extern "C" void* CreateInterface()
 	{
 		return new Passion::IInput;
 	}

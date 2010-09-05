@@ -1,0 +1,105 @@
+# depslib dependency file v1.0
+1283652175 source:/home/overv/Desktop/Passion/passion/src/Passion.cpp
+	<fstream>
+	<cstring>
+	"Interfaces.hpp"
+	"render.hpp"
+	"input.hpp"
+	"Model.hpp"
+	"RenderTarget.hpp"
+	"Vector.hpp"
+	"Matrix.hpp"
+	"util.lua.hpp"
+	"file.lua.hpp"
+	"enums.lua.hpp"
+	"ErrorHandling.hpp"
+
+1283556981 /home/overv/Desktop/Passion/passion/src/Interfaces.hpp
+	<Passion/Render.hpp>
+	<Passion/Input.hpp>
+	<Passion/Scripting.hpp>
+	<Passion/Network.hpp>
+
+1283123443 /home/overv/Desktop/Passion/include/Passion/Render.hpp
+	<Passion/Passion.hpp>
+	<Passion/Render/IBaseRender.hpp>
+
+1283639012 /home/overv/Desktop/Passion/include/Passion/Passion.hpp
+	<string>
+	<iostream>
+	<windows.h>
+	<dlfcn.h>
+
+1283639217 /home/overv/Desktop/Passion/include/Passion/Render/IBaseRender.hpp
+	<Passion/Render/Color.hpp>
+	<Passion/Render/Vector.hpp>
+	<Passion/Render/Matrix.hpp>
+	<Passion/Render/BaseRenderTarget.hpp>
+
+1283123443 /home/overv/Desktop/Passion/include/Passion/Render/Color.hpp
+
+1283123443 /home/overv/Desktop/Passion/include/Passion/Render/Vector.hpp
+	<cmath>
+
+1283638205 /home/overv/Desktop/Passion/include/Passion/Render/Matrix.hpp
+	<cmath>
+
+1283123443 /home/overv/Desktop/Passion/include/Passion/Render/BaseRenderTarget.hpp
+
+1283123443 /home/overv/Desktop/Passion/include/Passion/Input.hpp
+	<Passion/Passion.hpp>
+	<Passion/Input/IBaseInput.hpp>
+
+1283627297 /home/overv/Desktop/Passion/include/Passion/Input/IBaseInput.hpp
+
+1283123443 /home/overv/Desktop/Passion/include/Passion/Scripting.hpp
+	<Passion/Passion.hpp>
+	<Passion/Scripting/IBaseScripting.hpp>
+
+1283123443 /home/overv/Desktop/Passion/include/Passion/Scripting/IBaseScripting.hpp
+	<Passion/Scripting/BaseScriptState.hpp>
+
+1283123443 /home/overv/Desktop/Passion/include/Passion/Scripting/BaseScriptState.hpp
+	<Passion/Scripting/BaseScriptValue.hpp>
+	<memory>
+
+1283123443 /home/overv/Desktop/Passion/include/Passion/Scripting/BaseScriptValue.hpp
+	<memory>
+
+1283123443 /home/overv/Desktop/Passion/include/Passion/Network.hpp
+	<Passion/Passion.hpp>
+	<Passion/Network/IBaseNetwork.hpp>
+
+1283123443 /home/overv/Desktop/Passion/include/Passion/Network/IBaseNetwork.hpp
+	<Passion/Network/BaseTCPSocket.hpp>
+
+1283123443 /home/overv/Desktop/Passion/include/Passion/Network/BaseTCPSocket.hpp
+
+1283651802 /home/overv/Desktop/Passion/passion/src/render.hpp
+	"Interfaces.hpp"
+	<vector>
+
+1283123443 /home/overv/Desktop/Passion/passion/src/input.hpp
+	"Interfaces.hpp"
+
+1283123443 /home/overv/Desktop/Passion/passion/src/Model.hpp
+	"Interfaces.hpp"
+
+1283556981 /home/overv/Desktop/Passion/passion/src/RenderTarget.hpp
+	"Interfaces.hpp"
+
+1283123443 /home/overv/Desktop/Passion/passion/src/Vector.hpp
+	"Interfaces.hpp"
+
+1283556981 /home/overv/Desktop/Passion/passion/src/Matrix.hpp
+	"Interfaces.hpp"
+
+1283556981 /home/overv/Desktop/Passion/passion/src/util.lua.hpp
+
+1283123443 /home/overv/Desktop/Passion/passion/src/file.lua.hpp
+
+1283627297 /home/overv/Desktop/Passion/passion/src/enums.lua.hpp
+
+1283123443 /home/overv/Desktop/Passion/passion/src/ErrorHandling.hpp
+	<iostream>
+

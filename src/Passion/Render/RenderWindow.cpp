@@ -26,11 +26,15 @@
 
 #include <Passion/Render/RenderWindow.hpp>
 
+#include <cstring>
+#include <cstdio>
+
 namespace Passion
 {
 	RenderWindow::RenderWindow( const char* title, unsigned int width, unsigned int height )
 	{
-		// Create window
+        // Create window
+#ifdef WIN32
 		WNDCLASSEX windowClass;
 
 		windowClass.cbSize = sizeof( WNDCLASSEX );
@@ -53,8 +57,6 @@ namespace Passion
 
 		m_window =  CreateWindowEx( WS_EX_OVERLAPPEDWINDOW, "OpenGLWindow", title, WS_POPUPWINDOW | WS_CAPTION, size.right / 2 - width / 2, size.bottom / 2 - height / 2, width, height, NULL, NULL, GetModuleHandle( NULL ), this );
 
-		m_open = true;
-
 		ShowWindow( m_window, SW_SHOWNORMAL );
 		UpdateWindow( m_window );
 
@@ -63,7 +65,7 @@ namespace Passion
 
 		// Set pixel format
 		PIXELFORMATDESCRIPTOR pfd;
-		
+
 		ZeroMemory( &pfd, sizeof( PIXELFORMATDESCRIPTOR ) );
 		pfd.nSize = sizeof( PIXELFORMATDESCRIPTOR );
 		pfd.nVersion = 1;
@@ -79,8 +81,79 @@ namespace Passion
 		m_context = wglCreateContext( m_dc );
 
 		wglMakeCurrent( m_dc, m_context );
+#else
+        static const int snglBuf[] = { GLX_RGBA, GLX_DEPTH_SIZE, 16, None };
+        static const int dblBuf[]  = { GLX_RGBA, GLX_DEPTH_SIZE, 16, GLX_DOUBLEBUFFER, None };
 
-		// Initialize input states
+        static const unsigned long HINTS_FUNCTIONS = 1 << 0;
+        static const unsigned long HINTS_DECORATIONS = 1 << 1;
+
+        static const unsigned long DECOR_BORDER = 1 << 1;
+        static const unsigned long DECOR_TITLE = 1 << 3;
+        static const unsigned long DECOR_MENU = 1 << 4;
+        static const unsigned long DECOR_MINIMIZE = 1 << 5;
+
+        static const unsigned long FUNC_MOVE = 1 << 2;
+        static const unsigned long FUNC_MINIMIZE = 1 << 3;
+        static const unsigned long FUNC_CLOSE = 1 << 5;
+
+        // Connect to X server
+        m_dpy = XOpenDisplay( NULL );
+
+        // Find the appropiate color format (first try double buffered, then single buffered)
+        XVisualInfo* vi = glXChooseVisual( m_dpy, DefaultScreen( m_dpy ), const_cast<int*>( dblBuf ) );
+        m_doubleBuffered = true;
+
+        if ( !vi )
+        {
+            vi = glXChooseVisual( m_dpy, DefaultScreen( m_dpy ), const_cast<int*>( snglBuf ) );
+            m_doubleBuffered = false;
+        }
+
+        // Create OpenGL context
+        GLXContext cx = glXCreateContext( m_dpy, vi, None, true );
+
+        // Create color map
+        Colormap cmap = XCreateColormap( m_dpy, RootWindow( m_dpy, vi->screen ), vi->visual, AllocNone );
+        XSetWindowAttributes swa;
+        swa.colormap = cmap;
+        swa.border_pixel = 0;
+        swa.event_mask = KeyPressMask | KeyReleaseMask | ExposureMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask | StructureNotifyMask;
+
+        // Create window
+        m_win = XCreateWindow( m_dpy, RootWindow( m_dpy, vi->screen ), ( DisplayWidth( m_dpy, DefaultScreen( m_dpy ) ) - width ) / 2, ( DisplayHeight( m_dpy, DefaultScreen( m_dpy ) ) - height ) / 2, width, height, 0, vi->depth, InputOutput, vi->visual, CWBorderPixel | CWColormap | CWEventMask, &swa );
+
+        // Set title
+        XStoreName( m_dpy, m_win, title );
+
+        // Set window properties
+        Atom windowHints = XInternAtom( m_dpy, "_MOTIF_WM_HINTS", false );
+
+        struct WMHints
+        {
+            unsigned long flags;
+            unsigned long functions;
+            unsigned long decorations;
+            long inputMode;
+            unsigned long state;
+        };
+
+        WMHints hints;
+        hints.flags = HINTS_FUNCTIONS | HINTS_DECORATIONS;
+        hints.decorations = DECOR_BORDER | DECOR_TITLE | DECOR_MINIMIZE | DECOR_MENU;
+        hints.functions = FUNC_MOVE | FUNC_MINIMIZE | FUNC_CLOSE;
+
+        const unsigned char* hintsPtr = reinterpret_cast<const unsigned char*>( &hints );
+        XChangeProperty( m_dpy, m_win, windowHints, windowHints, 32, PropModeReplace, hintsPtr, 5 );
+
+        // Activate context
+        glXMakeCurrent( m_dpy, m_win, cx );
+
+        // Show window
+        XMapWindow( m_dpy, m_win );
+#endif
+
+		// Initialize states
 		m_x = 0;
 		m_y = 0;
 
@@ -91,23 +164,30 @@ namespace Passion
 		m_wheelDelta = 0;
 
 		memset( m_keys, 0, 256 );
+
+		m_open = true;
+		m_w = width;
+		m_h = height;
 	}
 
 	RenderWindow::~RenderWindow()
 	{
+#ifdef WIN32
 		wglDeleteContext( m_context );
 		wglMakeCurrent( NULL, NULL );
 		ReleaseDC( m_window, m_dc );
+#endif
 	}
 
 	bool RenderWindow::GetEvents()
 	{
+	    m_wheelDelta = 0;
+
+#ifdef WIN32
 		if ( !m_open ) return false;
 
-		m_wheelDelta = 0;
-
 		MSG msg;
-		
+
 		while ( PeekMessage( &msg, m_window, 0, 0, PM_REMOVE ) )
 		{
 			TranslateMessage( &msg );
@@ -115,38 +195,64 @@ namespace Passion
 		}
 
 		return true;
+#else
+        XEvent event;
+
+        while ( XPending( m_dpy ) )
+        {
+            XNextEvent( m_dpy, &event );
+
+            switch ( event.type )
+            {
+                case KeyPress:
+                m_keys[event.xkey.keycode] = true;
+                break;
+
+                case KeyRelease:
+                m_keys[event.xkey.keycode] = false;
+                break;
+
+                case ButtonPress:
+                if ( event.xbutton.button == 1 )
+                    m_mouseLeft = true;
+                else if ( event.xbutton.button == 2 )
+                    m_mouseMiddle = true;
+                else if ( event.xbutton.button == 3 )
+                    m_mouseRight = true;
+                break;
+
+                case ButtonRelease:
+                if ( event.xbutton.button == 1 )
+                    m_mouseLeft = false;
+                else if ( event.xbutton.button == 2 )
+                    m_mouseMiddle = false;
+                else if ( event.xbutton.button == 3 )
+                    m_mouseRight = false;
+                else if ( event.xbutton.button == 4 || event.xbutton.button == 5 )
+                {
+                    m_wheelDelta = event.xbutton.button == 4 ? 1 : -1;
+                }
+                break;
+
+                case MotionNotify:
+                m_x = event.xmotion.x;
+                m_y = event.xmotion.y;
+                break;
+            }
+        }
+
+        return true;
+#endif
 	}
 
 	unsigned int RenderWindow::GetWidth()
 	{
-		RECT size;
-		GetClientRect( m_window, &size );
-
-		return size.right;
+        return m_w;
 	}
 
 	unsigned int RenderWindow::GetHeight()
 	{
-		RECT size;
-		GetClientRect( m_window, &size );
-
-		return size.bottom;
-	}
-
-	int RenderWindow::GetX()
-	{
-		RECT pos;
-		GetWindowRect( m_window, &pos );
-
-		return pos.left;
-	}
-
-	int RenderWindow::GetY()
-	{
-		RECT pos;
-		GetWindowRect( m_window, &pos );
-
-		return pos.top;
+        return m_h;
 	}
 
 	int RenderWindow::MouseX()
@@ -188,9 +294,17 @@ namespace Passion
 
 	void RenderWindow::Present()
 	{
+#ifdef WIN32
 		SwapBuffers( m_dc );
+#else
+        if ( m_doubleBuffered )
+            glXSwapBuffers( m_dpy, m_win );
+        else
+            glFlush();
+#endif
 	}
 
+#ifdef WIN32
 	LRESULT RenderWindow::Event( UINT msg, WPARAM wParam, LPARAM lParam )
 	{
 		switch ( msg )
@@ -263,8 +377,9 @@ namespace Passion
 			return DefWindowProc( hWnd, msg, wParam, lParam );
 		} else {
 			window = reinterpret_cast<RenderWindow*>( GetWindowLong( hWnd, GWL_USERDATA ) );
-			
+
 			return window->Event( msg, wParam, lParam );
 		}
 	}
+#endif
 }

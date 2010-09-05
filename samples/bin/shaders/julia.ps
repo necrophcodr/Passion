@@ -9,7 +9,7 @@ uniform float time;
 
 void main()
 {
-	unsigned int maxIterations = 120;
+	unsigned int maxIterations = 120u;
 	
 	float minRe = centerRe - scaleRe;
 	float maxRe = centerRe + scaleRe;
@@ -25,7 +25,7 @@ void main()
 	bool inside = true;
 	unsigned int n;
 	
-	for ( n = 0; n < maxIterations; n++ )
+	for ( n = 0u; n < maxIterations; n++ )
 	{
 		float z_re2 = z_re * z_re;
 		float z_im2 = z_im * z_im;
@@ -42,10 +42,10 @@ void main()
 	if ( inside )
 	{
 		gl_FragColor = vec4( 0.0f, 0.0f, 0.0f, 1.0f );
-	} else if ( n <= maxIterations / 2 - 1 ) {
-		gl_FragColor = vec4( float( n ) / float( maxIterations / 2 - 1 ), 0.0f, 0.0f, 1.0f );
+	} else if ( n <= maxIterations / 2u - 1u ) {
+		gl_FragColor = vec4( float( n ) / float( maxIterations / 2u - 1u ), 0.0f, 0.0f, 1.0f );
 	} else {
-		float col = ( float( n ) - float( maxIterations / 2 ) ) / float( maxIterations / 2 );
+		float col = ( float( n ) - float( maxIterations / 2u ) ) / float( maxIterations / 2u );
 		gl_FragColor = vec4( 1.0f, col, col, 1.0f );
 	}
 }
