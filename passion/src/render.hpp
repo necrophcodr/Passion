@@ -96,7 +96,10 @@ public:
 
 	SCRIPT_FUNCTION( LoadTexture )
 	{
-		g_Lua->Push( (int)g_Render->LoadTexture( g_Lua->Get( 1 )->GetString(), g_Lua->Get( 2 )->GetBoolean() ) );
+	    const char* path = g_Lua->Get( 1 )->GetString();
+            int tex = g_Render->LoadTexture( path, g_Lua->Get( 2 )->GetBoolean() );
+		g_Lua->Push( tex );
+
 		return 1;
 	}
 
