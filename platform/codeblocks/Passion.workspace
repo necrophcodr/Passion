@@ -9,6 +9,10 @@
 		<Project filename="../../samples/build/gameoflife.cbp" />
 		<Project filename="../../samples/build/interpreter.cbp" />
 		<Project filename="../../samples/build/julia.cbp" />
-		<Project filename="../../passion/build/codeblocks/passion.cbp" active="1" />
+		<Project filename="../../passion/build/codeblocks/passion.cbp" active="1">
+			<Depends filename="input.cbp" />
+			<Depends filename="render.cbp" />
+			<Depends filename="scripting.cbp" />
+		</Project>
 	</Workspace>
 </CodeBlocks_workspace_file>

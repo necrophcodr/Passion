@@ -21,6 +21,8 @@
 				</Compiler>
 				<ExtraCommands>
 					<Add after="cp  ../../../lib/render-d.so ../../bin/bin/render-d.so" />
+					<Add after="cp  ../../../lib/input-d.so ../../bin/bin/input-d.so" />
+					<Add after="cp  ../../../lib/scripting-d.so ../../bin/bin/scripting-d.so" />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
@@ -37,6 +39,12 @@
 				<Linker>
 					<Add option="-s" />
 				</Linker>
+				<ExtraCommands>
+					<Add after="cp  ../../../lib/render.so ../../bin/bin/render.so" />
+					<Add after="cp  ../../../lib/input.so ../../bin/bin/input.so" />
+					<Add after="cp  ../../../lib/scripting.so ../../bin/bin/scripting.so" />
+					<Mode after="always" />
+				</ExtraCommands>
 			</Target>
 		</Build>
 		<Compiler>
@@ -89,4 +97,3 @@
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
-
