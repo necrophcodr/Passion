@@ -1,1 +1,1 @@
-Passion lua/samples/basics.lua
+Passion-d lua/samples/basics.lua

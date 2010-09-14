@@ -1,0 +1,28 @@
+varying vec4 gl_Color;
+
+varying vec3 normal;
+varying vec3 pos;
+
+uniform vec4 lightDiffuse;
+uniform vec4 lightSpecular;
+uniform vec4 lightAmbient;
+uniform vec3 lightPos;
+uniform vec3 eyePos;
+uniform float diffuse;
+uniform float specular;
+uniform float shininess;
+uniform float ambient;
+
+void main()
+{
+	float ang = dot( normalize( lightPos ), normal );
+	
+	float _specular = 0.0f;
+	if ( ang > 0.0f )
+	{
+		float dot2 = max( dot( normal, eyePos - normalize( lightPos - pos ) ), 0.0 );
+		_specular = specular * pow( dot2, shininess );
+	}
+	
+	gl_FragColor = lightDiffuse * diffuse * ang + _specular * lightSpecular + lightAmbient * ambient * gl_Color;
+}

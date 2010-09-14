@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;..\..\include&quot;"
-				PreprocessorDefinitions="WIN32"
+				PreprocessorDefinitions="WIN32; _DEBUG_"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"

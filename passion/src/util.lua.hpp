@@ -33,8 +33,8 @@ function Color( r, g, b, a ) \
 	return { r = math.Clamp( r, 0, 255 ), g = math.Clamp( g, 0, 255 ), b = math.Clamp( b, 0, 255 ), a = math.Clamp( a or 255, 0, 255 ) } \
 end \
 \
-function Vertex( pos, color, u, v ) \
-	return { pos = pos, color = color or Color( 255, 255, 255, 255 ), u = u or 0, v = v or 0 } \
+function Vertex( pos, color, u, v, normal ) \
+	return { pos = pos, color = color or Color( 255, 255, 255, 255 ), u = u or 0, v = v or 0, normal = normal or Vector( 0, 0, 0 ) } \
 end \
 \
 include = dofile \

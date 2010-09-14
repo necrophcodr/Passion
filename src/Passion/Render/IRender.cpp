@@ -61,10 +61,12 @@ namespace Passion
 		glEnableClientState( GL_VERTEX_ARRAY );
 		glEnableClientState( GL_COLOR_ARRAY );
 		glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+		glEnableClientState( GL_NORMAL_ARRAY );
 
 		glVertexPointer( 3, GL_FLOAT, sizeof( Vertex ), 0 );
 		glColorPointer( 4, GL_FLOAT, sizeof( Vertex ), reinterpret_cast<void*>( sizeof( Vector ) ) );
 		glTexCoordPointer( 2, GL_FLOAT, sizeof( Vertex ), reinterpret_cast<void*>( sizeof( Vector ) + sizeof( float ) * 4 ) );
+		glNormalPointer( GL_FLOAT, sizeof( Vertex ), reinterpret_cast<void*>( sizeof( Vector ) + sizeof( float ) * 6 ) );
 
 		glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
@@ -240,7 +242,7 @@ namespace Passion
 						normal = normals[n-1];
 					}
 
-					tr[face] = Vertex( point.x, point.y, point.z, Color(), uv.x, uv.y );
+					tr[face] = Vertex( point.x, point.y, point.z, Color(), uv.x, uv.y, normal.x, normal.y, normal.z );
 				}
 
 				triangles.push_back( tr );
@@ -287,6 +289,7 @@ namespace Passion
 		glVertexPointer( 3, GL_FLOAT, sizeof( Vertex ), 0 );
 		glColorPointer( 4, GL_FLOAT, sizeof( Vertex ), reinterpret_cast<void*>( sizeof( Vector ) ) );
 		glTexCoordPointer( 2, GL_FLOAT, sizeof( Vertex ), reinterpret_cast<void*>( sizeof( Vector ) + sizeof( float ) * 4 ) );
+		glNormalPointer( GL_FLOAT, sizeof( Vertex ), reinterpret_cast<void*>( sizeof( Vector ) + sizeof( float ) * 6 ) );
 
 		glDrawArrays( GL_TRIANGLES, 0, model.vertices );
 	}
@@ -301,6 +304,7 @@ namespace Passion
 			glVertexPointer( 3, GL_FLOAT, sizeof( Vertex ), 0 );
 			glColorPointer( 4, GL_FLOAT, sizeof( Vertex ), reinterpret_cast<void*>( sizeof( Vector ) ) );
 			glTexCoordPointer( 2, GL_FLOAT, sizeof( Vertex ), reinterpret_cast<void*>( sizeof( Vector ) + sizeof( float ) * 4 ) );
+			glNormalPointer( GL_FLOAT, sizeof( Vertex ), reinterpret_cast<void*>( sizeof( Vector ) + sizeof( float ) * 6 ) );
 
 			glDrawArrays( m_shape, 0, m_vertexIndex );
 

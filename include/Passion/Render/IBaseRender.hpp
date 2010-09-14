@@ -67,10 +67,11 @@ namespace Passion
 	struct Vertex
 	{
 		Vertex() {}
-		Vertex( float X, float Y, float Z, Color color, float U = 0.0f, float V = 0.0f ) { x = X; y = Y; z = Z; r = color.R; g = color.G; b = color.B; a = color.A; u = U; v = V; }
+		Vertex( float X, float Y, float Z, Color color, float U = 0.0f, float V = 0.0f, float NX = 0.0f, float NY = 0.0f, float NZ = 0.0f ) { x = X; y = Y; z = Z; r = color.R; g = color.G; b = color.B; a = color.A; u = U; v = V; nx = NX; ny = NY; nz = NZ; }
 		float x, y, z;
 		float r, g, b, a;
 		float u, v;
+		float nx, ny, nz;
 	};
 
 	////////////////////////////////////////////////////////////

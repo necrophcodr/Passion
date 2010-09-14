@@ -141,7 +141,10 @@ public:
 				vertexTable->GetMember( i )->GetMember( "color" )->Push();
 				Passion::Color color = GetColor( -1 );
 
-				vertices.push_back( Passion::Vertex( pos.x, pos.y, pos.z, color, vertexTable->GetMember( i )->GetMember( "u" )->GetFloat(), vertexTable->GetMember( i )->GetMember( "v" )->GetFloat() ) );
+				vertexTable->GetMember( i )->GetMember( "normal" )->Push();
+				Passion::Vector normal = GetVector( -1 );
+
+				vertices.push_back( Passion::Vertex( pos.x, pos.y, pos.z, color, vertexTable->GetMember( i )->GetMember( "u" )->GetFloat(), vertexTable->GetMember( i )->GetMember( "v" )->GetFloat(), normal.x, normal.y, normal.z ) );
 			}
 
 			Passion::Vertex* vertexArray = new Passion::Vertex[vertices.size()];
