@@ -1,0 +1,20 @@
+varying vec2 uv;
+varying vec4 gl_Color;
+uniform sampler2D tex;
+ 
+void main()
+{	
+	vec4 sum = vec4( 0.0 );
+	float blurSize = 1.0 / 1280.0;
+	float blurStrength = ( 1.0 - texture2D( tex, uv ).w ) * 32.0;
+	int samples = 0;
+	
+	for ( float x = -blurStrength * blurSize; x <= blurStrength * blurSize; x += blurSize )
+	{
+		sum += texture2D( tex, vec2( uv.x + x, uv.y ) );
+		samples++;
+	}	
+	
+	sum /= samples;
+	gl_FragColor = sum * gl_Color;
+}

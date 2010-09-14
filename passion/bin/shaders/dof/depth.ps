@@ -1,0 +1,17 @@
+varying vec2 uv;
+varying vec4 gl_Color;
+uniform sampler2D tex;
+
+void main()
+{
+	float rawdepth = gl_FragCoord.z / gl_FragCoord.w;
+	float depth;
+	vec4 color = texture2D( tex, uv ) * gl_Color;
+	
+	if ( rawdepth > 5.0f )
+		depth = ( rawdepth - 5.0f ) / 35.0f;
+	else
+		depth = 0.0f;
+	
+	gl_FragColor = vec4( color.xyz, 1.0f - depth );
+}

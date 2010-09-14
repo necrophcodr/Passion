@@ -52,10 +52,21 @@ namespace Passion
 
 		RegisterClassEx( &windowClass );
 
+		// Get display resolution
 		RECT size;
 		GetClientRect( GetDesktopWindow(), &size );
 
-		m_window =  CreateWindowEx( WS_EX_OVERLAPPEDWINDOW, "OpenGLWindow", title, WS_POPUPWINDOW | WS_CAPTION, size.right / 2 - width / 2, size.bottom / 2 - height / 2, width, height, NULL, NULL, GetModuleHandle( NULL ), this );
+		// Calculate appropriate window size
+		RECT windowSize;
+		windowSize.left = 0;
+		windowSize.top = 0;
+		windowSize.right = width;
+		windowSize.bottom = height;
+		AdjustWindowRect( &windowSize, WS_POPUPWINDOW | WS_CAPTION, false );
+		int width2 = windowSize.right - windowSize.left;
+		int height2 = windowSize.bottom - windowSize.top;
+
+		m_window =  CreateWindowEx( WS_EX_OVERLAPPEDWINDOW, "OpenGLWindow", title, WS_POPUPWINDOW | WS_CAPTION, size.right / 2 - width2 / 2, size.bottom / 2 - height2 / 2, width2, height2, NULL, NULL, GetModuleHandle( NULL ), this );
 
 		ShowWindow( m_window, SW_SHOWNORMAL );
 		UpdateWindow( m_window );

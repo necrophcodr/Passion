@@ -101,6 +101,7 @@ int main()
 	////////////////////////////////////////////////////////////
 
 	Passion::BaseRenderTarget* rt = render->CreateRenderTarget( 1280, 720 );
+	Passion::BaseRenderTarget* rt2 = render->CreateRenderTarget( 1280, 720 );
 
 	while ( input->GetEvents() )
 	{
@@ -126,19 +127,26 @@ int main()
 			render->DrawBox( Passion::Vector( -40.0f, -30.0f, -30.0f ), Passion::Vector( -100.0f, 30.0f, 30.0f ) );
 		render->End3D();
 
-		render->SetRenderTarget();
+		render->SetRenderTarget( rt2 );
 
 		render->Clear( Passion::Color( 0.0f, 0.0f, 0.0f ) );
 		render->SetDepthEnabled( false );
 
-		render->Start2D();			
-			render->SetDrawColor( Passion::Color( 1.0f, 1.0f, 1.0f, 1.0f ) );
-			render->SetTexture( rt->GetTexture() );
+		render->SetDrawColor( Passion::Color( 1.0f, 1.0f, 1.0f, 1.0f ) );
+		render->SetTexture( rt->GetTexture() );
+
+		render->Start2D();
 			render->SetProgram( gaussian_h );
 
 			render->DrawQuad( Passion::Vector( 0.0f, 720.0f ), Passion::Vector( 1280.0f, 720.0f ), Passion::Vector( 1280.0f, 0.0f ), Passion::Vector( 0.0f, 0.0f ) );
+		render->End2D();
 
-			render->SetDrawColor( Passion::Color( 1.0f, 1.0f, 1.0f, 0.5f ) );
+		render->SetRenderTarget();
+		
+		render->Clear( Passion::Color( 0.0f, 0.0f, 0.0f ) );
+		render->SetTexture( rt2->GetTexture() );
+
+		render->Start2D();
 			render->SetProgram( gaussian_v );
 
 			render->DrawQuad( Passion::Vector( 0.0f, 720.0f ), Passion::Vector( 1280.0f, 720.0f ), Passion::Vector( 1280.0f, 0.0f ), Passion::Vector( 0.0f, 0.0f ) );
