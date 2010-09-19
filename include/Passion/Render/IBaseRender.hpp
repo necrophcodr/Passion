@@ -133,7 +133,7 @@ namespace Passion
 
 		virtual void SetTransform( Matrix matrix ) = 0;
 		virtual void SetDrawColor( Color color ) = 0;
-		virtual void SetTexture( Texture texture = 0 ) = 0;
+		virtual void SetTexture( Texture texture = 0, unsigned int target = 0 ) = 0;
 		virtual void SetRenderTarget( BaseRenderTarget* rendertarget = 0 ) = 0;
 		virtual void SetProgram( Program program = 0 ) = 0;
 

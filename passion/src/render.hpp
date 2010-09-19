@@ -364,8 +364,10 @@ public:
 	{
 		if ( !g_Lua->Get( 1 )->IsNumber() && !g_Lua->Get( 1 )->IsNil() )
 			g_Lua->Error( 1, "Texture" );
+		if ( !g_Lua->Get( 2 )->IsNumber() && !g_Lua->Get( 2 )->IsNil() )
+			g_Lua->Error( 2, "number" );
 
-		g_Render->SetTexture( g_Lua->Get( 1 )->GetInteger() );
+		g_Render->SetTexture( g_Lua->Get( 1 )->GetInteger(), g_Lua->Get( 2 )->GetInteger() );
 
 		return 0;
 	}

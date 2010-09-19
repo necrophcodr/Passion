@@ -186,7 +186,7 @@ namespace Passion
 		glFramebufferTexture2DEXT( GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, rendertexture, 0 );
 
 		SetRenderTarget( 0 );
-		SetTexture( 0 );
+		SetTexture( 0, 0 );
 
 		return new RenderTarget( framebuffer, renderbuffer, rendertexture );
 	}
@@ -238,7 +238,11 @@ namespace Passion
 						uv = texcoords[t-1];
 					}
 					if ( normals.size() > 0 ) {
-						file >> c >> n;
+						if ( texcoords.size() > 0 )
+							file >> c >> n;
+						else
+							file >> c >> c >> n;
+
 						normal = normals[n-1];
 					}
 
@@ -471,9 +475,12 @@ namespace Passion
 		m_drawColor = color;
 	}
 
-	void IRender::SetTexture( Texture texture )
+	void IRender::SetTexture( Texture texture, unsigned int target )
 	{
 		Flush();
+
+		glActiveTexture( GL_TEXTURE0 + target );
+		glEnable( GL_TEXTURE_2D );
 
 		glBindTexture( GL_TEXTURE_2D, texture );
 

@@ -97,7 +97,7 @@ namespace Passion
 
 		void SetTransform( Matrix matrix );
 		void SetDrawColor( Color color );
-		void SetTexture( Texture texture );
+		void SetTexture( Texture texture, unsigned int target );
 		void SetRenderTarget( BaseRenderTarget* rendertarget );
 		void SetProgram( Program program = 0 );
 

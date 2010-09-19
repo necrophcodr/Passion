@@ -1,0 +1,7 @@
+varying vec3 normal;
+
+void main()
+{
+	float depth = gl_FragCoord.z / gl_FragCoord.w / 200.0f;
+	gl_FragColor = vec4( abs( normal ), depth );
+}
