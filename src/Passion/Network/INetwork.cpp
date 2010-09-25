@@ -27,10 +27,10 @@
 #include <Passion/Network/INetwork.hpp>
 #include <Passion/Network/TCPSocket.hpp>
 
-#ifdef PASSION_PLATFORM_LINUX
-
+#ifdef WIN32
+	#include <ws2tcpip.h>
 #else
-	#include <ws2tcpip.h>	
+	
 #endif
 
 namespace Passion

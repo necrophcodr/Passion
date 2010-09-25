@@ -79,7 +79,7 @@ int main()
 
 	while ( socket->IsConnected() )
 	{
-		socket->Receive( response, 512, received );
+		received = socket->Receive( response, 512 );
 		response[received] = 0;
 
 		if ( received > 0 )

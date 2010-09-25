@@ -28,39 +28,32 @@
 ////////////////////////////////////////////////////////////
 
 #include <Passion/Network/BaseTCPSocket.hpp>
-#include <SFML/Network.hpp>
-#include <deque>
+
+#ifdef WIN32
+	#include <winsock2.h>
+#endif
 
 namespace Passion
 {
-	struct TCPOperation
-	{
-		char op;
-		char* arg1;
-		unsigned short arg2;
-		unsigned int arg3;
-		float arg4;
-	};
-
 	class TCPSocket : public BaseTCPSocket
 	{
 	public:
 		TCPSocket();
 		~TCPSocket();
 
-		void Connect( const char* host, unsigned short port, float timeout );
+		void Connect( const char* host, unsigned short port );
 		void Disconnect();
 
-		void Send( char* data, unsigned int length );
-		void Receive( char* buffer, unsigned int size, unsigned int& received );
+		void Send( const char* data, size_t length );
+		unsigned int Receive( char* buffer, size_t length );
 
 		bool IsConnected();
-
-		sf::SocketTCP sock;
-		bool connected;
-		std::deque<TCPOperation> queue;
+		bool Available();
 	private:
-		sf::Thread* thread;
+#ifdef WIN32
+		SOCKET m_socket;
+#endif
+		bool m_connected;
 	};
 }
 

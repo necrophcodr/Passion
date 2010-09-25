@@ -28,13 +28,14 @@ namespace Passion
 	class BaseTCPSocket
 	{
 	public:
-		virtual void Connect( const char* host, unsigned short port, float timeout = 0 ) = 0;
+		virtual void Connect( const char* host, unsigned short port ) = 0;
 		virtual void Disconnect() = 0;
 
-		virtual void Send( char* data, unsigned int length ) = 0;
-		virtual void Receive( char* buffer, unsigned int size, unsigned int& received ) = 0;
+		virtual void Send( const char* data, size_t length = 0 ) = 0;
+		virtual unsigned int Receive( char* buffer, size_t length ) = 0;
 
 		virtual bool IsConnected() = 0;
+		virtual bool Available() = 0;
 	};
 }
 

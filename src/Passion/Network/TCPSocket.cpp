@@ -25,96 +25,102 @@
 ////////////////////////////////////////////////////////////
 
 #include <Passion/Network/TCPSocket.hpp>
-#include <iostream>
 
 namespace Passion
 {
-	void TCPThread( void* userdata )
-	{
-		TCPSocket* sock = (TCPSocket*)userdata;
-
-		while ( true )
-		{
-			if ( sock->queue.size() > 0 )
-			{
-				TCPOperation op = sock->queue[0];
-				
-				switch ( op.op )
-				{
-				case 0:
-					sock->connected = false;
-					sock->sock.Close();
-					sock->connected = sock->sock.Connect( op.arg2, op.arg1, op.arg4 ) == sf::Socket::Done;
-					break;
-
-				case 1:
-					sock->sock.Send( op.arg1, op.arg3 );
-					break;
-				}
-
-				sock->queue.pop_front();
-			}
-
-			sf::Sleep( 0.001f );
-		}
-	}
-
 	TCPSocket::TCPSocket()
 	{
-		connected = false;
+#ifdef WIN32
+		WSADATA wsaData;
+		WSAStartup( MAKEWORD( 1, 1 ), &wsaData );
 
-		thread = new sf::Thread( &TCPThread, this );
-		thread->Launch();
+		m_socket = socket( AF_INET, SOCK_STREAM, IPPROTO_TCP );
+
+		u_long nonblocking = 1;
+		ioctlsocket( m_socket, FIONBIO, &nonblocking );
+#endif
 	}
 
 	TCPSocket::~TCPSocket()
 	{
-		delete thread;
+#ifdef WIN32
+		WSACleanup();
+#endif;
 	}
 
-	void TCPSocket::Connect( const char* host, unsigned short port, float timeout )
+	void TCPSocket::Connect( const char* address, unsigned short port )
 	{
-		TCPOperation op;
-		op.op = 0;
-		op.arg1 = const_cast<char*>( host );
-		op.arg2 = port;
-		op.arg4 = timeout;
-		queue.push_back( op );
+#ifdef WIN32
+		LPHOSTENT hostEntry = (LPHOSTENT)gethostbyname( address );
+
+		SOCKADDR_IN serverInfo;
+		serverInfo.sin_family = AF_INET;
+		serverInfo.sin_addr = *( (LPIN_ADDR)*hostEntry->h_addr_list );
+		serverInfo.sin_port = htons( port );
+
+		connect( m_socket, (LPSOCKADDR)&serverInfo, sizeof( struct sockaddr ) );
+		m_connected = true;
+#endif
 	}
 
 	void TCPSocket::Disconnect()
 	{
-		thread->Terminate();
-
-		sock.Close();
-		connected = false;
+#ifdef WIN32
+		closesocket( m_socket );
+		m_connected = false;
+#endif;
 	}
 
-	void TCPSocket::Send( char* data, unsigned int length )
+	void TCPSocket::Send( const char* buffer, size_t length )
 	{
-		TCPOperation op;
-		op.op = 1;
-		op.arg1 = data;
-		op.arg3 = length;
-		queue.push_back( op );
+#ifdef WIN32
+		if ( length == 0 ) length = strlen( buffer );
+		send( m_socket, buffer, length, 0 );
+#endif;
 	}
 
-	void TCPSocket::Receive( char* buffer, unsigned int size, unsigned int& received )
+	unsigned int TCPSocket::Receive( char* buffer, size_t length )
 	{
-		if ( !connected ) { received = 0; return; }
-
-		sf::SelectorTCP selector;
-		selector.Add( sock );
-		if ( selector.Wait( 0 ) > 0 )
-		{
-			connected = sock.Receive( buffer, size, received ) != sf::Socket::Disconnected;
-		} else {
-			received = 0;
-		}
+#ifdef WIN32
+		if ( !Available() )
+			return 0;
+		else
+			return recv( m_socket, buffer, length, 0 );
+#endif
 	}
 
 	bool TCPSocket::IsConnected()
 	{
-		return connected;
+#ifdef WIN32
+		if ( !m_connected ) return false;
+
+		fd_set set;
+		set.fd_count = 1;
+		set.fd_array[0] = m_socket;
+
+		timeval time = { 0, 0 };
+
+		return select( 0, 0, &set, 0, &time ) != 0;
+#endif
+	}
+
+	bool TCPSocket::Available()
+	{
+#ifdef WIN32
+		if ( !IsConnected() ) return false;
+
+		fd_set set;
+		set.fd_count = 1;
+		set.fd_array[0] = m_socket;
+
+		timeval time = { 0, 0 };
+	
+		if ( select( 0, &set, 0, 0, &time ) > 0 ) {
+			char temp;
+			return recv( m_socket, &temp, 1, MSG_PEEK ) == 1;
+		} else {
+			return 0;
+		}
+#endif
 	}
 }
