@@ -60,7 +60,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Lua-d.lib"
+				AdditionalDependencies="Lua.lib"
 				OutputFile="$(SolutionDir)\..\..\lib\$(ProjectName)-d.dll"
 				AdditionalLibraryDirectories="..\..\extlibs\lib"
 				GenerateDebugInformation="false"

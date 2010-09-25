@@ -315,6 +315,118 @@ namespace Passion
 #endif
 	}
 
+	int RenderWindow::MapKey( int key )
+	{
+#ifdef WIN32
+		switch ( key )
+		{
+			case VK_BACK:		return Backspace;
+			case VK_TAB:		return Tab;
+			case VK_RETURN:		return Enter;
+			case VK_PAUSE:		return Pause;
+			case VK_CAPITAL:	return Capslock;
+			case VK_ESCAPE:		return Escape;
+			case VK_SPACE:		return Space;
+			case VK_PRIOR:		return PageUp;
+			case VK_NEXT:		return PageDown;
+			case VK_END:		return End;
+			case VK_HOME:		return Home;
+			case VK_LEFT:		return Left;
+			case VK_UP:			return Up;
+			case VK_RIGHT:		return Right;
+			case VK_DOWN:		return Down;
+			case VK_SELECT:		return Select;
+			case VK_PRINT:		return Print;
+			case VK_EXECUTE:	return Execute;
+			case VK_SNAPSHOT:	return PrintScreen;
+			case VK_INSERT:		return Insert;
+			case VK_DELETE:		return Delete;
+			case VK_HELP:		return Help;
+			case VK_LWIN:		return LWindows;
+			case VK_RWIN:		return RWindows;
+			case VK_NUMPAD0:	return Numpad0;
+			case VK_NUMPAD1:	return Numpad1;
+			case VK_NUMPAD2:	return Numpad2;
+			case VK_NUMPAD3:	return Numpad3;
+			case VK_NUMPAD4:	return Numpad4;
+			case VK_NUMPAD5:	return Numpad5;
+			case VK_NUMPAD6:	return Numpad6;
+			case VK_NUMPAD7:	return Numpad7;
+			case VK_NUMPAD8:	return Numpad8;
+			case VK_NUMPAD9:	return Numpad9;
+			case VK_MULTIPLY:	return Multiply;
+			case VK_ADD:		return Add;
+			case VK_SEPARATOR:	return Seperator;
+			case VK_SUBTRACT:	return Subtract;
+			case VK_DECIMAL:	return Comma;
+			case VK_DIVIDE:		return Divide;
+			case VK_F1:			return F1;
+			case VK_F2:			return F2;
+			case VK_F3:			return F3;
+			case VK_F4:			return F4;
+			case VK_F5:			return F5;
+			case VK_F6:			return F6;
+			case VK_F7:			return F7;
+			case VK_F8:			return F8;
+			case VK_F9:			return F9;
+			case VK_F10:		return F10;
+			case VK_F11:		return F11;
+			case VK_F12:		return F12;
+			case VK_F13:		return F13;
+			case VK_F14:		return F14;
+			case VK_F15:		return F15;
+			case VK_NUMLOCK:	return Numlock;
+			case VK_SCROLL:		return Scrolllock;
+			case VK_LSHIFT:		return LShift;
+			case VK_RSHIFT:		return RShift;
+			case VK_LCONTROL:	return LControl;
+			case VK_RCONTROL:	return RControl;
+			case VK_LMENU:		return LAlt;
+			case VK_RMENU:		return RAlt;
+			case '0':			return Num0;
+			case '1':			return Num1;
+			case '2':			return Num2;
+			case '3':			return Num3;
+			case '4':			return Num4;
+			case '5':			return Num5;
+			case '6':			return Num6;
+			case '7':			return Num7;
+			case '8':			return Num8;
+			case '9':			return Num9;
+			case 'A':			return A;
+			case 'B':			return B;
+			case 'C':			return C;
+			case 'D':			return D;
+			case 'E':			return E;
+			case 'F':			return F;
+			case 'G':			return G;
+			case 'H':			return H;
+			case 'I':			return I;
+			case 'J':			return J;
+			case 'K':			return K;
+			case 'L':			return L;
+			case 'M':			return M;
+			case 'N':			return N;
+			case 'O':			return O;
+			case 'P':			return P;
+			case 'Q':			return Q;
+			case 'R':			return R;
+			case 'S':			return S;
+			case 'T':			return T;
+			case 'U':			return U;
+			case 'V':			return V;
+			case 'W':			return W;
+			case 'X':			return X;
+			case 'Y':			return Y;
+			case 'Z':			return Z;
+		}
+#else
+		// Implement Linux key codes
+#endif
+
+		return key;
+	}
+
 #ifdef WIN32
 	LRESULT RenderWindow::Event( UINT msg, WPARAM wParam, LPARAM lParam )
 	{
@@ -360,11 +472,11 @@ namespace Passion
 			break;
 
 		case WM_KEYDOWN:
-			m_keys[wParam] = true;
+			m_keys[ MapKey( wParam ) ] = true;
 			break;
 
 		case WM_KEYUP:
-			m_keys[wParam] = false;
+			m_keys[ MapKey( wParam ) ] = false;
 			break;
 
 		default:

@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="sfml-system-s-d.lib sfml-network-s-d.lib"
+				AdditionalDependencies="ws2_32.lib"
 				OutputFile="$(SolutionDir)\..\..\lib\$(ProjectName)-d.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\extlibs\lib"
@@ -137,7 +137,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="sfml-system-s.lib sfml-network-s.lib"
+				AdditionalDependencies="ws2_32.lib"
 				OutputFile="$(SolutionDir)\..\..\lib\$(ProjectName).dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\extlibs\lib"
