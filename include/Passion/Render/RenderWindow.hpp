@@ -102,7 +102,7 @@ namespace Passion
 		// Key states
 		bool m_keys[256];
 
-		int MapKey( int key );
+		int MapKey( int key, int raw = 0 );
 
 #ifdef WIN32
 		LRESULT Event( UINT msg, WPARAM wParam, LPARAM lParam );

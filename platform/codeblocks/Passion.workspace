@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="Passion">
-		<Project filename="input.cbp" />
 		<Project filename="render.cbp" />
 		<Project filename="scripting.cbp" />
 		<Project filename="../../samples/build/blur.cbp" />
@@ -10,7 +9,6 @@
 		<Project filename="../../samples/build/interpreter.cbp" />
 		<Project filename="../../samples/build/julia.cbp" />
 		<Project filename="../../passion/build/codeblocks/passion.cbp">
-			<Depends filename="input.cbp" />
 			<Depends filename="render.cbp" />
 			<Depends filename="scripting.cbp" />
 		</Project>
@@ -18,5 +16,6 @@
 		<Project filename="../../samples/build/ip.cbp">
 			<Depends filename="network.cbp" />
 		</Project>
+		<Project filename="input.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

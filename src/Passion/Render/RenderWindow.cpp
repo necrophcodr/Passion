@@ -209,6 +209,9 @@ namespace Passion
 #else
         XEvent event;
 
+        char buffer[32];
+        KeySym sym;
+
         while ( XPending( m_dpy ) )
         {
             XNextEvent( m_dpy, &event );
@@ -216,11 +219,13 @@ namespace Passion
             switch ( event.type )
             {
                 case KeyPress:
-                m_keys[event.xkey.keycode] = true;
+                XLookupString( &event.xkey, buffer, 32, &sym, NULL);
+                m_keys[ MapKey( sym, event.xkey.keycode ) ] = true;
                 break;
 
                 case KeyRelease:
-                m_keys[event.xkey.keycode] = false;
+                XLookupString( &event.xkey, buffer, 32, &sym, NULL);
+                m_keys[ MapKey( sym, event.xkey.keycode ) ] = false;
                 break;
 
                 case ButtonPress:
@@ -315,7 +320,7 @@ namespace Passion
 #endif
 	}
 
-	int RenderWindow::MapKey( int key )
+	int RenderWindow::MapKey( int key, int raw )
 	{
 #ifdef WIN32
 		switch ( key )
@@ -421,7 +426,111 @@ namespace Passion
 			case 'Z':			return Z;
 		}
 #else
-		// Implement Linux key codes
+        KeySym lower, realkey;
+        XConvertCase( key, &lower, &realkey );
+
+        // Standard keys
+		switch ( realkey )
+		{
+			case XK_BackSpace:return Backspace;
+			case XK_Tab:		return Tab;
+			case XK_Return:		return Enter;
+			case XK_Pause:		return Pause;
+			case XK_End:		return End;
+			case XK_Home:		return Home;
+            case XK_Insert:		return Insert;
+			case XK_Delete:		return Delete;
+			case XK_space:		return Space;
+			case XK_KP_0:   	return Numpad0;
+			case XK_KP_1:	    return Numpad1;
+			case XK_KP_2:	    return Numpad2;
+			case XK_KP_3:	    return Numpad3;
+			case XK_KP_4:	    return Numpad4;
+			case XK_KP_5:	    return Numpad5;
+			case XK_KP_6:	    return Numpad6;
+			case XK_KP_7:	    return Numpad7;
+			case XK_KP_8:	    return Numpad8;
+			case XK_KP_9:	    return Numpad9;
+			case XK_KP_Multiply:return Multiply;
+			case XK_KP_Add:		return Add;
+			case XK_KP_Subtract:return Subtract;
+			case XK_comma:	    return Comma;
+			case XK_KP_Divide:	return Divide;
+			case XK_F1:			return F1;
+			case XK_F2:			return F2;
+			case XK_F3:			return F3;
+			case XK_F4:			return F4;
+			case XK_F5:			return F5;
+			case XK_F6:			return F6;
+			case XK_F7:			return F7;
+			case XK_F8:			return F8;
+			case XK_F9:			return F9;
+			case XK_F10:		return F10;
+			case XK_F11:		return F11;
+			case XK_F12:		return F12;
+			case XK_F13:		return F13;
+			case XK_F14:		return F14;
+			case XK_F15:		return F15;
+			case XK_Shift_L:	return LShift;
+			case XK_Shift_R:	return RShift;
+			case XK_Control_L:	return LControl;
+			case XK_Control_R:	return RControl;
+			case XK_Alt_L:		return LAlt;
+			case XK_Alt_R:		return RAlt;
+			case XK_0:			return Num0;
+			case XK_1:			return Num1;
+			case XK_2:			return Num2;
+			case XK_3:			return Num3;
+			case XK_4:			return Num4;
+			case XK_5:			return Num5;
+			case XK_6:			return Num6;
+			case XK_7:			return Num7;
+			case XK_8:			return Num8;
+			case XK_9:			return Num9;
+			case XK_A:			return A;
+			case XK_B:			return B;
+			case XK_C:			return C;
+			case XK_D:			return D;
+			case XK_E:			return E;
+			case XK_F:			return F;
+			case XK_G:			return G;
+			case XK_H:			return H;
+			case XK_I:			return I;
+			case XK_J:			return J;
+			case XK_K:			return K;
+			case XK_L:			return L;
+			case XK_M:			return M;
+			case XK_N:			return N;
+			case XK_O:			return O;
+			case XK_P:			return P;
+			case XK_Q:			return Q;
+			case XK_R:			return R;
+			case XK_S:			return S;
+			case XK_T:			return T;
+			case XK_U:			return U;
+			case XK_V:			return V;
+			case XK_W:			return W;
+			case XK_X:			return X;
+			case XK_Y:			return Y;
+			case XK_Z:			return Z;
+		}
+
+		// Other keys
+		switch ( raw )
+		{
+            case 66:	        return Capslock;
+			case 9:		        return Escape;
+			case 112:		    return PageUp;
+			case 117:		    return PageDown;
+			case 113:		    return Left;
+			case 111:			return Up;
+			case 114:		    return Right;
+			case 116:		    return Down;
+			case 78:            return Scrolllock;
+			case 77:            return Numlock;
+			case 133:		    return LWindows;
+			case 134:		    return RWindows;
+		}
 #endif
 
 		return key;
