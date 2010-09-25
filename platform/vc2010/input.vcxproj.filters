@@ -21,6 +21,9 @@
     <ClCompile Include="..\..\src\Passion\Input\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Passion\Render\RenderWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\Passion\Input\IBaseInput.hpp">

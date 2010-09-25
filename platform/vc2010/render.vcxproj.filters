@@ -24,6 +24,9 @@
     <ClCompile Include="..\..\src\Passion\Render\Render.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Passion\Render\RenderWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\Passion\Render\BaseRenderTarget.hpp">
@@ -51,6 +54,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\Passion\Render\Vector.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Passion\Render\RenderWindow.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
