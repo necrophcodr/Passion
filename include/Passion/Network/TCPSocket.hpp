@@ -32,6 +32,7 @@
 #ifdef WIN32
 	#include <winsock2.h>
 #endif
+#include <cstring>
 
 namespace Passion
 {
@@ -52,6 +53,8 @@ namespace Passion
 	private:
 #ifdef WIN32
 		SOCKET m_socket;
+#else
+        int m_socket;
 #endif
 		bool m_connected;
 	};

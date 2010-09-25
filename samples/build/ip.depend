@@ -1,0 +1,23 @@
+# depslib dependency file v1.0
+1285381396 source:/home/overv/Desktop/Passion/samples/ip/IP.cpp
+	<Passion/Network.hpp>
+	<iostream>
+	<time.h>
+	<stdio.h>
+
+1285380134 /home/overv/Desktop/Passion/include/Passion/Network.hpp
+	<Passion/Passion.hpp>
+	<Passion/Network/IBaseNetwork.hpp>
+
+1285380134 /home/overv/Desktop/Passion/include/Passion/Passion.hpp
+	<string>
+	<iostream>
+	<windows.h>
+	<dlfcn.h>
+
+1285380134 /home/overv/Desktop/Passion/include/Passion/Network/IBaseNetwork.hpp
+	<Passion/Network/BaseTCPSocket.hpp>
+
+1285380534 /home/overv/Desktop/Passion/include/Passion/Network/BaseTCPSocket.hpp
+	<cstring>
+

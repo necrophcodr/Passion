@@ -61,7 +61,7 @@ int main()
 	{
 		std::cout << "Could not connect to www.whatismyip.org!\n";
 
-		#ifndef PASSION_PLATFORM_LINUX
+		#ifdef WIN32
             getchar();
         #endif
 
@@ -102,7 +102,7 @@ int main()
 
 	Passion::DestroyInterface<Passion::IBaseNetwork>( network );
 
-	#ifndef PASSION_PLATFORM_LINUX
+	#ifdef WIN32
         getchar();
     #endif
 

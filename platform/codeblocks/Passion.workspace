@@ -6,13 +6,17 @@
 		<Project filename="scripting.cbp" />
 		<Project filename="../../samples/build/blur.cbp" />
 		<Project filename="../../samples/build/deform.cbp" />
-		<Project filename="../../samples/build/gameoflife.cbp" />
+		<Project filename="../../samples/build/gameoflife.cbp" active="1" />
 		<Project filename="../../samples/build/interpreter.cbp" />
 		<Project filename="../../samples/build/julia.cbp" />
-		<Project filename="../../passion/build/codeblocks/passion.cbp" active="1">
+		<Project filename="../../passion/build/codeblocks/passion.cbp">
 			<Depends filename="input.cbp" />
 			<Depends filename="render.cbp" />
 			<Depends filename="scripting.cbp" />
+		</Project>
+		<Project filename="network.cbp" />
+		<Project filename="../../samples/build/ip.cbp">
+			<Depends filename="network.cbp" />
 		</Project>
 	</Workspace>
 </CodeBlocks_workspace_file>

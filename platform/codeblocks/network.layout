@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Debug" />
+	<File name="../../include/Passion/Network/BaseTCPSocket.hpp" open="0" top="0" tabpos="1">
+		<Cursor position="1273" topLine="2" />
+	</File>
+	<File name="../../include/Passion/Network/TCPSocket.hpp" open="0" top="0" tabpos="2">
+		<Cursor position="1774" topLine="17" />
+	</File>
+	<File name="../../src/Passion/Network/INetwork.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="1378" topLine="2" />
+	</File>
+	<File name="../../src/Passion/Network/Network.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="1610" topLine="0" />
+	</File>
+	<File name="../../src/Passion/Network/TCPSocket.cpp" open="0" top="0" tabpos="3">
+		<Cursor position="3443" topLine="100" />
+	</File>
+</CodeBlocks_layout_file>

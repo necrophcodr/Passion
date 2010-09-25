@@ -30,7 +30,7 @@
 // Platform specific factory export method
 ////////////////////////////////////////////////////////////
 
-#ifdef PASSION_PLATFORM_LINUX
+#ifndef WIN32
 	extern "C" void* CreateInterface()
 	{
 		return new Passion::INetwork;
