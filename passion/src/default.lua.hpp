@@ -28,9 +28,9 @@ const char* default_lua =
 "function GAME:Initialize() \
 	render.SetAlphaBlendingEnabled( true ) \
 	 \
-	self.TexCloud = render.LoadTexture( \"textures/cloud.png\" ) \
-	self.TexLogo = render.LoadTexture( \"textures/logo.png\" ) \
-	self.TexGradient = render.LoadTexture( \"textures/gradient.png\" ) \
+	self.TexCloud = Texture( \"textures/cloud.png\" ) \
+	self.TexLogo = Texture( \"textures/logo.png\" ) \
+	self.TexGradient = Texture( \"textures/gradient.png\" ) \
 	 \
 	self.Clouds = {} \
 	for x = 1, 3 do \
@@ -78,7 +78,5 @@ function GAME:Draw() \
 			end \
 		end\
 	render.End3D(); \
-	 \
-	render.Present() \
 end \
 ";
