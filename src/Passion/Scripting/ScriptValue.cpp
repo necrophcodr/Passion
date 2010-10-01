@@ -151,7 +151,7 @@ namespace Passion
 		bool val;
 		Push();
 		val = lua_toboolean( m_lua, -1 ) == 1;
-		lua_pop( m_lua, -1 );
+		lua_pop( m_lua, 1 );
 		return val;
 	}
 
@@ -160,6 +160,15 @@ namespace Passion
 		const char* val;
 		Push();
 		val = lua_tostring( m_lua, -1 );
+		lua_pop( m_lua, 1 );
+		return val;
+	}
+
+	const char* ScriptValue::GetString( size_t& length )
+	{
+		const char* val;
+		Push();
+		val = lua_tolstring( m_lua, -1, &length );
 		lua_pop( m_lua, 1 );
 		return val;
 	}

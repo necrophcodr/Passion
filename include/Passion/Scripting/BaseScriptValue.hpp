@@ -53,6 +53,7 @@ namespace Passion
 		virtual double GetDouble() = 0;
 		virtual bool GetBoolean() = 0;
 		virtual const char* GetString() = 0;
+		virtual const char* GetString( size_t& length ) = 0;
 		virtual void* GetUserData() = 0;
 
 		virtual std::auto_ptr<BaseScriptValue> GetMember( const char* key ) = 0;

@@ -7,7 +7,7 @@ Passion is collection of libraries intended for game development with C++ and Lu
 - network: A networking library with socket objects.
 - scripting: A scripting library which makes interaction with Lua scripts easy.
 
-Passion will build without issues on Microsoft Visual C++ 2008 and 2010. In theory the libraries are completely cross-platform, but some libraries won't work right on Linux currently.
+Passion will build without issues in Microsoft Visual C++ 2008 and 2010 on Windows and in Code::Blocks on Linux. All features are available on both Windows and Linux.
 
 This project is licensed under the zlib license, which can be found at http://www.gzip.org/zlib/zlib_license.html or any of the code files included.
 

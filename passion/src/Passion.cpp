@@ -42,6 +42,7 @@
 #include "Shader.hpp"
 #include "Vector.hpp"
 #include "Matrix.hpp"
+#include "TCPSocket.hpp"
 
 // Lua files
 #include "util.lua.hpp"
@@ -62,7 +63,7 @@ Passion::IBaseInput*		g_Input		= NULL;
 Passion::IBaseScripting*	g_Scripting	= NULL;
 Passion::BaseScriptState*	g_Lua		= NULL;
 
-//Passion::IBaseNetwork*		g_Network	= NULL;
+Passion::IBaseNetwork*		g_Network	= NULL;
 
 ////////////////////////////////////////////////////////////
 // Main
@@ -78,12 +79,12 @@ int main( int argc, const char* argv[] )
 		g_Render	= Passion::CreateInterface<Passion::IBaseRender>( "bin/render" );
 		g_Input		= Passion::CreateInterface<Passion::IBaseInput>( "bin/input" );
 		g_Scripting	= Passion::CreateInterface<Passion::IBaseScripting>( "bin/scripting" );
-		//g_Network	= Passion::CreateInterface<Passion::IBaseNetwork>( "bin/network" );
+		g_Network	= Passion::CreateInterface<Passion::IBaseNetwork>( "bin/network" );
 	#else
 		g_Render	= Passion::CreateInterface<Passion::IBaseRender>( "bin/render-d" );
 		g_Input		= Passion::CreateInterface<Passion::IBaseInput>( "bin/input-d" );
 		g_Scripting	= Passion::CreateInterface<Passion::IBaseScripting>( "bin/scripting-d" );
-		//g_Network	= Passion::CreateInterface<Passion::IBaseNetwork>( "bin/network-d" );
+		g_Network	= Passion::CreateInterface<Passion::IBaseNetwork>( "bin/network-d" );
 	#endif
 
 	////////////////////////////////////////////////////////////
@@ -112,6 +113,7 @@ int main( int argc, const char* argv[] )
 	Shader::Bind();
 	Vector::Bind();
 	Matrix::Bind();
+	TCPSocket::Bind();
 
 	////////////////////////////////////////////////////////////
 	// Load Lua files

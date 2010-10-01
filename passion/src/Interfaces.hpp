@@ -42,7 +42,7 @@ extern Passion::IBaseInput*			g_Input;
 extern Passion::IBaseScripting*		g_Scripting;
 extern Passion::BaseScriptState*	g_Lua;
 
-//extern Passion::IBaseNetwork*		g_Network;
+extern Passion::IBaseNetwork*		g_Network;
 
 ////////////////////////////////////////////////////////////
 // Miscellaneous

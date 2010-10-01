@@ -241,6 +241,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\TCPSocket.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Texture.hpp"
 					>
 				</File>

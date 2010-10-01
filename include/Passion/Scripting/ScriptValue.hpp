@@ -62,6 +62,7 @@ namespace Passion
 		double GetDouble();
 		bool GetBoolean();
 		const char* GetString();
+		const char* GetString( size_t& length );
 		void* GetUserData();
 
 		std::auto_ptr<BaseScriptValue> GetMember( const char* key );

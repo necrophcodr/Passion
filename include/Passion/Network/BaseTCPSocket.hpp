@@ -34,6 +34,8 @@ namespace Passion
 	class BaseTCPSocket
 	{
 	public:
+		virtual ~BaseTCPSocket() {};
+		
 		virtual void Connect( const char* host, unsigned short port ) = 0;
 		virtual void Disconnect() = 0;
 
