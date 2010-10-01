@@ -73,8 +73,17 @@
 		<Unit filename="../../src/RenderTarget.hpp">
 			<Option virtualFolder="include/Objects/" />
 		</Unit>
+		<Unit filename="../../src/Shader.hpp">
+			<Option virtualFolder="include/Objects/" />
+		</Unit>
+		<Unit filename="../../src/Texture.hpp">
+			<Option virtualFolder="include/Objects/" />
+		</Unit>
 		<Unit filename="../../src/Vector.hpp">
 			<Option virtualFolder="include/Objects/" />
+		</Unit>
+		<Unit filename="../../src/default.lua.hpp">
+			<Option virtualFolder="include/Lua/" />
 		</Unit>
 		<Unit filename="../../src/enums.lua.hpp">
 			<Option virtualFolder="include/Lua/" />

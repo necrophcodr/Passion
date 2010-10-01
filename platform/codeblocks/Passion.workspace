@@ -5,10 +5,10 @@
 		<Project filename="scripting.cbp" />
 		<Project filename="../../samples/build/blur.cbp" />
 		<Project filename="../../samples/build/deform.cbp" />
-		<Project filename="../../samples/build/gameoflife.cbp" active="1" />
+		<Project filename="../../samples/build/gameoflife.cbp" />
 		<Project filename="../../samples/build/interpreter.cbp" />
 		<Project filename="../../samples/build/julia.cbp" />
-		<Project filename="../../passion/build/codeblocks/passion.cbp">
+		<Project filename="../../passion/build/codeblocks/passion.cbp" active="1">
 			<Depends filename="render.cbp" />
 			<Depends filename="scripting.cbp" />
 		</Project>
