@@ -94,179 +94,6 @@ public:
 		return 0;
 	}
 
-	SCRIPT_FUNCTION( LoadTexture )
-	{
-	    const char* path = g_Lua->Get( 1 )->GetString();
-            int tex = g_Render->LoadTexture( path, g_Lua->Get( 2 )->GetBoolean() );
-		g_Lua->Push( tex );
-
-		return 1;
-	}
-
-	SCRIPT_FUNCTION( CreateRenderTarget )
-	{
-		if ( g_Lua->Get( 1 )->IsNumber() && g_Lua->Get( 2 )->IsNumber() )
-		{
-			Passion::BaseRenderTarget* rt = g_Render->CreateRenderTarget( g_Lua->Get( 1 )->GetInteger(), g_Lua->Get( 2 )->GetInteger() );
-
-			g_Lua->Push( &rt, sizeof( Passion::BaseRenderTarget* ), g_Lua->Registry()->GetMember( "RenderTarget" ) );
-
-			return 1;
-		}
-
-		return 0;
-	}
-
-	SCRIPT_FUNCTION( LoadModel )
-	{
-		Passion::Model model = g_Render->LoadModel( g_Lua->Get( 1 )->GetString() );
-
-		g_Lua->Push( &model, sizeof( Passion::Model ), g_Lua->Registry()->GetMember( "Model" ) );
-
-		return 1;
-	}
-
-	SCRIPT_FUNCTION( CreateModel )
-	{
-		if ( g_Lua->Get( 1 )->IsTable() )
-		{
-			std::auto_ptr<BaseScriptValue> vertexTable = g_Lua->Get( 1 );
-			std::vector<Passion::Vertex> vertices;
-
-			for ( int i = 1; vertexTable->GetMember( i )->IsTable(); i++ )
-			{
-				vertexTable->GetMember( i )->GetMember( "pos" )->Push();
-				Passion::Vector pos = GetVector( -1 );
-
-				vertexTable->GetMember( i )->GetMember( "color" )->Push();
-				Passion::Color color = GetColor( -1 );
-
-				vertexTable->GetMember( i )->GetMember( "normal" )->Push();
-				Passion::Vector normal = GetVector( -1 );
-
-				vertices.push_back( Passion::Vertex( pos.x, pos.y, pos.z, color, vertexTable->GetMember( i )->GetMember( "u" )->GetFloat(), vertexTable->GetMember( i )->GetMember( "v" )->GetFloat(), normal.x, normal.y, normal.z ) );
-			}
-
-			Passion::Vertex* vertexArray = new Passion::Vertex[vertices.size()];
-
-			for ( unsigned int i = 0; i < vertices.size(); i++ )
-			{
-				vertexArray[i] = vertices[i];
-			}
-
-			Passion::Model model = g_Render->CreateModel( vertexArray, vertices.size() );
-			g_Lua->Push( &model, sizeof( Passion::Model ), g_Lua->Registry()->GetMember( "Model" ) );
-
-			delete [] vertexArray;
-
-			return 1;
-		}
-
-		return 0;
-	}
-
-	SCRIPT_FUNCTION( DrawModel )
-	{
-		if ( g_Lua->Get( 1 )->IsUserData() && g_Lua->Get( 1 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "Model" ) ) )
-		{
-			Passion::Model* model = (Passion::Model*)g_Lua->Get( 1 )->GetUserData();
-
-			g_Render->DrawModel( *model );
-		}
-
-		return 0;
-	}
-
-	SCRIPT_FUNCTION( CreateVertexShader )
-	{
-		if ( g_Lua->Get( 1 )->IsString() )
-		{
-			g_Lua->Push( (int)g_Render->CreateShader( g_Lua->Get( 1 )->GetString(), VERTEX_SHADER ) );
-			return 1;
-		}
-
-		return 0;
-	}
-
-	SCRIPT_FUNCTION( CreatePixelShader )
-	{
-		if ( g_Lua->Get( 1 )->IsString() )
-		{
-			g_Lua->Push( (int)g_Render->CreateShader( g_Lua->Get( 1 )->GetString(), PIXEL_SHADER ) );
-			return 1;
-		}
-
-		return 0;
-	}
-
-	SCRIPT_FUNCTION( CreateProgram )
-	{
-		if ( g_Lua->Get( 1 )->IsNumber() && g_Lua->Get( 2 )->IsNumber() )
-		{
-			Passion::Shader shaders[2] = { g_Lua->Get( 1 )->GetInteger(), g_Lua->Get( 2 )->GetInteger() };
-			g_Lua->Push( (int)g_Render->CreateProgram( shaders, 2 ) );
-			return 1;
-		}
-
-		return 0;
-	}
-
-	SCRIPT_FUNCTION( SetProgramFloat )
-	{
-		if ( g_Lua->Get( 1 )->IsString() )
-		{
-			int floats = 0;
-			for ( int i = 2; g_Lua->Get( i )->IsNumber(); i++ )
-				floats++;
-
-			switch ( floats )
-			{
-			case 1:
-				g_Render->SetProgramFloat( g_Lua->Get( 1 )->GetString(), g_Lua->Get( 2 )->GetFloat() );
-				break;
-			case 2:
-				g_Render->SetProgramFloat( g_Lua->Get( 1 )->GetString(), g_Lua->Get( 2 )->GetFloat(), g_Lua->Get( 3 )->GetFloat() );
-				break;
-			case 3:
-				g_Render->SetProgramFloat( g_Lua->Get( 1 )->GetString(), g_Lua->Get( 2 )->GetFloat(), g_Lua->Get( 3 )->GetFloat(), g_Lua->Get( 4 )->GetFloat() );
-				break;
-			case 4:
-				g_Render->SetProgramFloat( g_Lua->Get( 1 )->GetString(), g_Lua->Get( 2 )->GetFloat(), g_Lua->Get( 3 )->GetFloat(), g_Lua->Get( 4 )->GetFloat(), g_Lua->Get( 5 )->GetFloat() );
-				break;
-			}
-		}
-
-		return 0;
-	}
-
-	SCRIPT_FUNCTION( SetProgramInt )
-	{
-		if ( g_Lua->Get( 1 )->IsString() )
-		{
-			int ints = 0;
-			for ( int i = 2; g_Lua->Get( i )->IsNumber(); i++ )
-				ints++;
-
-			switch ( ints )
-			{
-			case 1:
-				g_Render->SetProgramInt( g_Lua->Get( 1 )->GetString(), g_Lua->Get( 2 )->GetInteger() );
-				break;
-			case 2:
-				g_Render->SetProgramInt( g_Lua->Get( 1 )->GetString(), g_Lua->Get( 2 )->GetInteger(), g_Lua->Get( 3 )->GetInteger() );
-				break;
-			case 3:
-				g_Render->SetProgramInt( g_Lua->Get( 1 )->GetString(), g_Lua->Get( 2 )->GetInteger(), g_Lua->Get( 3 )->GetInteger(), g_Lua->Get( 4 )->GetInteger() );
-				break;
-			case 4:
-				g_Render->SetProgramInt( g_Lua->Get( 1 )->GetString(), g_Lua->Get( 2 )->GetInteger(), g_Lua->Get( 3 )->GetInteger(), g_Lua->Get( 4 )->GetInteger(), g_Lua->Get( 5 )->GetInteger() );
-				break;
-			}
-		}
-
-		return 0;
-	}
-
 	SCRIPT_FUNCTION( Clear )
 	{
 		g_Render->Clear( GetColor( 1 ) );
@@ -327,9 +154,10 @@ public:
 		float fov = 45.0f; if ( g_Lua->Get( 3 )->IsNumber() ) fov = g_Lua->Get( 3 )->GetFloat();
 		float znear = 1.0f; if ( g_Lua->Get( 4 )->IsNumber() ) znear = g_Lua->Get( 4 )->GetFloat();
 		float zfar = 10000.0f; if ( g_Lua->Get( 5 )->IsNumber() ) zfar = g_Lua->Get( 5 )->GetFloat();
-		Passion::Vector up( 0.0f, 1.0f, 0.0f ); if ( g_Lua->Get( 6 )->IsTable() ) up = GetVector( 5 );
+		Passion::Vector up( 0.0f, 0.0f, 1.0f ); if ( g_Lua->Get( 6 )->IsTable() ) up = GetVector( 6 );
 
 		g_Render->Start3D( GetVector( 1 ), GetVector( 2 ), fov, znear, zfar, up );
+
 		return 0;
 	}
 
@@ -348,7 +176,7 @@ public:
 			if ( !g_Lua->Get( 1 )->IsUserData() || !g_Lua->Get( 1 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "Matrix" ) ) )
 				g_Lua->Error( 1, "Matrix" );
 
-			g_Render->SetTransform( *(Passion::Matrix*)g_Lua->Get( 1 )->GetUserData() );
+			g_Render->SetTransform( *reinterpret_cast<Passion::Matrix*>( g_Lua->Get( 1 )->GetUserData() ) );
 		}
 
 		return 0;
@@ -362,12 +190,12 @@ public:
 
 	SCRIPT_FUNCTION( SetTexture )
 	{
-		if ( !g_Lua->Get( 1 )->IsNumber() && !g_Lua->Get( 1 )->IsNil() )
+		if ( g_Lua->Get( 1 )->IsUserData() && g_Lua->Get( 1 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "Texture" ) ) )
+			g_Render->SetTexture( *reinterpret_cast<Passion::Texture*>( g_Lua->Get( 1 )->GetUserData() ), g_Lua->Get( 2 )->GetInteger() );
+		else if ( g_Lua->Get( 1 )->IsNil() || ( g_Lua->Get( 1 )->IsNumber() && g_Lua->Get( 1 )->GetInteger() == 0 ) )
+			g_Render->SetTexture();
+		else
 			g_Lua->Error( 1, "Texture" );
-		if ( !g_Lua->Get( 2 )->IsNumber() && !g_Lua->Get( 2 )->IsNil() )
-			g_Lua->Error( 2, "number" );
-
-		g_Render->SetTexture( g_Lua->Get( 1 )->GetInteger(), g_Lua->Get( 2 )->GetInteger() );
 
 		return 0;
 	}
@@ -375,16 +203,22 @@ public:
 	SCRIPT_FUNCTION( SetRenderTarget )
 	{
 		if ( g_Lua->Get( 1 )->IsUserData() && g_Lua->Get( 1 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "RenderTarget" ) ) )
-			g_Render->SetRenderTarget( *(Passion::BaseRenderTarget**)g_Lua->Get( 1 )->GetUserData() );
+			g_Render->SetRenderTarget( *reinterpret_cast<Passion::BaseRenderTarget**>( g_Lua->Get( 1 )->GetUserData() ) );
 		else
 			g_Render->SetRenderTarget();
 
 		return 0;
 	}
 
-	SCRIPT_FUNCTION( SetProgram )
+	SCRIPT_FUNCTION( SetShader )
 	{
-		g_Render->SetProgram( g_Lua->Get( 1 )->GetInteger() );
+		if ( g_Lua->Get( 1 )->IsUserData() && g_Lua->Get( 1 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "Shader" ) ) )
+			g_Render->SetProgram( *reinterpret_cast<Passion::Shader*>( g_Lua->Get( 1 )->GetUserData() ) );
+		else if ( g_Lua->Get( 1 )->IsNil() )
+			g_Render->SetProgram();
+		else
+			g_Lua->Error( 1, "Shader" );
+
 		return 0;
 	}
 
@@ -452,12 +286,6 @@ public:
 		return 1;
 	}
 
-	SCRIPT_FUNCTION( Present )
-	{
-		g_Render->Present( g_Lua->Get( 1 )->GetBoolean() );
-		return 0;
-	}
-
 	static void Bind()
 	{
 		// Library
@@ -474,20 +302,6 @@ public:
 		render->GetMember( "SetScissorEnabled" )->Set( SetScissorEnabled );
 		render->GetMember( "SetAlphaBlendingEnabled" )->Set( SetAlphaBlendingEnabled );
 		render->GetMember( "SetTexturingEnabled" )->Set( SetTexturingEnabled );
-
-		render->GetMember( "LoadTexture" )->Set( LoadTexture );
-		render->GetMember( "CreateRenderTarget" )->Set( CreateRenderTarget );
-
-		render->GetMember( "LoadModel" )->Set( LoadModel );
-		render->GetMember( "CreateModel" )->Set( CreateModel );
-		render->GetMember( "DrawModel" )->Set( DrawModel );
-
-		render->GetMember( "CreateVertexShader" )->Set( CreateVertexShader );
-		render->GetMember( "CreatePixelShader" )->Set( CreatePixelShader );
-		render->GetMember( "CreateProgram" )->Set( CreateProgram );
-
-		render->GetMember( "SetProgramFloat" )->Set( SetProgramFloat );
-		render->GetMember( "SetProgramInt" )->Set( SetProgramInt );
 
 		render->GetMember( "Clear" )->Set( Clear );
 		render->GetMember( "ClearZ" )->Set( ClearZ );
@@ -508,7 +322,7 @@ public:
 		render->GetMember( "SetDrawColor" )->Set( SetDrawColor );
 		render->GetMember( "SetTexture" )->Set( SetTexture );
 		render->GetMember( "SetRenderTarget" )->Set( SetRenderTarget );
-		render->GetMember( "SetProgram" )->Set( SetProgram );
+		render->GetMember( "SetShader" )->Set( SetShader );
 
 		render->GetMember( "DrawPoint" )->Set( DrawPoint );
 		render->GetMember( "DrawLine" )->Set( DrawLine );
@@ -519,8 +333,6 @@ public:
 
 		render->GetMember( "WorldToScreen" )->Set( WorldToScreen );
 		render->GetMember( "ScreenToWorld" )->Set( ScreenToWorld );
-
-		render->GetMember( "Present" )->Set( Present );
 
 		g_Lua->Globals()->GetMember( "render" )->Set( render );
 	}

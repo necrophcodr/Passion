@@ -137,7 +137,9 @@ int main()
 		render->Clear( Passion::Color( 0.0f, 0.4f, 0.4f ) );
 		render->ClearZ();
 
-		render->Start3D( Passion::Vector( cos( angle ) * 1500.0f, sin( angle ) * 1500.0f, 700.0f ), Passion::Vector( 0.0f, 0.0f, -200.0f ) );
+		render->SetTexture( texBox );
+
+		render->Start3D( Passion::Vector( cos( angle ) * 750.0f, sin( angle ) * 750.0f, 350.0f ), Passion::Vector( 0.0f, 0.0f, -200.0f ) );
 
 			float generationProgress = 1.0f - (float)( nextUpdate - clock() ) / ( (float)CLOCKS_PER_SEC / generationsPerSecond );
 
@@ -160,7 +162,7 @@ int main()
 							else {
 								render->SetDrawColor( Passion::Color( gray, gray, gray, 1.0f ) );
 							}
-
+							
 							render->DrawBox( Passion::Vector( (float)x * 25.0f - gridSize * 12.5f, (float)y * 25.0f - gridSize * 12.5f, 0.0f - gen * 25.0f - generationProgress * 25.0f ), Passion::Vector( (float)x * 25.0f + 25.0f - gridSize * 12.5f, (float)y * 25.0f + 25.0f - gridSize * 12.5f, 25.0f - gen * 25.0f - generationProgress * 25.0f ) );
 						}
 					}

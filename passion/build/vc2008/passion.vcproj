@@ -205,6 +205,10 @@
 				Name="Lua"
 				>
 				<File
+					RelativePath="..\..\src\default.lua.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\enums.lua.hpp"
 					>
 				</File>
@@ -230,6 +234,14 @@
 				</File>
 				<File
 					RelativePath="..\..\src\RenderTarget.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Shader.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Texture.hpp"
 					>
 				</File>
 				<File

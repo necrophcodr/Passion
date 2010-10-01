@@ -33,7 +33,7 @@
 class Vector
 {
 public:
-	static void pushVector( Passion::Vector v )
+	static void PushVector( Passion::Vector v )
 	{
 		std::auto_ptr<BaseScriptValue> vector = g_Lua->NewTable();
 			vector->GetMember( "x" )->Set( v.x );
@@ -46,7 +46,7 @@ public:
 
 	SCRIPT_FUNCTION( Constructor )
 	{
-		pushVector( Passion::Vector( g_Lua->Get( 1 )->GetFloat(), g_Lua->Get( 2 )->GetFloat(), g_Lua->Get( 3 )->GetFloat() ) );
+		PushVector( Passion::Vector( g_Lua->Get( 1 )->GetFloat(), g_Lua->Get( 2 )->GetFloat(), g_Lua->Get( 3 )->GetFloat() ) );
 		
 		return 1;
 	}
@@ -65,31 +65,39 @@ public:
 
 	SCRIPT_FUNCTION( __add )
 	{
-		pushVector( GetVector( 1 ) + GetVector( 2 ) );
+		PushVector( GetVector( 1 ) + GetVector( 2 ) );
 		return 1;
 	}
 
 	SCRIPT_FUNCTION( __sub )
 	{
-		pushVector( GetVector( 1 ) - GetVector( 2 ) );
+		PushVector( GetVector( 1 ) - GetVector( 2 ) );
 		return 1;
 	}
 
 	SCRIPT_FUNCTION( __mul )
 	{
-		pushVector( GetVector( 1 ) * g_Lua->Get( 2 )->GetFloat() );
+		if ( g_Lua->Get( 2 )->IsNumber() )
+			PushVector( GetVector( 1 ) * g_Lua->Get( 2 )->GetFloat() );
+		else if ( g_Lua->Get( 2 )->IsUserData() && g_Lua->Get( 2 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "Matrix" ) ) )
+		{
+			PushVector( GetVector( 1 ) * *(Passion::Matrix*)g_Lua->Get( 2 )->GetUserData() );
+		}
+		else
+			g_Lua->Error( 1, "number" );
+
 		return 1;
 	}
 
 	SCRIPT_FUNCTION( __div )
 	{
-		pushVector( GetVector( 1 ) / g_Lua->Get( 2 )->GetFloat() );
+		PushVector( GetVector( 1 ) / g_Lua->Get( 2 )->GetFloat() );
 		return 1;
 	}
 
 	SCRIPT_FUNCTION( __unm )
 	{
-		pushVector( GetVector( 1 ) * -1.0f );
+		PushVector( GetVector( 1 ) * -1.0f );
 		return 1;
 	}
 
@@ -119,13 +127,13 @@ public:
 
 	SCRIPT_FUNCTION( Cross )
 	{
-		pushVector( GetVector( 1 ).Cross( GetVector( 2 ) ) );
+		PushVector( GetVector( 1 ).Cross( GetVector( 2 ) ) );
 		return 1;
 	}
 
 	SCRIPT_FUNCTION( Normal )
 	{
-		pushVector( GetVector( 1 ).Normal() );
+		PushVector( GetVector( 1 ).Normal() );
 		return 1;
 	}
 

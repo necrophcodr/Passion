@@ -9,16 +9,16 @@ end
 function GAME:Initialize()
 	render.SetTexturingEnabled( true )
 	
-	self.Texture = render.LoadTexture( "textures/models/debug.png" )
+	self.Texture = Texture( "textures/models/debug.png" )
 	
-	self.DepthWriterShader = render.CreateProgram( render.CreateVertexShader( file.Read( "shaders/null.vs" ) ), render.CreatePixelShader( file.Read( "shaders/dof/depth.ps" ) ) )
-	self.DepthReaderShader = render.CreateProgram( render.CreateVertexShader( file.Read( "shaders/null.vs" ) ), render.CreatePixelShader( file.Read( "shaders/dof/visualdepth.ps" ) ) )
+	self.DepthWriterShader = Shader( file.Read( "shaders/null.vs" ), file.Read( "shaders/dof/depth.ps" ) )
+	self.DepthReaderShader = Shader( file.Read( "shaders/null.vs" ), file.Read( "shaders/dof/visualdepth.ps" ) )
 	
-	self.BlurShaderV = render.CreateProgram( render.CreateVertexShader( file.Read( "shaders/null.vs" ) ), render.CreatePixelShader( file.Read( "shaders/dof/blur_v.ps" ) ) )
-	self.BlurShaderH = render.CreateProgram( render.CreateVertexShader( file.Read( "shaders/null.vs" ) ), render.CreatePixelShader( file.Read( "shaders/dof/blur_h.ps" ) ) )
+	self.BlurShaderV = Shader( file.Read( "shaders/null.vs" ), file.Read( "shaders/dof/blur_v.ps" ) )
+	self.BlurShaderH = Shader( file.Read( "shaders/null.vs" ), file.Read( "shaders/dof/blur_h.ps" ) )
 	
-	self.RT = render.CreateRenderTarget( 1280, 720 )
-	self.RT2 = render.CreateRenderTarget( 1280, 720 )
+	self.RT = RenderTarget( 1280, 720 )
+	self.RT2 = RenderTarget( 1280, 720 )
 end
 
 function GAME:Update()
@@ -59,7 +59,7 @@ function GAME:Draw()
 	render.ClearZ()
 	
 	render.SetTexture( self.Texture )
-	render.SetProgram( self.DepthWriterShader )
+	render.SetShader( self.DepthWriterShader )
 	
 	self:DrawScene()
 	
@@ -67,7 +67,7 @@ function GAME:Draw()
 	render.SetRenderTarget( self.RT2 )
 	render.SetDepthEnabled( false )
 	
-	render.SetProgram( self.BlurShaderV )
+	render.SetShader( self.BlurShaderV )
 	render.SetTexture( self.RT:GetTexture() )
 	
 	render.Start2D()
@@ -77,7 +77,7 @@ function GAME:Draw()
 	-- Blur pass 2
 	render.SetRenderTarget()
 	
-	render.SetProgram( self.BlurShaderH )
+	render.SetShader( self.BlurShaderH )
 	render.SetTexture( self.RT2:GetTexture() )
 	
 	render.Start2D()
@@ -85,12 +85,10 @@ function GAME:Draw()
 	render.End2D()
 	
 	-- VIsualize depth buffer
-	render.SetProgram( self.DepthReaderShader )
+	render.SetShader( self.DepthReaderShader )
 	render.SetTexture( self.RT:GetTexture() )
 	
 	render.Start2D()
 		render.DrawRect( 1280 * 0.8, 144, 256, -144 )
 	render.End2D()
-	
-	render.Present()
 end

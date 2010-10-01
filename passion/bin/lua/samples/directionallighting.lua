@@ -15,10 +15,10 @@ function GAME:Initialize()
 	render.SetTexturingEnabled( true )
 	
 	-- Load the model itself.
-	self.Model = render.LoadModel( "models/teapot.obj" )
+	self.Model = Model( "models/teapot.obj" )
 	
 	-- Load lighting shader
-	self.Shader = render.CreateProgram( render.CreateVertexShader( file.Read( "shaders/light/directional_pixel.vs" ) ), render.CreatePixelShader( file.Read( "shaders/light/directional.ps" ) ) )
+	self.Shader = Shader( file.Read( "shaders/light/directional_pixel.vs" ), file.Read( "shaders/light/directional.ps" ) )
 end
 
 function GAME:Update( dt )
@@ -27,30 +27,27 @@ end
 
 function GAME:Draw()	
 	-- Activate the lighting shader.
-	render.SetProgram( self.Shader )
+	render.SetShader( self.Shader )
 	
 	-- Update light properties
-	render.SetProgramFloat( "lightDiffuse", 1.0, 1.0, 1.0, 1.0 );
-	render.SetProgramFloat( "lightSpecular", 1.0, 1.0, 1.0, 1.0 );
-	render.SetProgramFloat( "lightAmbient", 1.0, 1.0, 1.0, 1.0 );
-	render.SetProgramFloat( "lightPos", math.cos( os.clock() ) * 3, math.sin( os.clock() ) * 3, 3.0 );
-	render.SetProgramFloat( "eyePos", math.cos( os.clock() / 10 ) * 5, math.sin( os.clock() / 10 ) * 5, 3 );
-	render.SetProgramFloat( "diffuse", 1.0 );
-	render.SetProgramFloat( "specular", 0.02 );
-	render.SetProgramFloat( "shininess", 0.4 );
-	render.SetProgramFloat( "ambient", 0.1 );
+	self.Shader:SetFloat( "lightDiffuse", 1.0, 1.0, 1.0, 1.0 );
+	self.Shader:SetFloat( "lightSpecular", 1.0, 1.0, 1.0, 1.0 );
+	self.Shader:SetFloat( "lightAmbient", 1.0, 1.0, 1.0, 1.0 );
+	self.Shader:SetFloat( "lightPos", math.cos( os.clock() ) * 3, math.sin( os.clock() ) * 3, 3.0 );
+	self.Shader:SetFloat( "eyePos", math.cos( os.clock() / 10 ) * 5, math.sin( os.clock() / 10 ) * 5, 3 );
+	self.Shader:SetFloat( "diffuse", 1.0 );
+	self.Shader:SetFloat( "specular", 0.02 );
+	self.Shader:SetFloat( "shininess", 0.4 );
+	self.Shader:SetFloat( "ambient", 0.1 );
 	
 	-- Clear the color and depth buffer.
 	render.Clear( Color( 10, 10, 10 ) )
 	render.ClearZ()
 	
 	-- Start a 3D projection from the specified position
-	render.Start3D( Vector( math.cos( os.clock() / 10 ) * 5, math.sin( os.clock() / 10 ) * 5, 3 ), Vector( 0, 0, 0 ) )				
-		render.DrawModel( self.Model )
+	render.Start3D( Vector( math.cos( os.clock() / 10 ) * 4, math.sin( os.clock() / 10 ) * 4, 3 ), Vector( 0, 0, 0 ) )				
+		self.Model:Draw()
 	render.End3D()
-	
-	-- Present the image to the screen.
-	render.Present()
 end
 
 function GAME:Unload()

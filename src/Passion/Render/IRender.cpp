@@ -439,9 +439,9 @@ namespace Passion
 
 	void IRender::Start2D()
 	{
-		glMatrixMode( GL_PROJECTION );
-		glLoadIdentity();
-		gluOrtho2D( 0.0, m_viewW, m_viewH, 0.0 );
+		Matrix mat;
+		mat.Orthogonal( 0.0f, m_viewW, m_viewH, 0.0f, -1.0f, 1.0f );
+		SetTransform( mat, MATRIX_PROJECTION );
 	}
 
 	void IRender::End2D()
@@ -451,10 +451,10 @@ namespace Passion
 
 	void IRender::Start3D( Vector position, Vector lookAt, float fov, float znear, float zfar, Vector up )
 	{
-		glMatrixMode( GL_PROJECTION );
-		glLoadIdentity();
-		gluPerspective( fov, m_viewW / m_viewH, znear, zfar );
-		gluLookAt( position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z, up.x, up.z, up.y );
+		Matrix mat;
+		mat.Perspective( fov, m_viewW / m_viewH, znear, zfar );
+		mat.LookAt( position, lookAt, up );
+		SetTransform( mat, MATRIX_PROJECTION );
 	}
 
 	void IRender::End3D()
@@ -462,12 +462,19 @@ namespace Passion
 		Flush();
 	}
 
-	void IRender::SetTransform( Matrix matrix )
+	void IRender::SetTransform( Matrix matrix, MatrixMode mode )
 	{
 		Flush();
+		
+		glMatrixMode( 0x1700 + mode );
+		glLoadMatrixf( matrix );
+	}
 
-		glMatrixMode( GL_MODELVIEW );
-		glLoadMatrixf( reinterpret_cast<float*>( &matrix ) );
+	Matrix IRender::GetTransform( MatrixMode mode )
+	{
+		Matrix m;
+		glGetFloatv( 0x0BA6 + mode, (float*)&m );
+		return m;
 	}
 
 	void IRender::SetDrawColor( Color color )
@@ -573,17 +580,18 @@ namespace Passion
 
 	Vector IRender::WorldToScreen( Vector pos )
 	{
-		double proj[16], model[16];
-		int view[4];
+		int view[4]; glGetIntegerv( GL_VIEWPORT, view );
 
-		glGetDoublev( GL_PROJECTION_MATRIX, proj );
-		glGetDoublev( GL_MODELVIEW_MATRIX, model );
-		glGetIntegerv( GL_VIEWPORT, view );
+		Matrix m = GetTransform( MATRIX_PROJECTION ) * GetTransform( MATRIX_MODEL );
+		Vector v = m * pos;
 
-		double x, y, z;
-		gluProject( (double)pos.x, (double)pos.y, (double)pos.z, model, proj, view, &x, &y, &z );
+		float w = m.m[0][3] * pos.x + m.m[1][3] * pos.y + m.m[2][3] * pos.z + m.m[3][3];
 
-		return Vector( (float)x, (float)( view[3] - y ), (float)z );
+		v.x = ( v.x / w * 0.5f + 0.5f ) * view[2] + view[0];
+		v.y = view[3] - ( v.y / w * 0.5f + 0.5f ) * view[3] + view[1];
+		v.z = v.z / w * 0.5f + 0.5f;
+		
+		return v;
 	}
 
 	Vector IRender::ScreenToWorld( float x, float y )

@@ -113,7 +113,7 @@ int main()
 		render->Clear( Passion::Color( 0.1f, 0.1f, 0.1f ) );
 		render->ClearZ();
 
-		render->Start3D( Passion::Vector( cos( time ) * 280.0f, sin( time ) * 280.0f, 200.0f ), Passion::Vector() );
+		render->Start3D( Passion::Vector( cos( time ) * 200.0f, sin( time ) * 200.0f, 100.0f ), Passion::Vector() );
 			render->SetTexture( pattern );
 			render->SetProgram();
 

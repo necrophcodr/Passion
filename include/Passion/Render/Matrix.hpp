@@ -36,12 +36,18 @@ namespace Passion
 		Matrix operator*( Matrix m );
 		void operator*=( Matrix m );
 
+		operator float*();
+
 		void Translate( Vector v );
 		void Scale( Vector v );
 
 		void RotateX( float ang );
 		void RotateY( float ang );
 		void RotateZ( float ang );
+
+		void Orthogonal( float left, float right, float bottom, float top, float znear = -1.0f, float zfar = 1.0f );
+		void Perspective( float fov, float aspectRatio, float znear, float zfar );
+		void LookAt( Vector pos, Vector target, Vector up );
 
 		float m[4][4];
 	};
@@ -87,6 +93,11 @@ namespace Passion
 	inline void Matrix::operator*=( Matrix m )
 	{
 		*this = *this * m;
+	}
+
+	inline Matrix::operator float*()
+	{
+		return (float*)this;
 	}
 
 	inline void Matrix::Translate( Vector v )
@@ -147,6 +158,49 @@ namespace Passion
 	inline Vector Vector::operator*( Matrix m )
 	{
 		return m.operator*( *this );
+	}
+
+	inline void Matrix::Orthogonal( float left, float right, float bottom, float top, float znear, float zfar )
+	{
+		float mat[] = {
+			2/(right-left), 0, 0, -(right+left)/(right-left),
+			0, 2/(top-bottom), 0, -(top+bottom)/(top-bottom),
+			0, 0, -2/(zfar-znear), -(zfar+znear)/(zfar-znear),
+			0, 0, 0, 1
+		};
+		*this *= Matrix( mat );
+	}
+
+	inline void Matrix::Perspective( float fov, float aspectRatio, float znear, float zfar )
+	{
+		float f = 1.0f / tan( fov / 2.0f );
+		
+		float mat[] = {
+			f/aspectRatio, 0, 0, 0,
+			0, f, 0, 0,
+			0, 0, (zfar+znear)/(znear-zfar), (2.0f*zfar*znear)/(znear-zfar),
+			0, 0, -1, 0
+		};
+		*this *= Matrix( mat );
+	}
+
+	inline void Matrix::LookAt( Vector pos, Vector target, Vector up )
+	{
+		Vector f = ( target - pos ).Normal();
+		up = up.Normal();
+
+		Vector s = f.Cross( up );
+		Vector u = s.Cross( f );
+		
+		float mat[] = {
+			s.x, s.y, s.z, 0,
+			u.x, u.y, u.z, 0,
+			-f.x, -f.y, -f.z, 0,
+			0, 0, 0, 1
+		};
+
+		*this *= Matrix( mat );
+		Translate( -pos );
 	}
 }
 

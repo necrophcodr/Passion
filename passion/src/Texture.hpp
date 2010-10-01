@@ -27,46 +27,32 @@
 #include "Interfaces.hpp"
 
 ////////////////////////////////////////////////////////////
-// Render target object
+// Texture object
 ////////////////////////////////////////////////////////////
 
-class RenderTarget
+class Texture
 {
 public:
 	SCRIPT_FUNCTION( Constructor )
 	{
-		if ( g_Lua->Get( 1 )->IsNumber() && g_Lua->Get( 2 )->IsNumber() )
+		if ( g_Lua->Get( 1 )->IsString() )
 		{
-			Passion::BaseRenderTarget* rt = g_Render->CreateRenderTarget( g_Lua->Get( 1 )->GetInteger(), g_Lua->Get( 2 )->GetInteger() );
-			g_Lua->Push( &rt, sizeof( Passion::BaseRenderTarget* ), g_Lua->Registry()->GetMember( "RenderTarget" ) );
+			const char* path = g_Lua->Get( 1 )->GetString();
+				int tex = g_Render->LoadTexture( path, g_Lua->Get( 2 )->GetBoolean() );
+			g_Lua->Push( &tex, sizeof( int ), g_Lua->Registry()->GetMember( "Texture" ) );
 		} else {
-			if ( g_Lua->Get( 1 )->IsNumber() ) g_Lua->Error( 2, "number" ); else g_Lua->Error( 1, "number" );
+			g_Lua->Error( 1, "string" );
 		}
-
-		return 1;
-	}
-	
-	SCRIPT_FUNCTION( GetTexture )
-	{
-		if ( !g_Lua->Get( 1 )->IsUserData() || !g_Lua->Get( 1 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "RenderTarget" ) ) )
-			g_Lua->Error( 1, "RenderTarget" );
-
-		Passion::BaseRenderTarget* rt = *reinterpret_cast<Passion::BaseRenderTarget**>( g_Lua->Get( 1 )->GetUserData() );
-		Passion::Texture tex = rt->GetTexture();
-
-		g_Lua->Push( &tex, sizeof( int* ), g_Lua->Registry()->GetMember( "Texture" ) );
 
 		return 1;
 	}
 
 	static void Bind()
 	{
-		g_Lua->Globals()->GetMember( "RenderTarget" )->Set( Constructor );
-
+		g_Lua->Globals()->GetMember( "Texture" )->Set( Constructor );
+		
 		std::auto_ptr<BaseScriptValue> meta = g_Lua->NewTable();
-			meta->GetMember( "GetTexture" )->Set( GetTexture );
-
 			meta->GetMember( "__index" )->Set( meta.get() );
-		g_Lua->Registry()->GetMember( "RenderTarget" )->Set( meta );
+		g_Lua->Registry()->GetMember( "Texture" )->Set( meta );
 	}
 };

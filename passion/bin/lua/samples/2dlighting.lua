@@ -68,9 +68,10 @@ function GAME:Initialize()
 		table.insert( self.Sides, { { 1, 2 }, { 2, 3 }, { 3, 5 }, { 5, 1 } } )
 	end
 	
-	self.RT = render.CreateRenderTarget( 800, 600 )
+	self.RT = RenderTarget( 800, 600 )
 	
-	self.LightShader = render.CreateProgram( render.CreateVertexShader( file.Read( "shaders/null.vs" ) ), render.CreatePixelShader( file.Read( "shaders/2dlight.ps" ) ) )
+	--self.LightShader = render.CreateProgram( render.CreateVertexShader( file.Read( "shaders/null.vs" ) ), render.CreatePixelShader( file.Read( "shaders/2dlight.ps" ) ) )
+	self.LightShader = Shader( file.Read( "shaders/null.vs" ), file.Read( "shaders/2dlight.ps" ) )
 end
 
 function GAME:Update()
@@ -141,7 +142,7 @@ end
 function GAME:Draw()
 	render.SetRenderTarget( self.RT )
 	render.SetTexture()
-	render.SetProgram()
+	render.SetShader()
 	
 	render.Clear( Color( 255, 255, 255 ) )
 	
@@ -161,16 +162,14 @@ function GAME:Draw()
 	
 	render.SetRenderTarget()
 	render.SetTexture( self.RT:GetTexture() )
-	render.SetProgram( self.LightShader )
+	render.SetShader( self.LightShader )
 	render.SetDepthEnabled( false )
 	
-	render.SetProgramFloat( "lightPos", self.LightPos.x / 800, 1.0 - self.LightPos.y / 600 )
-	render.SetProgramFloat( "lightColor", 0.8, 0.8, 1.0, 0.6 )
+	self.LightShader:SetFloat( "lightPos", self.LightPos.x / 800, 1 - self.LightPos.y / 600 )
+	self.LightShader:SetFloat( "lightColor", 0.8, 0.8, 1, 0.6 )
 	
 	render.Start2D()
 		render.SetDrawColor( Color( 255, 255, 255 ) )
 		render.DrawRect( 0, 600, 800, -600 )
 	render.End2D()
-	
-	render.Present()
 end

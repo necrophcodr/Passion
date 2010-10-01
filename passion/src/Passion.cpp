@@ -26,6 +26,7 @@
 
 #include <fstream>
 #include <cstring>
+#include <time.h>
 
 // Base header
 #include "Interfaces.hpp"
@@ -36,7 +37,9 @@
 
 // Objects
 #include "Model.hpp"
+#include "Texture.hpp"
 #include "RenderTarget.hpp"
+#include "Shader.hpp"
 #include "Vector.hpp"
 #include "Matrix.hpp"
 
@@ -44,6 +47,7 @@
 #include "util.lua.hpp"
 #include "file.lua.hpp"
 #include "enums.lua.hpp"
+#include "default.lua.hpp"
 
 // Error handling
 #include "ErrorHandling.hpp"
@@ -103,7 +107,9 @@ int main( int argc, const char* argv[] )
 	////////////////////////////////////////////////////////////
 
 	Model::Bind();
+	Texture::Bind();
 	RenderTarget::Bind();
+	Shader::Bind();
 	Vector::Bind();
 	Matrix::Bind();
 
@@ -134,7 +140,8 @@ int main( int argc, const char* argv[] )
 			return 1;
 		}
 	} else {
-		g_Lua->DoString( "print( \"No default screen code.\" )" );
+		if ( !g_Lua->DoString( default_lua ) )
+				return Error( g_Lua->Error() );
 	}
 
 	////////////////////////////////////////////////////////////
@@ -192,18 +199,22 @@ int main( int argc, const char* argv[] )
 			return Error( g_Lua->Error() );
 	}
 
+	clock_t nextUpdate = 0;
+
 	while ( g_Input->GetEvents() )
 	{
 		////////////////////////////////////////////////////////////
 		// Update
 		////////////////////////////////////////////////////////////
 
-		if ( GAME->IsTable() && GAME->GetMember( "Update" )->IsFunction() ) {
+		if ( clock() > nextUpdate && GAME->IsTable() && GAME->GetMember( "Update" )->IsFunction() ) {
 			g_Lua->Push( GAME->GetMember( "Update" ).get() );
 			g_Lua->Push( GAME.get() );
 
 			if ( !g_Lua->Call( 1, 0 ) )
 				return Error( g_Lua->Error() );
+
+			nextUpdate = clock() + CLOCKS_PER_SEC / 60;
 		}
 
 		////////////////////////////////////////////////////////////
@@ -216,6 +227,8 @@ int main( int argc, const char* argv[] )
 
 			if ( !g_Lua->Call( 1, 0 ) )
 				return Error( g_Lua->Error() );
+
+			g_Render->Present();
 		}
 	}
 
@@ -231,7 +244,7 @@ int main( int argc, const char* argv[] )
 			return Error( g_Lua->Error() );
 	}
 
-	// Destroy g_Lua state
+	// Destroy Lua state
 	g_Scripting->DestroyState( g_Lua );
 
 	// Clean up

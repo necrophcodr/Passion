@@ -12,49 +12,49 @@ function GAME:Initialize()
 	render.SetCullingEnabled( true )
 	
 	-- Load scene
-	self.Model = render.LoadModel( "models/ssao_scene.obj" )
+	self.Model = Model( "models/ssao_scene.obj" )
 	
 	-- Load noise texture
-	self.NoiseTexture = render.LoadTexture( "textures/noise.png" )
+	self.NoiseTexture = Texture( "textures/noise.png" )
 	
 	-- Load shaders
-	self.NormalDepthShader = render.CreateProgram( render.CreateVertexShader( file.Read( "shaders/ssao/normaldepth.vs" ) ), render.CreatePixelShader( file.Read( "shaders/ssao/normaldepth.ps" ) ) )
-	self.SSAOShader = render.CreateProgram( render.CreateVertexShader( file.Read( "shaders/ssao/ssao.vs" ) ), render.CreatePixelShader( file.Read( "shaders/ssao/ssao.ps" ) ) )
-	self.LightingShader = render.CreateProgram( render.CreateVertexShader( file.Read( "shaders/light/directional_pixel.vs" ) ), render.CreatePixelShader( file.Read( "shaders/light/directional.ps" ) ) )
-	self.FinalShader = render.CreateProgram( render.CreateVertexShader( file.Read( "shaders/ssao/final.vs" ) ), render.CreatePixelShader( file.Read( "shaders/ssao/final.ps" ) ) )
+	self.NormalDepthShader = Shader( file.Read( "shaders/ssao/normaldepth.vs" ), file.Read( "shaders/ssao/normaldepth.ps" ) )
+	self.SSAOShader = Shader( file.Read( "shaders/ssao/ssao.vs" ), file.Read( "shaders/ssao/ssao.ps" ) )
+	self.LightingShader = Shader( file.Read( "shaders/light/directional_pixel.vs" ), file.Read( "shaders/light/directional.ps" ) )
+	self.FinalShader = Shader( file.Read( "shaders/ssao/final.vs" ), file.Read( "shaders/ssao/final.ps" ) )
 	
 	-- Create render targets
-	self.RTNormalDepth = render.CreateRenderTarget( 1280, 720 )
-	self.RTSSAO = render.CreateRenderTarget( 1280, 720 )
-	self.RTGeometry = render.CreateRenderTarget( 1280, 720 )
+	self.RTNormalDepth = RenderTarget( 1280, 720 )
+	self.RTSSAO = RenderTarget( 1280, 720 )
+	self.RTGeometry = RenderTarget( 1280, 720 )
 	
 	-- Set up SSAO shader
-	render.SetProgram( self.SSAOShader )
-	render.SetProgramFloat( "offset", 18 )
-	render.SetProgramFloat( "rad", 0.00497 )
-	render.SetProgramFloat( "strength", 0.07840 )
-	render.SetProgramFloat( "totStrength", 1.18000 )
-	render.SetProgramFloat( "falloff", 0 )
+	render.SetShader( self.SSAOShader )
+	self.SSAOShader:SetFloat( "offset", 18 )
+	self.SSAOShader:SetFloat( "rad", 0.00497 )
+	self.SSAOShader:SetFloat( "strength", 0.07840 )
+	self.SSAOShader:SetFloat( "totStrength", 1.18000 )
+	self.SSAOShader:SetFloat( "falloff", 0 )
 	
-	render.SetProgramInt( "Texture0", 0 )
-	render.SetProgramInt( "rnm", 1 )
+	self.SSAOShader:SetInt( "Texture0", 0 )
+	self.SSAOShader:SetInt( "rnm", 1 )
 	
 	-- Set up lighting shader
-	render.SetProgram( self.LightingShader )
-	render.SetProgramFloat( "lightDiffuse", 1.0, 1.0, 1.0, 1.0 )
-	render.SetProgramFloat( "lightSpecular", 1.0, 1.0, 1.0, 1.0 )
-	render.SetProgramFloat( "lightAmbient", 1.0, 1.0, 1.0, 1.0 )
-	render.SetProgramFloat( "lightPos", -37, -35, 30 )
-	render.SetProgramFloat( "eyePos", -50, -40, 30  )
-	render.SetProgramFloat( "diffuse", 1.0 )
-	render.SetProgramFloat( "specular", 0.02 )
-	render.SetProgramFloat( "shininess", 0.4 )
-	render.SetProgramFloat( "ambient", 0.3 )
+	render.SetShader( self.LightingShader )
+	self.LightingShader:SetFloat( "lightDiffuse", 1.0, 1.0, 1.0, 1.0 )
+	self.LightingShader:SetFloat( "lightSpecular", 1.0, 1.0, 1.0, 1.0 )
+	self.LightingShader:SetFloat( "lightAmbient", 1.0, 1.0, 1.0, 1.0 )
+	self.LightingShader:SetFloat( "lightPos", -37, -35, 30 )
+	self.LightingShader:SetFloat( "eyePos", -50, -40, 30  )
+	self.LightingShader:SetFloat( "diffuse", 1.0 )
+	self.LightingShader:SetFloat( "specular", 0.02 )
+	self.LightingShader:SetFloat( "shininess", 0.4 )
+	self.LightingShader:SetFloat( "ambient", 0.3 )
 	
 	-- Set up final shader
-	render.SetProgram( self.FinalShader )
-	render.SetProgramInt( "Texture0", 0 )
-	render.SetProgramInt( "Texture1", 1 )
+	render.SetShader( self.FinalShader )
+	self.FinalShader:SetInt( "Texture0", 0 )
+	self.FinalShader:SetInt( "Texture1", 1 )
 	
 	self.Pos = Vector( -30, -40, 10 )
 	self.Yaw = math.pi / 3
@@ -102,19 +102,19 @@ function GAME:Draw()
 	-- Pass #1 - Normal/Depth
 	render.SetRenderTarget( self.RTNormalDepth )
 	
-	render.SetProgram( self.NormalDepthShader )
+	render.SetShader( self.NormalDepthShader )
 	
 	render.Clear( Color( 0, 0, 0 ) )
 	render.ClearZ()
 	
 	render.Start3D( self.Pos, self.LookAt, 45, 0.1, 200 )
-		render.DrawModel( self.Model )
+		self.Model:Draw()
 	render.End3D()
 	
 	-- Pass #2 - SSAO
 	render.SetRenderTarget( self.RTSSAO )
 	
-	render.SetProgram( self.SSAOShader )
+	render.SetShader( self.SSAOShader )
 	
 	render.Clear( Color( 0, 0, 0 ) )
 	render.ClearZ()
@@ -132,19 +132,19 @@ function GAME:Draw()
 	-- Pass #3 - Geometry
 	render.SetRenderTarget( self.RTGeometry )
 	
-	render.SetProgram( self.LightingShader )
+	render.SetShader( self.LightingShader )
 	
 	render.Clear( Color( 0, 0, 0 ) )
 	render.ClearZ()
 	
 	render.Start3D( self.Pos, self.LookAt, 45, 0.1, 200 )
-		render.DrawModel( self.Model )
+		self.Model:Draw()
 	render.End3D()
 	
 	-- Final pass
 	render.SetRenderTarget()
 	
-	render.SetProgram( self.FinalShader )
+	render.SetShader( self.FinalShader )
 	
 	render.Clear( Color( 0, 0, 0 ) )
 	render.ClearZ()
@@ -158,6 +158,4 @@ function GAME:Draw()
 		render.SetTexture( 0, 0 )
 		render.SetTexture( 0, 1 )
 	render.End2D()
-	
-	render.Present( true )
 end

@@ -11,7 +11,7 @@
 			<DebugSettings
 				Command="$(TargetPath)"
 				WorkingDirectory="$(TargetDir)"
-				CommandArguments="&quot;lua/samples/ssao.lua&quot;"
+				CommandArguments=""
 				Attach="false"
 				DebuggerType="3"
 				Remote="1"
@@ -39,7 +39,7 @@
 			<DebugSettings
 				Command="$(TargetPath)"
 				WorkingDirectory="$(TargetDir)"
-				CommandArguments="&quot;lua/samples/basics.lua&quot;"
+				CommandArguments=""
 				Attach="false"
 				DebuggerType="3"
 				Remote="1"
