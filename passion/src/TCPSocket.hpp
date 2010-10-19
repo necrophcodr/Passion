@@ -25,6 +25,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "Interfaces.hpp"
+#include <stdlib.h>
 
 ////////////////////////////////////////////////////////////
 // TCP socket object
@@ -82,10 +83,10 @@ public:
 
 		size_t len;
 		const char* data = g_Lua->Get( 2 )->GetString( len );
-		
+
 		socket->Send( data, len );
 
-		return 0;		
+		return 0;
 	}
 
 	SCRIPT_FUNCTION( Receive )
@@ -124,7 +125,7 @@ public:
 	static void Bind()
 	{
 		g_Lua->Globals()->GetMember( "TCPSocket" )->Set( Constructor );
-		
+
 		std::auto_ptr<BaseScriptValue> meta = g_Lua->NewTable();
 			meta->GetMember( "Connect" )->Set( Connect );
 			meta->GetMember( "Disconnect" )->Set( Disconnect );
