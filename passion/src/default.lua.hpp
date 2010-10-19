@@ -63,7 +63,7 @@ function GAME:Draw() \
 	render.Start3D( Vector( 700 + math.sin( os.clock() / 3 ) * 100, 600, 500 ), Vector( 640, 400, 0 ), 45, 1, 10000, Vector( 0, 1, 0 ) ) \
 		render.SetTexture( self.TexLogo ) \
 		render.SetDrawColor( Color( 255, 255, 255, 128 ) ) \
-		render.DrawRect( 392, 312, 496, 158 ) \
+		render.DrawRect( 392, 470, 496, -158 ) \
 		 \
 		render.SetDrawColor( Color( 255, 255, 255 ) ) \
 		render.SetTexture( self.TexCloud ) \

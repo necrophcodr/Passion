@@ -224,25 +224,41 @@ public:
 
 	SCRIPT_FUNCTION( DrawPoint )
 	{
-		g_Render->DrawPoint( GetVector( 1 ) );
+		if ( g_Lua->Get( 1 )->IsTable() && g_Lua->Get( 1 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "Vector" ) ) )
+			g_Render->DrawPoint( GetVector( 1 ) );
+		else
+			g_Render->DrawPoint( GetVertex( 1 ) );
+
 		return 0;
 	}
 
 	SCRIPT_FUNCTION( DrawLine )
 	{
-		g_Render->DrawLine( GetVector( 1 ), GetVector( 2 ) );
+		if ( g_Lua->Get( 1 )->IsTable() && g_Lua->Get( 1 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "Vector" ) ) )
+			g_Render->DrawLine( GetVector( 1 ), GetVector( 2 ) );
+		else
+			g_Render->DrawLine( GetVertex( 1 ), GetVertex( 2 ) );
+
 		return 0;
 	}
 
 	SCRIPT_FUNCTION( DrawTriangle )
 	{
-		g_Render->DrawTriangle( GetVector( 1 ), GetVector( 2 ), GetVector( 3 ) );
+		if ( g_Lua->Get( 1 )->IsTable() && g_Lua->Get( 1 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "Vector" ) ) )
+			g_Render->DrawTriangle( GetVector( 1 ), GetVector( 2 ), GetVector( 3 ) );
+		else
+			g_Render->DrawTriangle( GetVertex( 1 ), GetVertex( 2 ), GetVertex( 3 ) );
+
 		return 0;
 	}
 
 	SCRIPT_FUNCTION( DrawQuad )
 	{
-		g_Render->DrawQuad( GetVector( 1 ), GetVector( 2 ), GetVector( 3 ), GetVector( 4 ) );
+		if ( g_Lua->Get( 1 )->IsTable() && g_Lua->Get( 1 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "Vector" ) ) )
+			g_Render->DrawQuad( GetVector( 1 ), GetVector( 2 ), GetVector( 3 ), GetVector( 4 ) );
+		else
+			g_Render->DrawQuad( GetVertex( 1 ), GetVertex( 2 ), GetVertex( 3 ), GetVertex( 4 ) );
+
 		return 0;
 	}
 
@@ -258,14 +274,22 @@ public:
 		return 0;
 	}
 
+	SCRIPT_FUNCTION( DrawText )
+	{
+		g_Render->DrawText( g_Lua->Get( 1 )->GetInteger(), g_Lua->Get( 2 )->GetInteger(), g_Lua->Get( 3 )->GetString() );
+		
+		return 0;
+	}
+
 	SCRIPT_FUNCTION( WorldToScreen )
 	{
 		Passion::Vector pos = g_Render->WorldToScreen( GetVector( 1 ) );
 
 		std::auto_ptr<BaseScriptValue> vec = g_Lua->NewTable();
-		vec->GetMember( "x" )->Set( pos.x );
-		vec->GetMember( "y" )->Set( pos.y );
-		vec->GetMember( "z" )->Set( pos.z );
+			vec->GetMember( "x" )->Set( pos.x );
+			vec->GetMember( "y" )->Set( pos.y );
+			vec->GetMember( "z" )->Set( pos.z );
+		vec->SetMetaTable( g_Lua->Registry()->GetMember( "Vector" ) );
 
 		g_Lua->Push( vec );
 
@@ -274,12 +298,16 @@ public:
 
 	SCRIPT_FUNCTION( ScreenToWorld )
 	{
+		if ( !g_Lua->Get( 1 )->IsNumber() ) g_Lua->Error( 1, "number" );
+		if ( !g_Lua->Get( 2 )->IsNumber() ) g_Lua->Error( 2, "number" );
+
 		Passion::Vector pos = g_Render->ScreenToWorld( g_Lua->Get( 1 )->GetFloat(), g_Lua->Get( 2 )->GetFloat() );
 
 		std::auto_ptr<BaseScriptValue> vec = g_Lua->NewTable();
-		vec->GetMember( "x" )->Set( pos.x );
-		vec->GetMember( "y" )->Set( pos.y );
-		vec->GetMember( "z" )->Set( pos.z );
+			vec->GetMember( "x" )->Set( pos.x );
+			vec->GetMember( "y" )->Set( pos.y );
+			vec->GetMember( "z" )->Set( pos.z );
+		vec->SetMetaTable( g_Lua->Registry()->GetMember( "Vector" ) );
 
 		g_Lua->Push( vec );
 
@@ -330,6 +358,8 @@ public:
 		render->GetMember( "DrawQuad" )->Set( DrawQuad );
 		render->GetMember( "DrawRect" )->Set( DrawRect );
 		render->GetMember( "DrawBox" )->Set( DrawBox );
+
+		render->GetMember( "DrawText" )->Set( DrawText );
 
 		render->GetMember( "WorldToScreen" )->Set( WorldToScreen );
 		render->GetMember( "ScreenToWorld" )->Set( ScreenToWorld );

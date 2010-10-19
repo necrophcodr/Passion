@@ -71,7 +71,7 @@ function GAME:Draw()
 	render.SetTexture( self.RT:GetTexture() )
 	
 	render.Start2D()
-		render.DrawRect( 0, 720, 1280, -720 )
+		render.DrawRect( 0, 0, 1280, 720 )
 	render.End2D()
 	
 	-- Blur pass 2
@@ -81,7 +81,7 @@ function GAME:Draw()
 	render.SetTexture( self.RT2:GetTexture() )
 	
 	render.Start2D()
-		render.DrawRect( 0, 720, 1280, -720 )
+		render.DrawRect( 0, 0, 1280, 720 )
 	render.End2D()
 	
 	-- VIsualize depth buffer
@@ -89,6 +89,6 @@ function GAME:Draw()
 	render.SetTexture( self.RT:GetTexture() )
 	
 	render.Start2D()
-		render.DrawRect( 1280 * 0.8, 144, 256, -144 )
+		render.DrawRect( 1280 * 0.8, 0, 256, 144 )
 	render.End2D()
 end

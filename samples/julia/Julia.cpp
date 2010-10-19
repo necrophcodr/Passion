@@ -125,7 +125,7 @@ int main()
 		if ( input->IsMouseDown( Passion::MOUSE_LEFT ) ) {
 			if ( dragging ) {
 				centerRe += (float)( lastX - input->GetMouseX() ) / 1280.0f * scaleRe * 2.0f;
-				centerIm -= (float)( lastY - input->GetMouseY() ) / 720.0f * scaleIm * 2.0f;
+				centerIm += (float)( lastY - input->GetMouseY() ) / 720.0f * scaleIm * 2.0f;
 			} else {
 				dragging = true;
 			}
@@ -161,7 +161,7 @@ int main()
 
 		render->Start2D();
 
-			render->DrawQuad( Passion::Vector( 0.0f, 0.0f ), Passion::Vector( 1280.0f, 0.0f ), Passion::Vector( 1280.0f, 800.0f ), Passion::Vector( 0.0f, 800.0f ) );
+			render->DrawQuad( Passion::Vector( 0.0f, 0.0f ), Passion::Vector( 1280.0f, 0.0f ), Passion::Vector( 1280.0f, 720.0f ), Passion::Vector( 0.0f, 720.0f ) );
 
 		render->End2D();
 

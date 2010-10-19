@@ -33,6 +33,10 @@
 
 #include <Passion/Render/RenderWindow.hpp>
 
+#ifdef WIN32
+	#undef DrawText
+#endif
+
 namespace Passion
 {
 	////////////////////////////////////////////////////////////
@@ -104,12 +108,18 @@ namespace Passion
 		void SetProgram( Program program = 0 );
 
 		void DrawPoint( Vector point );
+		void DrawPoint( Vertex point );
 		void DrawLine( Vector p1, Vector p2 );
+		void DrawLine( Vertex p1, Vertex p2 );
 		void DrawTriangle( Vector p1, Vector p2, Vector p3 );
+		void DrawTriangle( Vertex p1, Vertex p2, Vertex p3 );
 		void DrawQuad( Vector p1, Vector p2, Vector p3, Vector p4, float repeat = 1.0f );
+		void DrawQuad( Vertex p1, Vertex p2, Vertex p3, Vertex p4 );
 		void DrawRect( float x, float y, float w, float h, float repeat = 1.0f );
 
 		void DrawBox( Vector min, Vector max );
+
+		void DrawText( int x, int y, const char* str );
 
 		Vector WorldToScreen( Vector pos );
 		Vector ScreenToWorld( float x, float y );
@@ -128,6 +138,8 @@ namespace Passion
 		Color m_drawColor;
 
 		Program m_activeProgram;
+
+		Texture m_textTexture;
 
 		void Flush();
 	};

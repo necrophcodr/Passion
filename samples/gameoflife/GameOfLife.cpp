@@ -139,7 +139,7 @@ int main()
 
 		render->SetTexture( texBox );
 
-		render->Start3D( Passion::Vector( cos( angle ) * 750.0f, sin( angle ) * 750.0f, 350.0f ), Passion::Vector( 0.0f, 0.0f, -200.0f ) );
+		render->Start3D( Passion::Vector( cos( angle ) * 1000.0f, sin( angle ) * 1000.0f, 350.0f ), Passion::Vector( 0.0f, 0.0f, -200.0f ) );
 
 			float generationProgress = 1.0f - (float)( nextUpdate - clock() ) / ( (float)CLOCKS_PER_SEC / generationsPerSecond );
 

@@ -170,6 +170,6 @@ function GAME:Draw()
 	
 	render.Start2D()
 		render.SetDrawColor( Color( 255, 255, 255 ) )
-		render.DrawRect( 0, 600, 800, -600 )
+		render.DrawRect( 0, 0, 800, 600 )
 	render.End2D()
 end

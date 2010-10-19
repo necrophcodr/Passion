@@ -39,6 +39,7 @@ namespace Passion
 		m_renderWindow = 0;
 		m_vertexIndex = 0;
 		m_shape = 0;
+		m_textTexture = 0;
 	}
 
 	IRender::~IRender()
@@ -524,6 +525,16 @@ namespace Passion
 		m_vertices[m_vertexIndex++] = Vertex( point.x, point.y, point.z, m_drawColor );
 	}
 
+	void IRender::DrawPoint( Vertex point )
+	{
+		if ( m_shape != GL_POINTS || m_vertexIndex > 4095 ) {
+			Flush();
+			m_shape = GL_POINTS;
+		}
+
+		m_vertices[m_vertexIndex++] = point;
+	}
+
 	void IRender::DrawLine( Vector p1, Vector p2 )
 	{
 		if ( m_shape != GL_LINES || m_vertexIndex > 4094 ) {
@@ -533,6 +544,17 @@ namespace Passion
 
 		m_vertices[m_vertexIndex++] = Vertex( p1.x, p1.y, p1.z, m_drawColor );
 		m_vertices[m_vertexIndex++] = Vertex( p2.x, p2.y, p2.z, m_drawColor );
+	}
+
+	void IRender::DrawLine( Vertex p1, Vertex p2 )
+	{
+		if ( m_shape != GL_LINES || m_vertexIndex > 4094 ) {
+			Flush();
+			m_shape = GL_LINES;
+		}
+
+		m_vertices[m_vertexIndex++] = p1;
+		m_vertices[m_vertexIndex++] = p2;
 	}
 
 	void IRender::DrawTriangle( Vector p1, Vector p2, Vector p3 )
@@ -547,6 +569,18 @@ namespace Passion
 		m_vertices[m_vertexIndex++] = Vertex( p3.x, p3.y, p3.z, m_drawColor, 1.0f, 0.0f );
 	}
 
+	void IRender::DrawTriangle( Vertex p1, Vertex p2, Vertex p3 )
+	{
+		if ( m_shape != GL_TRIANGLES || m_vertexIndex > 4093 ) {
+			Flush();
+			m_shape = GL_TRIANGLES;
+		}
+
+		m_vertices[m_vertexIndex++] = p1;
+		m_vertices[m_vertexIndex++] = p2;
+		m_vertices[m_vertexIndex++] = p3;
+	}
+
 	void IRender::DrawQuad( Vector p1, Vector p2, Vector p3, Vector p4, float repeat )
 	{
 		if ( m_shape != GL_TRIANGLES || m_vertexIndex > 4090 ) {
@@ -554,13 +588,29 @@ namespace Passion
 			m_shape = GL_TRIANGLES;
 		}
 
-		m_vertices[m_vertexIndex++] = Vertex( p1.x, p1.y, p1.z, m_drawColor, 0.0f, 0.0f );
-		m_vertices[m_vertexIndex++] = Vertex( p2.x, p2.y, p2.z, m_drawColor, repeat, 0.0f );
-		m_vertices[m_vertexIndex++] = Vertex( p3.x, p3.y, p3.z, m_drawColor, repeat, repeat );
+		m_vertices[m_vertexIndex++] = Vertex( p1.x, p1.y, p1.z, m_drawColor, 0.0f, repeat );
+		m_vertices[m_vertexIndex++] = Vertex( p2.x, p2.y, p2.z, m_drawColor, repeat, repeat );
+		m_vertices[m_vertexIndex++] = Vertex( p3.x, p3.y, p3.z, m_drawColor, repeat, 0.0f );
 
-		m_vertices[m_vertexIndex++] = Vertex( p3.x, p3.y, p3.z, m_drawColor, repeat, repeat );
-		m_vertices[m_vertexIndex++] = Vertex( p4.x, p4.y, p4.z, m_drawColor, 0.0f, repeat );
-		m_vertices[m_vertexIndex++] = Vertex( p1.x, p1.y, p1.z, m_drawColor, 0.0f, 0.0f );
+		m_vertices[m_vertexIndex++] = Vertex( p3.x, p3.y, p3.z, m_drawColor, repeat, 0.0f );
+		m_vertices[m_vertexIndex++] = Vertex( p4.x, p4.y, p4.z, m_drawColor, 0.0f, 0.0f );
+		m_vertices[m_vertexIndex++] = Vertex( p1.x, p1.y, p1.z, m_drawColor, 0.0f, repeat );
+	}
+
+	void IRender::DrawQuad( Vertex p1, Vertex p2, Vertex p3, Vertex p4 )
+	{
+		if ( m_shape != GL_TRIANGLES || m_vertexIndex > 4090 ) {
+			Flush();
+			m_shape = GL_TRIANGLES;
+		}
+
+		m_vertices[m_vertexIndex++] = p1;
+		m_vertices[m_vertexIndex++] = p2;
+		m_vertices[m_vertexIndex++] = p3;
+
+		m_vertices[m_vertexIndex++] = p3;
+		m_vertices[m_vertexIndex++] = p4;
+		m_vertices[m_vertexIndex++] = p1;
 	}
 
 	void IRender::DrawRect( float x, float y, float w, float h, float repeat )
@@ -576,6 +626,37 @@ namespace Passion
 		DrawQuad( Vector( min.x, max.y, min.z ), Vector( min.x, max.y, max.z ), max, Vector( max.x, max.y, min.z ) );
 		DrawQuad( min, Vector( min.x, min.y, max.z ), Vector( min.x, max.y, max.z ), Vector( min.x, max.y, min.z ) );
 		DrawQuad( Vector( max.x, max.y, min.z ), max, Vector( max.x, min.y, max.z ), Vector( max.x, min.y, min.z ) );
+	}
+
+	void IRender::DrawText( int x, int y, const char* str )
+	{
+		if ( m_textTexture == 0 ) m_textTexture = LoadTexture( "textures/font.png", false );
+		SetTexture( m_textTexture, 0 );
+
+		int ox = x;
+		int len = strlen( str );
+		float u, v;
+
+		for ( int i = 0; i < len; i++ )
+		{
+			if ( str[i] == '\n' ) {
+				x = ox;
+				y = y + 9;
+				continue;
+			}
+
+			u = (float)( str[i] % 16 ) * 0.0625f;
+			v = floor( (float)str[i] / 16.0f ) * 0.0625f;
+
+			DrawQuad(
+				Vertex( x, y, 0.0f, m_drawColor, u, 1.0f - v ),
+				Vertex( x + 6, y, 0.0f, m_drawColor, u + 0.0625f, 1.0f - v ),
+				Vertex( x + 6, y + 8, 0.0f, m_drawColor, u + 0.0625f, 1.0f - v - 0.0625f ),
+				Vertex( x, y + 8, 0.0f, m_drawColor, u, 1.0f - v - 0.0625f )
+			);
+
+			x = x + 6;
+		}
 	}
 
 	Vector IRender::WorldToScreen( Vector pos )

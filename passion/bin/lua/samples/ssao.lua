@@ -9,7 +9,6 @@ end
 function GAME:Initialize()
 	-- Set up renderer
 	render.SetDepthEnabled( true )
-	render.SetCullingEnabled( true )
 	
 	-- Load scene
 	self.Model = Model( "models/ssao_scene.obj" )
@@ -123,7 +122,7 @@ function GAME:Draw()
 		render.SetTexture( self.RTNormalDepth:GetTexture(), 0 )
 		render.SetTexture( self.NoiseTexture, 1 )
 		
-		render.DrawRect( 0, 720, 1280, -720 )
+		render.DrawRect( 0, 0, 1280, 720 )
 		
 		render.SetTexture( 0, 0 )
 		render.SetTexture( 0, 1 )
@@ -153,7 +152,7 @@ function GAME:Draw()
 		render.SetTexture( self.RTGeometry:GetTexture(), 0 )
 		render.SetTexture( self.RTSSAO:GetTexture(), 1 )
 		
-		render.DrawRect( 0, 720, 1280, -720 )
+		render.DrawRect( 0, 0, 1280, 720 )
 		
 		render.SetTexture( 0, 0 )
 		render.SetTexture( 0, 1 )

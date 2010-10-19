@@ -76,10 +76,7 @@ inline Passion::Vector GetVector( int index )
 
 inline Passion::Color GetColor( int index )
 {
-	float r = 1.0f;
-	float g = 1.0f;
-	float b = 1.0f;
-	float a = 1.0f;
+	float r, g, b, a;
 
 	std::auto_ptr<BaseScriptValue> col = g_Lua->Get( index );
 
@@ -94,6 +91,34 @@ inline Passion::Color GetColor( int index )
 	}
 
 	return Passion::Color( r, g, b, a );
+}
+
+inline Passion::Vertex GetVertex( int index )
+{
+	Passion::Vertex vtx;
+
+	std::auto_ptr<BaseScriptValue> vertex = g_Lua->Get( index );
+
+	if ( vertex->IsTable() )
+	{
+		vertex->GetMember( "pos" )->Push();
+		Passion::Vector pos = GetVector( -1 );
+		g_Lua->Pop( 1 );
+		
+		vertex->GetMember( "color" )->Push();
+		Passion::Color color = GetColor( -1 );
+		g_Lua->Pop( 1 );
+
+		vtx.x = pos.x; vtx.y = pos.y; vtx.z = pos.z;
+		vtx.r = color.R; vtx.g = color.G; vtx.b = color.B; vtx.a = color.A;
+
+		vtx.u = vertex->GetMember( "u" )->GetFloat();
+		vtx.v = vertex->GetMember( "v" )->GetFloat();
+	} else {
+		g_Lua->Error( index, "Vertex" );
+	}
+
+	return vtx;
 }
 
 #endif

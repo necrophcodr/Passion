@@ -146,12 +146,18 @@ namespace Passion
 		virtual void SetProgram( Program program = 0 ) = 0;
 
 		virtual void DrawPoint( Vector point ) = 0;
+		virtual void DrawPoint( Vertex point ) = 0;
 		virtual void DrawLine( Vector p1, Vector p2 ) = 0;
+		virtual void DrawLine( Vertex p1, Vertex p2 ) = 0;
 		virtual void DrawTriangle( Vector p1, Vector p2, Vector p3 ) = 0;
+		virtual void DrawTriangle( Vertex p1, Vertex p2, Vertex p3 ) = 0;
 		virtual void DrawQuad( Vector p1, Vector p2, Vector p3, Vector p4, float repeat = 1.0f ) = 0;
+		virtual void DrawQuad( Vertex p1, Vertex p2, Vertex p3, Vertex p4 ) = 0;
 		virtual void DrawRect( float x, float y, float w, float h, float repeat = 1.0f ) = 0;
 
 		virtual void DrawBox( Vector min, Vector max ) = 0;
+
+		virtual void DrawText( int x, int y, const char* str ) = 0;
 
 		virtual Vector WorldToScreen( Vector pos ) = 0;
 		virtual Vector ScreenToWorld( float x, float y ) = 0;

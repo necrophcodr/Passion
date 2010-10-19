@@ -230,7 +230,7 @@ int main( int argc, const char* argv[] )
 			if ( !g_Lua->Call( 1, 0 ) )
 				return Error( g_Lua->Error() );
 
-			g_Render->Present();
+			g_Render->Present( true );
 		}
 	}
 
