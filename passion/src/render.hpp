@@ -314,6 +314,30 @@ public:
 		return 1;
 	}
 
+	SCRIPT_FUNCTION( GetPixel )
+	{
+		if ( !g_Lua->Get( 1 )->IsNumber() ) g_Lua->Error( 1, "number" );
+		if ( !g_Lua->Get( 2 )->IsNumber() ) g_Lua->Error( 2, "number" );
+
+		Passion::Color color;
+		float depth;
+		int stencil;
+
+		g_Render->GetPixel( g_Lua->Get( 1 )->GetInteger(), g_Lua->Get( 2 )->GetInteger(), &color, &depth, &stencil );
+
+		std::auto_ptr<BaseScriptValue> col = g_Lua->NewTable();
+		col->GetMember( "r" )->Set( color.R * 255 );
+		col->GetMember( "g" )->Set( color.G * 255 );
+		col->GetMember( "b" )->Set( color.B * 255 );
+		col->GetMember( "a" )->Set( color.A * 255 );
+
+		g_Lua->Push( col );
+		g_Lua->Push( depth );
+		g_Lua->Push( stencil );
+
+		return 3;
+	}
+
 	static void Bind()
 	{
 		// Library
@@ -363,6 +387,8 @@ public:
 
 		render->GetMember( "WorldToScreen" )->Set( WorldToScreen );
 		render->GetMember( "ScreenToWorld" )->Set( ScreenToWorld );
+
+		render->GetMember( "GetPixel" )->Set( GetPixel );
 
 		g_Lua->Globals()->GetMember( "render" )->Set( render );
 	}

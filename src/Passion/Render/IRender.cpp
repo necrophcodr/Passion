@@ -415,7 +415,7 @@ namespace Passion
 
 	void IRender::SetViewport( int x, int y, int w, int h )
 	{
-		glViewport( x, m_renderWindow->GetHeight() - y - h, w, h );
+		glViewport( x, y, w, h );
 		m_viewW = (float)w;
 		m_viewH = (float)h;
 	}
@@ -456,6 +456,7 @@ namespace Passion
 		mat.Perspective( fov, m_viewW / m_viewH, znear, zfar );
 		mat.LookAt( position, lookAt, up );
 		SetTransform( mat, MATRIX_PROJECTION );
+		m_camPos = position;
 	}
 
 	void IRender::End3D()
@@ -688,9 +689,20 @@ namespace Passion
 		gluUnProject( (double)x, (double)( view[3] - y ), 1.0, model, proj, view, &x2, &y2, &z2 );
 
 		Vector aim( (float)x2, (float)y2, (float)z2 );
+		aim = aim - m_camPos;
 		aim.Normalize();
 
 		return aim;
+	}
+
+	void IRender::GetPixel( int x, int y, Color* color, float* depth, int* stencil )
+	{
+		if ( color != 0 )
+			glReadPixels( x, m_viewH - y, 1, 1, GL_RGBA, GL_FLOAT, color );
+		if ( depth != 0 )
+			glReadPixels( x, m_viewH - y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, depth );
+		if ( stencil != 0 )
+			glReadPixels( x, m_viewH - y, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, stencil );
 	}
 
 	void IRender::Present( bool immediate )

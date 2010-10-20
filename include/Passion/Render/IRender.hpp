@@ -121,10 +121,12 @@ namespace Passion
 
 		void DrawText( int x, int y, const char* str );
 
+		void Present( bool immediate );
+
 		Vector WorldToScreen( Vector pos );
 		Vector ScreenToWorld( float x, float y );
 
-		void Present( bool immediate );
+		void GetPixel( int x, int y, Color* color, float* depth, int* stencil );
 
 	private:
 		RenderWindow* m_renderWindow;
@@ -136,6 +138,7 @@ namespace Passion
 
 		char m_shape;
 		Color m_drawColor;
+		Vector m_camPos;
 
 		Program m_activeProgram;
 

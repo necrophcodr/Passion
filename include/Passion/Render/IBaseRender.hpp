@@ -159,10 +159,12 @@ namespace Passion
 
 		virtual void DrawText( int x, int y, const char* str ) = 0;
 
+		virtual void Present( bool immediate = false ) = 0;
+
 		virtual Vector WorldToScreen( Vector pos ) = 0;
 		virtual Vector ScreenToWorld( float x, float y ) = 0;
 
-		virtual void Present( bool immediate = false ) = 0;
+		virtual void GetPixel( int x, int y, Color* color = 0, float* depth = 0, int* stencil = 0 ) = 0;
 	};
 }
 

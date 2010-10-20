@@ -27,8 +27,9 @@
 
 namespace Passion
 {
-	struct Matrix
+	class Matrix
 	{
+	public:
 		Matrix();
 		Matrix( float* m );
 
@@ -48,7 +49,7 @@ namespace Passion
 		void Orthogonal( float left, float right, float bottom, float top, float znear = -1.0f, float zfar = 1.0f );
 		void Perspective( float fov, float aspectRatio, float znear, float zfar );
 		void LookAt( Vector pos, Vector target, Vector up );
-
+		
 		float m[4][4];
 	};
 

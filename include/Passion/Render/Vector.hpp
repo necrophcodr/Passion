@@ -27,10 +27,11 @@
 
 namespace Passion
 {
-	struct Matrix;
+	class Matrix;
 
-	struct Vector
+	class Vector
 	{
+	public:
 		Vector( float X = 0.0f, float Y = 0.0f, float Z = 0.0f ) { x = X; y = Y; z = Z; }
 
 		Vector operator+( Vector vec );
