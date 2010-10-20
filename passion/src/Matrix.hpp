@@ -49,9 +49,7 @@ public:
 		Passion::Matrix* matrix = (Passion::Matrix*)g_Lua->Get( 1 )->GetUserData();
 		matrix->Translate( GetVector( 2 ) );
 
-		g_Lua->Push( matrix, sizeof( *matrix ), g_Lua->Registry()->GetMember( "Matrix" ) );
-
-		return 1;
+		return 0;
 	}
 	
 	SCRIPT_FUNCTION( Scale )
@@ -62,9 +60,7 @@ public:
 		Passion::Matrix* matrix = (Passion::Matrix*)g_Lua->Get( 1 )->GetUserData();
 		matrix->Scale( GetVector( 2 ) );
 
-		g_Lua->Push( matrix, sizeof( *matrix ), g_Lua->Registry()->GetMember( "Matrix" ) );
-
-		return 1;
+		return 0;
 	}
 
 	SCRIPT_FUNCTION( RotateX )
@@ -76,9 +72,7 @@ public:
 		Passion::Matrix* matrix = (Passion::Matrix*)g_Lua->Get( 1 )->GetUserData();
 		matrix->RotateX( g_Lua->Get( 2 )->GetFloat() );
 
-		g_Lua->Push( matrix, sizeof( *matrix ), g_Lua->Registry()->GetMember( "Matrix" ) );
-
-		return 1;
+		return 0;
 	}
 
 	SCRIPT_FUNCTION( RotateY )
@@ -89,10 +83,7 @@ public:
 
 		Passion::Matrix* matrix = (Passion::Matrix*)g_Lua->Get( 1 )->GetUserData();
 		matrix->RotateY( g_Lua->Get( 2 )->GetFloat() );
-
-		g_Lua->Push( matrix, sizeof( *matrix ), g_Lua->Registry()->GetMember( "Matrix" ) );
-
-		return 1;
+		return 0;
 	}
 
 	SCRIPT_FUNCTION( RotateZ )
@@ -104,7 +95,52 @@ public:
 		Passion::Matrix* matrix = (Passion::Matrix*)g_Lua->Get( 1 )->GetUserData();
 		matrix->RotateZ( g_Lua->Get( 2 )->GetFloat() );
 
-		g_Lua->Push( matrix, sizeof( *matrix ), g_Lua->Registry()->GetMember( "Matrix" ) );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( Invert )
+	{
+		if ( !g_Lua->Get( 1 )->IsUserData() || !g_Lua->Get( 1 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "Matrix" ) ) )
+			g_Lua->Error( 1, "Matrix" );
+		
+		Passion::Matrix* matrix = (Passion::Matrix*)g_Lua->Get( 1 )->GetUserData();
+		bool result = matrix->Invert();
+
+		g_Lua->Push( result );
+
+		return 1;
+	}
+
+	SCRIPT_FUNCTION( Multiply )
+	{
+		if ( !g_Lua->Get( 1 )->IsUserData() || !g_Lua->Get( 1 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "Matrix" ) ) )
+			g_Lua->Error( 1, "Matrix" );
+
+		if ( g_Lua->Get( 2 )->IsTable() && g_Lua->Get( 2 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "Vector" ) ) )
+		{
+			Passion::Matrix mat = *(Passion::Matrix*)g_Lua->Get( 1 )->GetUserData();
+			Passion::Vector vec = GetVector( 2 );
+
+			Passion::Vector result = mat * vec;
+
+			std::auto_ptr<BaseScriptValue> vector = g_Lua->NewTable();
+				vector->GetMember( "x" )->Set( result.x );
+				vector->GetMember( "y" )->Set( result.y );
+				vector->GetMember( "z" )->Set( result.z );
+			vector->SetMetaTable( g_Lua->Registry()->GetMember( "Vector" ) );
+
+			g_Lua->Push( vector );
+		} else {
+			if ( !g_Lua->Get( 2 )->IsUserData() || !g_Lua->Get( 2 )->GetMetaTable()->Equals( g_Lua->Registry()->GetMember( "Matrix" ) ) )
+				g_Lua->Error( 2, "Matrix" );
+
+			Passion::Matrix mat = *(Passion::Matrix*)g_Lua->Get( 1 )->GetUserData();
+			Passion::Matrix mat2 = *(Passion::Matrix*)g_Lua->Get( 2 )->GetUserData();
+
+			Passion::Matrix result = mat * mat2;
+
+			g_Lua->Push( &result, sizeof( result ), g_Lua->Registry()->GetMember( "Matrix" ) );
+		}
 
 		return 1;
 	}
@@ -120,6 +156,10 @@ public:
 			meta->GetMember( "RotateX" )->Set( RotateX );
 			meta->GetMember( "RotateY" )->Set( RotateY );
 			meta->GetMember( "RotateZ" )->Set( RotateZ );
+
+			meta->GetMember( "Invert" )->Set( Invert );
+
+			meta->GetMember( "__mul" )->Set( Multiply );
 
 			meta->GetMember( "__index" )->Set( meta.get() );
 		g_Lua->Registry()->GetMember( "Matrix" )->Set( meta );

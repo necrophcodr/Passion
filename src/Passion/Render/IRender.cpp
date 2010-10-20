@@ -698,11 +698,11 @@ namespace Passion
 	void IRender::GetPixel( int x, int y, Color* color, float* depth, int* stencil )
 	{
 		if ( color != 0 )
-			glReadPixels( x, m_viewH - y, 1, 1, GL_RGBA, GL_FLOAT, color );
+			glReadPixels( x, (int)m_viewH - y, 1, 1, GL_RGBA, GL_FLOAT, color );
 		if ( depth != 0 )
-			glReadPixels( x, m_viewH - y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, depth );
+			glReadPixels( x, (int)m_viewH - y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, depth );
 		if ( stencil != 0 )
-			glReadPixels( x, m_viewH - y, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, stencil );
+			glReadPixels( x, (int)m_viewH - y, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, stencil );
 	}
 
 	void IRender::Present( bool immediate )

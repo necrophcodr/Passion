@@ -33,8 +33,13 @@ function GAME:Draw()
 	render.Clear( Color( 10, 10, 10 ) )
 	render.ClearZ()
 	
+	-- Rotate the tank around the Z (up) axis based on the time
+	local mat = Matrix()
+	mat:RotateZ( os.clock() / 3 )
+	render.SetTransform( mat )
+	
 	-- Start a 3D projection from the specified position, looking at 30 units above the center of the world.
-	render.Start3D( Vector( math.cos( os.clock() / 3 ) * 250, math.sin( os.clock() / 3 ) * 250, 150 ), Vector( 0, 0, 30 ) )
+	render.Start3D( Vector( 150, 150, 150 ), Vector( 0, 0, 30 ) )
 		self.Model:Draw()
 	render.End3D()
 end
