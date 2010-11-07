@@ -274,6 +274,16 @@ public:
 		return 0;
 	}
 
+	SCRIPT_FUNCTION( DrawSphere )
+	{
+		int slices = 36; if ( !g_Lua->Get( 3 )->IsNil() ) slices = g_Lua->Get( 3 )->GetInteger();
+		int stacks = 36; if ( !g_Lua->Get( 4 )->IsNil() ) slices = g_Lua->Get( 4 )->GetInteger();
+
+		g_Render->DrawSphere( GetVector( 1 ), g_Lua->Get( 2 )->GetFloat(), slices, stacks );
+
+		return 0;
+	}
+
 	SCRIPT_FUNCTION( DrawText )
 	{
 		g_Render->DrawText( g_Lua->Get( 1 )->GetInteger(), g_Lua->Get( 2 )->GetInteger(), g_Lua->Get( 3 )->GetString() );
@@ -382,6 +392,7 @@ public:
 		render->GetMember( "DrawQuad" )->Set( DrawQuad );
 		render->GetMember( "DrawRect" )->Set( DrawRect );
 		render->GetMember( "DrawBox" )->Set( DrawBox );
+		render->GetMember( "DrawSphere" )->Set( DrawSphere );
 
 		render->GetMember( "DrawText" )->Set( DrawText );
 

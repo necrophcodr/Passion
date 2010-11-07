@@ -63,6 +63,18 @@ public:
 		return 1;
 	}
 
+	SCRIPT_FUNCTION( ShowMouseCursor )
+	{
+		g_Input->ShowMouseCursor( g_Lua->Get( 1 )->GetBoolean() );
+		return 0;
+	}
+
+	SCRIPT_FUNCTION( SetMousePos )
+	{
+		g_Input->SetMousePos( g_Lua->Get( 1 )->GetInteger(), g_Lua->Get( 2 )->GetInteger() );
+		return 0;
+	}
+
 	static void Bind()
 	{
 		std::auto_ptr<BaseScriptValue> input = g_Lua->NewTable();
@@ -73,6 +85,10 @@ public:
 
 		input->GetMember( "IsMouseDown" )->Set( IsMouseDown );
 		input->GetMember( "IsKeyDown" )->Set( IsKeyDown );
+
+		input->GetMember( "ShowMouseCursor" )->Set( ShowMouseCursor );
+
+		input->GetMember( "SetMousePos" )->Set( SetMousePos );
 
 		g_Lua->Globals()->GetMember( "input" )->Set( input );
 	}

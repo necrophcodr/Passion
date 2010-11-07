@@ -62,4 +62,14 @@ namespace Passion
 	{
 		return m_window->IsKeyDown( key );
 	}
+
+	void IInput::ShowMouseCursor( bool show )
+	{
+		m_window->ShowMouseCursor( show );
+	}
+
+	void IInput::SetMousePos( int x, int y )
+	{
+		m_window->SetMousePos( x, y );
+	}
 }

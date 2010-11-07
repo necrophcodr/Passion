@@ -51,6 +51,10 @@ namespace Passion
 		bool IsMouseDown( MouseButton button );
 		bool IsKeyDown( Key key );
 
+		void ShowMouseCursor( bool show );
+
+		void SetMousePos( int x, int y );
+
 	private:
 		RenderWindow* m_window;
 

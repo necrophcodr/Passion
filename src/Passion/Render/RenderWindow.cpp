@@ -92,6 +92,8 @@ namespace Passion
 		m_context = wglCreateContext( m_dc );
 
 		wglMakeCurrent( m_dc, m_context );
+
+		m_cursorState = LoadCursor( 0, IDC_ARROW );
 #else
         static const int snglBuf[] = { GLX_RGBA, GLX_DEPTH_SIZE, 16, None };
         static const int dblBuf[]  = { GLX_RGBA, GLX_DEPTH_SIZE, 16, GLX_DOUBLEBUFFER, None };
@@ -109,36 +111,36 @@ namespace Passion
         static const unsigned long FUNC_CLOSE = 1 << 5;
 
         // Connect to X server
-        m_dpy = XOpenDisplay( NULL );
+        m_display = XOpenDisplay( NULL );
 
         // Find the appropiate color format (first try double buffered, then single buffered)
-        XVisualInfo* vi = glXChooseVisual( m_dpy, DefaultScreen( m_dpy ), const_cast<int*>( dblBuf ) );
+        XVisualInfo* vi = glXChooseVisual( m_display, DefaultScreen( m_display ), const_cast<int*>( dblBuf ) );
         m_doubleBuffered = true;
 
         if ( !vi )
         {
-            vi = glXChooseVisual( m_dpy, DefaultScreen( m_dpy ), const_cast<int*>( snglBuf ) );
+            vi = glXChooseVisual( m_display, DefaultScreen( m_display ), const_cast<int*>( snglBuf ) );
             m_doubleBuffered = false;
         }
 
         // Create OpenGL context
-        GLXContext cx = glXCreateContext( m_dpy, vi, None, true );
+        GLXContext cx = glXCreateContext( m_display, vi, None, true );
 
         // Create color map
-        Colormap cmap = XCreateColormap( m_dpy, RootWindow( m_dpy, vi->screen ), vi->visual, AllocNone );
+        Colormap cmap = XCreateColormap( m_display, RootWindow( m_display, vi->screen ), vi->visual, AllocNone );
         XSetWindowAttributes swa;
         swa.colormap = cmap;
         swa.border_pixel = 0;
         swa.event_mask = KeyPressMask | KeyReleaseMask | ExposureMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask | StructureNotifyMask;
 
         // Create window
-        m_win = XCreateWindow( m_dpy, RootWindow( m_dpy, vi->screen ), ( DisplayWidth( m_dpy, DefaultScreen( m_dpy ) ) - width ) / 2, ( DisplayHeight( m_dpy, DefaultScreen( m_dpy ) ) - height ) / 2, width, height, 0, vi->depth, InputOutput, vi->visual, CWBorderPixel | CWColormap | CWEventMask, &swa );
+        m_window = XCreateWindow( m_display, RootWindow( m_display, vi->screen ), ( DisplayWidth( m_display, DefaultScreen( m_display ) ) - width ) / 2, ( DisplayHeight( m_display, DefaultScreen( m_display ) ) - height ) / 2, width, height, 0, vi->depth, InputOutput, vi->visual, CWBorderPixel | CWColormap | CWEventMask, &swa );
 
         // Set title
-        XStoreName( m_dpy, m_win, title );
+        XStoreName( m_display, m_window, title );
 
         // Set window properties
-        Atom windowHints = XInternAtom( m_dpy, "_MOTIF_WM_HINTS", false );
+        Atom windowHints = XInternAtom( m_display, "_MOTIF_WM_HINTS", false );
 
         struct WMHints
         {
@@ -155,13 +157,26 @@ namespace Passion
         hints.functions = FUNC_MOVE | FUNC_MINIMIZE | FUNC_CLOSE;
 
         const unsigned char* hintsPtr = reinterpret_cast<const unsigned char*>( &hints );
-        XChangeProperty( m_dpy, m_win, windowHints, windowHints, 32, PropModeReplace, hintsPtr, 5 );
+        XChangeProperty( m_display, m_window, windowHints, windowHints, 32, PropModeReplace, hintsPtr, 5 );
 
         // Activate context
-        glXMakeCurrent( m_dpy, m_win, cx );
+        glXMakeCurrent( m_display, m_window, cx );
 
         // Show window
-        XMapWindow( m_dpy, m_win );
+        XMapWindow( m_display, m_window );
+
+		// Create hidden cursor
+		Pixmap cursorPixmap = XCreatePixmap( m_display, m_window, 1, 1, 1 );
+		GC graphicsContext = XCreateGC( m_display, cursorPixmap, 0, NULL );
+		XDrawPoint( m_display, cursorPixmap, graphicsContext, 0, 0 );
+		XFreeGC( m_display, graphicsContext );
+
+		XColor color;
+		color.flags = DoRed | DoGreen | DoBlue;
+		color.red = color.blue = color.green = 0;
+		m_hiddenCursor = XCreatePixmapCursor( m_display, cursorPixmap, cursorPixmap, &color, &color, 0, 0 );
+
+		XFreePixmap( m_display, cursorPixmap );
 #endif
 
 		// Initialize states
@@ -212,9 +227,9 @@ namespace Passion
         char buffer[32];
         KeySym sym;
 
-        while ( XPending( m_dpy ) )
+        while ( XPending( m_display ) )
         {
-            XNextEvent( m_dpy, &event );
+            XNextEvent( m_display, &event );
 
             switch ( event.type )
             {
@@ -308,13 +323,36 @@ namespace Passion
 		return m_wheelDelta;
 	}
 
+	void RenderWindow::ShowMouseCursor( bool show )
+	{
+#ifdef WIN32
+		m_cursorState = show ? LoadCursor( 0, IDC_ARROW ) : 0;
+		SetCursor( m_cursorState );
+#else
+		XDefineCursor( m_display, m_window, show ? None : m_hiddenCursor );
+		XFlush( m_display );
+#endif
+	}
+
+	void RenderWindow::SetMousePos( int x, int y )
+	{
+#ifdef WIN32
+		POINT pos = { x, y };
+		ClientToScreen( m_window, &pos );
+		SetCursorPos( pos.x, pos.y );
+#else
+		XWarpPointer( m_display, None, m_window, 0, 0, 0, 0, x, y );
+		XFlush( m_display );
+#endif
+	}
+
 	void RenderWindow::Present()
 	{
 #ifdef WIN32
 		SwapBuffers( m_dc );
 #else
         if ( m_doubleBuffered )
-            glXSwapBuffers( m_dpy, m_win );
+            glXSwapBuffers( m_display, m_window );
         else
             glFlush();
 #endif
@@ -543,6 +581,11 @@ namespace Passion
 		{
 		case WM_DESTROY:
 			m_open = false;
+			break;
+
+		case WM_SETCURSOR:
+			if ( LOWORD( lParam ) == HTCLIENT )
+				SetCursor( m_cursorState );
 			break;
 
 		case WM_MOUSEMOVE:

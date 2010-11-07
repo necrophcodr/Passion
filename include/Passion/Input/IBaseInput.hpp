@@ -157,6 +157,9 @@ namespace Passion
 
 		virtual bool IsMouseDown( MouseButton button ) = 0;
 		virtual bool IsKeyDown( Key key ) = 0;
+
+		virtual void ShowMouseCursor( bool show ) = 0;
+		virtual void SetMousePos( int x, int y ) = 0;
 	};
 }
 

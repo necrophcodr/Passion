@@ -68,6 +68,10 @@ namespace Passion
 
 		int MouseWheel();
 
+		void ShowMouseCursor( bool show );
+
+		void SetMousePos( int x, int y );
+
 		void Present();
 
 #ifdef WIN32
@@ -79,9 +83,12 @@ namespace Passion
 		HWND	m_window;
 		HDC		m_dc;
 		HGLRC	m_context;
+
+		HCURSOR m_cursorState;
 #else
-        Display*    m_dpy;
-        ::Window    m_win;
+        Display*    m_display;
+        ::Window    m_window;
+		Cursro		m_hiddenCursor;
 
         bool        m_doubleBuffered;
 #endif
