@@ -52,31 +52,29 @@ namespace Passion
 
 		bool Invert();
 		
-		float m[4][4];
+		float m[16];
 	};
 
 	inline Matrix::Matrix()
 	{
-		for ( short c = 0; c < 4; c++ )
-			for ( short r = 0; r < 4; r++ )
-				if ( r == c )
-					m[c][r] = 1;
-				else
-					m[c][r] = 0;
+		for ( int i = 0; i < 16; i++ ) m[i] = 0;
+		m[0] = 1;
+		m[5] = 1;
+		m[10] = 1;
+		m[15] = 1;
 	}
 
 	inline Matrix::Matrix( float* v )
 	{
-		for ( short c = 0; c < 4; c++ )
-			for ( short r = 0; r < 4; r++ )
-				m[c][r] = v[r*4+c];
+		for ( int i = 0; i < 16; i++ )
+			m[i] = v[i];
 	}
 
 	inline Vector Matrix::operator*( Vector v )
 	{
-		float x = v.x * m[0][0] + v.y * m[1][0] + v.z * m[2][0] + m[3][0];
-		float y = v.x * m[0][1] + v.y * m[1][1] + v.z * m[2][1] + m[3][1];
-		float z = v.x * m[0][2] + v.y * m[1][2] + v.z * m[2][2] + m[3][2];
+		float x = v.x * m[0] + v.y * m[1] + v.z * m[2] + m[3];
+		float y = v.x * m[4] + v.y * m[5] + v.z * m[6] + m[7];
+		float z = v.x * m[8] + v.y * m[9] + v.z * m[10] + m[11];
 
 		return Vector( x, y, z );
 	}
@@ -85,11 +83,23 @@ namespace Passion
 	{
 		Matrix res;
 
-		for ( short c = 0; c < 4; c++ )
-			for ( short r = 0; r < 4; r++ )
-				res.m[c][r] = (*this).m[0][r] * mat.m[c][0] + (*this).m[1][r] * mat.m[c][1] +
-					(*this).m[2][r] * mat.m[c][2] + (*this).m[3][r] * mat.m[c][3];
-
+		res.m[0] = m[0]*mat.m[0] + m[1]*mat.m[4] + m[2]*mat.m[8] + m[3]*mat.m[12];
+		res.m[1] = m[0]*mat.m[1] + m[1]*mat.m[5] + m[2]*mat.m[9] + m[3]*mat.m[13];
+		res.m[2] = m[0]*mat.m[2] + m[1]*mat.m[6] + m[2]*mat.m[10] + m[3]*mat.m[14];
+		res.m[3] = m[0]*mat.m[3] + m[1]*mat.m[7] + m[2]*mat.m[11] + m[3]*mat.m[15];
+		res.m[4] = m[4]*mat.m[0] + m[5]*mat.m[4] + m[6]*mat.m[8] + m[7]*mat.m[12];
+		res.m[5] = m[4]*mat.m[1] + m[5]*mat.m[5] + m[6]*mat.m[9] + m[7]*mat.m[13];
+		res.m[6] = m[4]*mat.m[2] + m[5]*mat.m[6] + m[6]*mat.m[10] + m[7]*mat.m[14];
+		res.m[7] = m[4]*mat.m[3] + m[5]*mat.m[7] + m[6]*mat.m[11] + m[7]*mat.m[15];
+		res.m[8] = m[8]*mat.m[0] + m[9]*mat.m[4] + m[10]*mat.m[8] + m[11]*mat.m[12];
+		res.m[9] = m[8]*mat.m[1] + m[9]*mat.m[5] + m[10]*mat.m[9] + m[11]*mat.m[13];
+		res.m[10] = m[8]*mat.m[2] + m[9]*mat.m[6] + m[10]*mat.m[10] + m[11]*mat.m[14];
+		res.m[11] = m[8]*mat.m[3] + m[9]*mat.m[7] + m[10]*mat.m[11] + m[11]*mat.m[15];
+		res.m[12] = m[12]*mat.m[0] + m[13]*mat.m[4] + m[14]*mat.m[8] + m[15]*mat.m[12];
+		res.m[13] = m[12]*mat.m[1] + m[13]*mat.m[5] + m[14]*mat.m[9] + m[15]*mat.m[13];
+		res.m[14] = m[12]*mat.m[2] + m[13]*mat.m[6] + m[14]*mat.m[10] + m[15]*mat.m[14];
+		res.m[15] = m[12]*mat.m[3] + m[13]*mat.m[7] + m[14]*mat.m[11] + m[15]*mat.m[15];
+		
 		return res;
 	}
 
@@ -210,7 +220,6 @@ namespace Passion
 	{
 		float inv[16], det;
 		int i;
-		float* m = reinterpret_cast<float*>( this );
 
 		inv[0] =   m[5]*m[10]*m[15] - m[5]*m[11]*m[14] - m[9]*m[6]*m[15]
 		+ m[9]*m[7]*m[14] + m[13]*m[6]*m[11] - m[13]*m[7]*m[10];

@@ -148,7 +148,6 @@ int main()
 
 		render->Start2D();
 			render->SetProgram( gaussian_v );
-
 			render->DrawQuad( Passion::Vector( 0.0f, 0.0f ), Passion::Vector( 1280.0f, 0.0f ), Passion::Vector( 1280.0f, 720.0f ), Passion::Vector( 0.0f, 720.0f ) );
 		render->End2D();
 

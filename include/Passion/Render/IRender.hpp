@@ -118,6 +118,7 @@ namespace Passion
 		void DrawRect( float x, float y, float w, float h, float repeat = 1.0f );
 
 		void DrawBox( Vector min, Vector max );
+		void DrawSphere( Vector center, float radius, int slices, int stacks );
 
 		void DrawText( int x, int y, const char* str );
 

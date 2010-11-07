@@ -32,6 +32,8 @@
 #include <string>
 #include <cstring>
 
+const float pi = 3.14159265359f;
+
 namespace Passion
 {
 	IRender::IRender()
@@ -469,13 +471,32 @@ namespace Passion
 		Flush();
 		
 		glMatrixMode( 0x1700 + mode );
-		glLoadMatrixf( matrix );
+		glLoadTransposeMatrixf( matrix );
 	}
 
 	Matrix IRender::GetTransform( MatrixMode mode )
 	{
+		float t[16];
 		Matrix m;
-		glGetFloatv( 0x0BA6 + mode, (float*)&m );
+		glGetFloatv( 0x0BA6 + mode, t );
+
+		m.m[0] = t[0];
+		m.m[4] = t[1];
+		m.m[8] = t[2];
+		m.m[12] = t[3];
+		m.m[1] = t[4];
+		m.m[5] = t[5];
+		m.m[9] = t[6];
+		m.m[13] = t[7];
+		m.m[2] = t[8];
+		m.m[6] = t[9];
+		m.m[10] = t[10];
+		m.m[14] = t[11];
+		m.m[3] = t[12];
+		m.m[7] = t[13];
+		m.m[11] = t[14];
+		m.m[15] = t[15];
+
 		return m;
 	}
 
@@ -629,6 +650,39 @@ namespace Passion
 		DrawQuad( Vector( max.x, max.y, min.z ), max, Vector( max.x, min.y, max.z ), Vector( max.x, min.y, min.z ) );
 	}
 
+	void IRender::DrawSphere( Vector center, float radius, int slices, int stacks )
+	{
+		float delta = pi * 2.0f / (float)slices;
+		float delta2 = pi / (float)stacks;
+		float r, z, r2, z2;
+		float x1, y1, x2, y2, x3, y3, x4, y4;
+		
+		for ( float s = -0.5f * pi; s < 0.5f * pi; s += delta2 )
+		{
+			r = cos( s ) * radius;
+			z = center.z + sin( s ) * radius;
+			r2 = cos( s + delta2 ) * radius;
+			z2 = center.z + sin( s + delta2 ) * radius;
+
+			for ( float ang = 0.0f; ang < pi*2.0f; ang += delta )
+			{
+				x1 = cos( ang ) * r;
+				y1 = sin( ang ) * r;
+				x2 = cos( ang + delta ) * r;
+				y2 = sin( ang + delta ) * r;
+				x3 = cos( ang + delta ) * r2;
+				y3 = sin( ang + delta ) * r2;
+				x4 = cos( ang ) * r2;
+				y4 = sin( ang ) * r2;
+
+				DrawQuad(	Passion::Vertex( center.x + x1, center.y + y1, z, m_drawColor, 0.0f, 0.0f, x1, y1, z - center.z ),
+							Passion::Vertex( center.x + x2, center.y + y2, z, m_drawColor, 0.0f, 0.0f, x2, y2, z - center.z ),
+							Passion::Vertex( center.x + x3, center.y + y3, z2, m_drawColor, 0.0f, 0.0f, x3, y3, z2 - center.z ),
+							Passion::Vertex( center.x + x4, center.y + y4, z2, m_drawColor, 0.0f, 0.0f, x4, y4, z2 - center.z ) );
+			}
+		}
+	}
+
 	void IRender::DrawText( int x, int y, const char* str )
 	{
 		if ( m_textTexture == 0 ) m_textTexture = LoadTexture( "textures/font.png", false );
@@ -666,9 +720,9 @@ namespace Passion
 
 		Matrix m = GetTransform( MATRIX_PROJECTION ) * GetTransform( MATRIX_MODEL );
 		Vector v = m * pos;
-
-		float w = m.m[0][3] * pos.x + m.m[1][3] * pos.y + m.m[2][3] * pos.z + m.m[3][3];
-
+		
+		float w = m.m[3] * pos.x + m.m[7] * pos.y + m.m[11] * pos.z + m.m[15];
+		
 		v.x = ( v.x / w * 0.5f + 0.5f ) * view[2] + view[0];
 		v.y = view[3] - ( v.y / w * 0.5f + 0.5f ) * view[3] + view[1];
 		v.z = v.z / w * 0.5f + 0.5f;

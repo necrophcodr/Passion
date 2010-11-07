@@ -70,7 +70,7 @@ function GAME:Draw()
 					render.DrawQuad( rect[1],  rect[2],  rect[3],  rect[4] )
 				render.SetDrawColor( Color( 167, 172, 199 ) )
 			else
-				render.DrawQuad( rect[1],  rect[2],  rect[3],  rect[4] )
+				render.DrawQuad( rect[1], rect[2], rect[3], rect[4] )
 			end
 		end
 	render.End3D()

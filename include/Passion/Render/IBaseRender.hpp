@@ -156,6 +156,7 @@ namespace Passion
 		virtual void DrawRect( float x, float y, float w, float h, float repeat = 1.0f ) = 0;
 
 		virtual void DrawBox( Vector min, Vector max ) = 0;
+		virtual void DrawSphere( Vector center, float radius, int slices, int stacks ) = 0;
 
 		virtual void DrawText( int x, int y, const char* str ) = 0;
 
