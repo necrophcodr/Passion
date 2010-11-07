@@ -88,7 +88,7 @@ namespace Passion
 #else
         Display*    m_display;
         ::Window    m_window;
-		Cursro		m_hiddenCursor;
+		Cursor		m_hiddenCursor;
 
         bool        m_doubleBuffered;
 #endif
