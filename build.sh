@@ -4,7 +4,7 @@ cmake .;
 make;
 if [[ "$?" == "0" ]]; then
 	printf "=== RUNNING ===\n";
-	cd bin;
+	cd passion/bin;
 	./passion
 	printf "=== DONE === \n";
 	exit 0;

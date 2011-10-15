@@ -81,7 +81,7 @@ int main( int argc, const char* argv[] )
 		g_Scripting	= Passion::CreateInterface<Passion::IBaseScripting>( "bin/scripting" );
 		g_Network	= Passion::CreateInterface<Passion::IBaseNetwork>( "bin/network" );
 	#else
-		g_Render	= Passion::CreateInterface<Passion::IBaseRender>( "bin/render-d" );
+		g_Render	= Passion::CreateInterface<Passion::IBaseRender>( "bin/lrender-d" );
 		g_Input		= Passion::CreateInterface<Passion::IBaseInput>( "bin/input-d" );
 		g_Scripting	= Passion::CreateInterface<Passion::IBaseScripting>( "bin/scripting-d" );
 		g_Network	= Passion::CreateInterface<Passion::IBaseNetwork>( "bin/network-d" );

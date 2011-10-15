@@ -17,5 +17,11 @@ samples/bin/*.ilk
 *.lib
 *.dynlib
 
+# CMake related files and directories
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefiles
+
 # Other
 build.sh
