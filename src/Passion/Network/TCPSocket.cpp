@@ -60,7 +60,7 @@ namespace Passion
 	{
 #ifdef WIN32
 		WSACleanup();
-#endif;
+#endif
 	}
 
 	void TCPSocket::Connect( const char* address, unsigned short port )
@@ -95,7 +95,7 @@ namespace Passion
 		closesocket( m_socket );
 #else
         close( m_socket );
-#endif;
+#endif
         m_connected = false;
 	}
 

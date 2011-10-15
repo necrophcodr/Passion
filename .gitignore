@@ -2,16 +2,20 @@
 temp/*.*
 
 # No compiling files
-lib/*.lib
-lib/*.pdb
-lib/*.exp
-lib/*.ilk
-
-# No VS files
-platform/vc2008/*.ncb
-platform/vc2010/*.ncb
-platform/vc2010/*.sdf
+lib/
 
 # Again no compiling files
 samples/bin/*.pdb
 samples/bin/*.ilk
+
+# File extensions to ignore
+*.swp
+*.exe
+*.so
+*.a
+*.dll
+*.lib
+*.dynlib
+
+# Other
+build.sh
