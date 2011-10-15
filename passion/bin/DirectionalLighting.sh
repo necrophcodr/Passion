@@ -1,2 +1,2 @@
 #!/bin/bash
-./Passion lua/samples/directionallighting.lua
+./passion lua/samples/directionallighting.lua

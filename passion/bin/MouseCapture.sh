@@ -1,2 +1,2 @@
 #!/bin/bash
-./Passion lua/samples/mousecapturing.lua
+./passion lua/samples/mousecapturing.lua

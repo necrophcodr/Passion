@@ -1,2 +1,2 @@
 #!/bin/bash
-./Passion lua/samples/basics.lua
+./passion lua/samples/basics.lua

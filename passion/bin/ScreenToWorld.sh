@@ -1,2 +1,2 @@
 #!/bin/bash
-./Passion lua/samples/screentoworld.lua
+./passion lua/samples/screentoworld.lua
