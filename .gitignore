@@ -4,6 +4,7 @@ temp/*.*
 # No compiling files
 lib/
 passion/bin/passion
+passion/bin/Passion
 
 # Again no compiling files
 samples/bin/*.pdb
