@@ -23,7 +23,7 @@ samples/bin/*.ilk
 CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
-Makefie
+Makefile
 
 # Other
 build.sh
