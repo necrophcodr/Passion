@@ -1,4 +1,4 @@
-Icmake_minimum_required( VERSION 2.8 )
+cmake_minimum_required( VERSION 2.8 )
 SET( EXECUTABLE_OUTPUT_PATH "../passion/bin" )
 SET( LIBRARY_OUTPUT_PATH "../passion/bin/bin" )
 project(input)
