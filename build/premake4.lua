@@ -3,6 +3,7 @@ solution "PASSION"
 
 	includedirs { "../include", "../extlibs/headers" }
 	libdirs { "../extlibs/lib", "../lib" }
+	targetdir( "../passion/bin/bin" )
 	if( _ACTION == nil ) then
 		location "projects/"
 	else
@@ -30,5 +31,6 @@ solution "PASSION"
 	project "Passion"
 		kind "WindowedApp"
 		language "C++"
+		targetdir( "../passion/bin" )
 		files { "../passion/src/**.cpp", "../src/Passion/Render/GLee/GLee.c" }
 		links { "input", "GL", "GLU", "SOIL", "render", "network", "dl", "scripting" }

@@ -5,6 +5,7 @@ temp/*.*
 lib/
 passion/bin/passion
 passion/bin/Passion
+passion/bin/bin/
 
 # Again no compiling files
 samples/bin/*.pdb
@@ -19,11 +20,12 @@ samples/bin/*.ilk
 *.lib
 *.dynlib
 
-# CMake related files and directories
-CMakeCache.txt
-CMakeFiles/
-cmake_install.cmake
-Makefile
+# Project files
+build/CMakeCache.txt
+build/CMakeFiles/
+build/cmake_install.cmake
+build/Makefile
+build/projects/
 
 # Other
 build.sh
