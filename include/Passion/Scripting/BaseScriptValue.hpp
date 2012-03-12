@@ -24,6 +24,7 @@
 #define PASSION_BASESCRIPTVALUE_HPP
 
 #include <memory>
+#include <cstdlib>
 
 namespace Passion
 {
