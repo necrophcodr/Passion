@@ -26,6 +26,7 @@ build/CMakeFiles/
 build/cmake_install.cmake
 build/Makefile
 build/projects/
+samples/build/projects/
 
 # Other
 build.sh
