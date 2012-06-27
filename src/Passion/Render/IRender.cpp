@@ -31,6 +31,9 @@
 #include <vector>
 #include <string>
 #include <cstring>
+#ifndef WIN32
+#include <unistd.h>
+#endif
 
 const float pi = 3.14159265359f;
 
